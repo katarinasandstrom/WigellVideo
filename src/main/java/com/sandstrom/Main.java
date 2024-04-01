@@ -266,7 +266,7 @@ public class Main extends Application {
         textFieldUpdateCustomerLName.setPromptText("Efternamn");
 
         textFieldUpdateCustomerEmail = new TextField();
-        textFieldUpdateCustomerEmail.setPromptText("Mailadress");
+         textFieldUpdateCustomerEmail.setPromptText("Mailadress");
 
         Address updateCustomerAddress = new Address();
 
