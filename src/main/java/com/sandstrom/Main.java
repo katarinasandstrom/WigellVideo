@@ -284,16 +284,15 @@ public class Main extends Application {
         // Lyssnare för att hantera ändringar i knappens tillstånd
         toggleButtonCustomerIsActive.setOnAction(event -> {
             if (toggleButtonCustomerIsActive.isSelected()) {
-                statusLabel.setText("Kunden är aktiv");
-
+                toggleButtonCustomerIsActive.setText("Inaktiv");
+                statusLabel.setText("Kunden är inaktiv");
                 // Här kan du lägga till kod för att ändra kundens status i din databas
             } else {
-                statusLabel.setText("Kunden är inaktiv");
-                toggleButtonCustomerIsActive.setText("Inaktiv");
+                toggleButtonCustomerIsActive.setText("Aktiv");
+                statusLabel.setText("Kunden är aktiv");
                 // Här kan du lägga till kod för att ändra kundens status i din databas
             }
         });
-
         vBoxUpdateCustomer1 = new VBox();
         vBoxUpdateCustomer1.getChildren().addAll(textFieldUpdateCustomerFName,
                 textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail);
