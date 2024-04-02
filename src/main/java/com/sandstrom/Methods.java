@@ -29,7 +29,7 @@ public class Methods {
                 session.getTransaction().rollback();
                 e.printStackTrace();
             }
-        } catch (Exception e) {
+ x       } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
         return false;
