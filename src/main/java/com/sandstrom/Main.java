@@ -198,7 +198,6 @@ public class Main extends Application {
         vBoxStaff.setSpacing(10);
         vBoxStaff.getChildren().addAll(labelStaffChoice, btnRegisterNewStaff, btnUpdateStaff);
 
-
     //REGISTRERA KUND-SIDA
 
         labelRegNewCustomer = new Label("Registrera ny kund");
