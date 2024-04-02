@@ -7,11 +7,11 @@
     <session-factory>
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <!-- property name="connection.driver_class">com.mysql.jdbc.Driver</property -->
-        <property name="connection.url">jdbc:mysql://localhost/sakila</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306</property>
 
-
+        <!--400Lingon!-->
         <property name="connection.username">root</property>
-        <property name="connection.password">400Lingon!</property>
+        <property name="connection.password">201720</property>
         <property name="connection.pool_size">3</property>
         <!--property name="dialect">org.hibernate.dialect.MySQLDialect</property-->
         <property name="current_session_context_class">thread</property>
@@ -20,10 +20,13 @@
         <property name="hbm2ddl.auto">update</property>
         <!-- mapping class="com.mcnz.jpa.examples.Player" / -->
 
-        <mapping class="com.sandstrom.Entities.Staff"/>
-
-
-
+        <mapping class="com.sandstrom.entities.Staff"/>
+        <mapping class="com.sandstrom.entities.Actor"/>
+        <mapping class="com.sandstrom.entities.Category"/>
+        <mapping class="com.sandstrom.entities.Film"/>
+        <mapping class="com.sandstrom.entities.FilmActor"/>
+        <mapping class="com.sandstrom.entities.FilmCategory"/>
+        <mapping class="com.sandstrom.entities.Language"/>
 
 
     </session-factory>

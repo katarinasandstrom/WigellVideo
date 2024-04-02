@@ -1,4 +1,4 @@
-package com.sandstrom.Entities;
+package com.sandstrom.entities;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.NaturalId;
