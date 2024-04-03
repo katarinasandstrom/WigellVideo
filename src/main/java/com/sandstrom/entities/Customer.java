@@ -55,7 +55,7 @@ public class Customer {
 
     @ManyToOne
     @JoinColumn(name = "store_id")
-    private StoreEntity store;
+    private Store store;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Rental> rentals;
@@ -163,11 +163,11 @@ public class Customer {
         this.address = address;
     }
 
-    public StoreEntity getStore() {
+    public Store getStore() {
         return store;
     }
 
-    public void setStore(StoreEntity store) {
+    public void setStore(Store store) {
         this.store = store;
     }
 
