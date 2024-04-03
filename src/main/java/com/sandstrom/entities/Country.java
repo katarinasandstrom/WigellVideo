@@ -10,7 +10,7 @@ public class Country {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "country_id")
-    private int countryId;
+    private short countryId;
     @Basic
     @Column(name = "country")
     private String country;
@@ -18,11 +18,20 @@ public class Country {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    public int getCountryId() {
+    public Country() {
+    }
+
+    // Konstruktor med parametrar
+    public Country(String country, Timestamp lastUpdate) {
+        this.country = country;
+        this.lastUpdate = lastUpdate;
+    }
+
+    public short getCountryId() {
         return countryId;
     }
 
-    public void setCountryId(int countryId) {
+    public void setCountryId(short countryId) {
         this.countryId = countryId;
     }
 

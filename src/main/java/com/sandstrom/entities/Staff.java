@@ -1,6 +1,7 @@
 package com.sandstrom.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -44,6 +45,7 @@ public class Staff {
     private byte active;
 
     @Basic
+    @NaturalId
     @Column(name = "username")
     private String username;
 

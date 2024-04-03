@@ -12,15 +12,15 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")
-    private int storeId;
+    private Byte storeId;
 
     @Basic
     @Column(name = "manager_staff_id")
-    private int managerStaffId;
+    private Byte managerStaffId;
 
     @Basic
     @Column(name = "address_id")
-    private int addressId;
+    private short addressId;
 
     @Basic
     @Column(name = "last_update")
@@ -33,27 +33,37 @@ public class Store {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Address> addresses;
 
-    public int getStoreId() {
+    public Store() {
+    }
+
+    // Konstruktor med parametrar
+    public Store(Byte managerStaffId, short addressId, Timestamp lastUpdate) {
+        this.managerStaffId = managerStaffId;
+        this.addressId = addressId;
+        this.lastUpdate = lastUpdate;
+    }
+
+    public Byte getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(int storeId) {
+    public void setStoreId(Byte storeId) {
         this.storeId = storeId;
     }
 
-    public int getManagerStaffId() {
+    public Byte getManagerStaffId() {
         return managerStaffId;
     }
 
-    public void setManagerStaffId(int managerStaffId) {
+    public void setManagerStaffId(Byte managerStaffId) {
         this.managerStaffId = managerStaffId;
     }
 
-    public int getAddressId() {
+    public short getAddressId() {
         return addressId;
     }
 
-    public void setAddressId(int addressId) {
+    public void setAddressId(short addressId) {
         this.addressId = addressId;
     }
 
