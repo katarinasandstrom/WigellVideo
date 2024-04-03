@@ -48,7 +48,7 @@ public class Address {
 
     @ManyToOne
     @JoinColumn(name = "store_id", referencedColumnName = "store_id")
-    private StoreEntity store;
+    private Store store;
 
     @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
     private List<Staff> staff;
@@ -61,11 +61,11 @@ public class Address {
         this.addressId = addressId;
     }
 
-    public StoreEntity getStore() {
+    public Store getStore() {
         return store;
     }
 
-    public void setStore(StoreEntity store) {
+    public void setStore(Store store) {
         this.store = store;
     }
 

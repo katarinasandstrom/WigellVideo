@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "store", schema = "sakila")
-public class StoreEntity {
+public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")
@@ -74,7 +74,7 @@ public class StoreEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StoreEntity that = (StoreEntity) o;
+        Store that = (Store) o;
         return storeId == that.storeId &&
                 managerStaffId == that.managerStaffId &&
                 addressId == that.addressId &&
@@ -97,3 +97,5 @@ public class StoreEntity {
                 '}';
     }
 }
+
+

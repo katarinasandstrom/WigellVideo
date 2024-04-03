@@ -25,7 +25,7 @@ public class Inventory {
 
     @ManyToOne
     @JoinColumn(name = "store_id" , referencedColumnName = "store_id")
-    private StoreEntity store;
+    private Store store;
 
     @OneToMany(mappedBy = "inventory")
     private List<Rental> rentals; //
