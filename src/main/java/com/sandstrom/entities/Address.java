@@ -3,8 +3,9 @@ package com.sandstrom.entities;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;;
+import java.util.Objects;
 
 @Entity
 @Table(name = "address", schema = "sakila")
@@ -46,12 +47,26 @@ public class Address {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    @ManyToOne
-    @JoinColumn(name = "store_id", referencedColumnName = "store_id")
-    private Store store;
+    @OneToMany(mappedBy = "address")
+    private List<Store> storesByAddressId = new ArrayList<>();
 
-    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
-    private List<Staff> staff;
+    public List<Store> getStoresByAddressId() {
+        return storesByAddressId;
+    }
+    public void setStoresByAddressId(List<Store> storesByAddressId) {
+        this.storesByAddressId = storesByAddressId;
+    }
+
+    @OneToMany(mappedBy = "address")
+    private List<Staff> staffByAddressId = new ArrayList<>();
+
+    public List<Staff> getStaffByAddressId() {
+        return staffByAddressId;
+    }
+
+    public void setStaffByAddressId(List<Staff> staffByAddressId) {
+        this.staffByAddressId = staffByAddressId;
+    }
 
     public int getAddressId() {
         return addressId;
@@ -59,14 +74,6 @@ public class Address {
 
     public void setAddressId(int addressId) {
         this.addressId = addressId;
-    }
-
-    public Store getStore() {
-        return store;
-    }
-
-    public void setStore(Store store) {
-        this.store = store;
     }
 
     public String getAddress() {
@@ -166,7 +173,8 @@ public class Address {
                 ", phone='" + phone + '\'' +
                 ", location='" + location + '\'' +
                 ", lastUpdate=" + lastUpdate +
-                ", store=" + store +
+                ", storesByAddressId=" + storesByAddressId +
+                ", staffByAddressId=" + staffByAddressId +
                 '}';
     }
 }
