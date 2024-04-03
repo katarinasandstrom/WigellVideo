@@ -101,8 +101,8 @@ public class CrudOfCities implements CrudOfCityInterface{
         return latestId != null ? latestId : 0;
     }
 
-    private int getGeneratedId(){
-        return idGenerating() + 1;
+    private short getGeneratedId(){
+        return (short) (idGenerating() + 1);
     }
 }
 
