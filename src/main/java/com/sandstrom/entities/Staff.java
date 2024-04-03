@@ -57,7 +57,7 @@ public class Staff {
 
     @ManyToOne
     @JoinColumn(name = "address_id")
-    private AddressEntity address;
+    private Address address;
 
     @ManyToOne
     @JoinColumn(name = "store_id")
@@ -178,11 +178,11 @@ public class Staff {
         this.lastUpdate = lastUpdate;
     }
 
-    public AddressEntity getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(AddressEntity address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 

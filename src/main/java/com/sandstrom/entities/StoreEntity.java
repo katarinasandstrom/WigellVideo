@@ -25,7 +25,7 @@ public class StoreEntity {
     private Timestamp lastUpdate;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private List<AddressEntity> addresses;
+    private List<Address> addresses;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Staff> staff;
@@ -38,11 +38,11 @@ public class StoreEntity {
         this.storeId = storeId;
     }
 
-    public List<AddressEntity> getAddresses() {
+    public List<Address> getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(List<AddressEntity> addresses) {
+    public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
     }
 
