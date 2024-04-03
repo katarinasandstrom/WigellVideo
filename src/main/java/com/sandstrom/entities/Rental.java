@@ -39,9 +39,11 @@ public class Rental {
     private Timestamp lastUpdate;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "staff_id", referencedColumnName = "staff_id")
     private Staff staff;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
     @OneToMany(mappedBy = "rental", cascade = CascadeType.ALL)
