@@ -95,7 +95,7 @@ public class CrudOfCities implements CrudOfCityInterface{
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Query<Integer> query = session.createQuery("SELECT max(a.addressId) FROM AddressEntity a", Integer.class);
+        Query<Integer> query = session.createQuery("SELECT max(c.cityId) FROM City c", Integer.class);
         Integer latestId = query.uniqueResult();
         session.getTransaction().commit();
         return latestId != null ? latestId : 0;

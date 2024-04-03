@@ -1,5 +1,7 @@
 package com.sandstrom.entities;
+
 import jakarta.persistence.*;
+
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
@@ -24,11 +26,12 @@ public class Store {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
+    @ManyToOne
+    @JoinColumn(name = "manager_staff_id", referencedColumnName = "staff_id")
+    private Staff staff;
+
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Address> addresses;
-
-    @OneToMany(mappedBy = "store_staff_id", cascade = CascadeType.ALL)
-    private List<Staff> staff;
 
     public int getStoreId() {
         return storeId;
@@ -36,14 +39,6 @@ public class Store {
 
     public void setStoreId(int storeId) {
         this.storeId = storeId;
-    }
-
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
     }
 
     public int getManagerStaffId() {
@@ -70,15 +65,31 @@ public class Store {
         this.lastUpdate = lastUpdate;
     }
 
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Store that = (Store) o;
-        return storeId == that.storeId &&
-                managerStaffId == that.managerStaffId &&
-                addressId == that.addressId &&
-                Objects.equals(lastUpdate, that.lastUpdate);
+        Store store = (Store) o;
+        return storeId == store.storeId &&
+                managerStaffId == store.managerStaffId &&
+                addressId == store.addressId &&
+                Objects.equals(lastUpdate, store.lastUpdate);
     }
 
     @Override
@@ -88,14 +99,13 @@ public class Store {
 
     @Override
     public String toString() {
-        return "StoreEntity{" +
+        return "Store{" +
                 "storeId=" + storeId +
                 ", managerStaffId=" + managerStaffId +
                 ", addressId=" + addressId +
                 ", lastUpdate=" + lastUpdate +
+                ", staff=" + staff +
                 ", addresses=" + addresses +
                 '}';
     }
 }
-
-
