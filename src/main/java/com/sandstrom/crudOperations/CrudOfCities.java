@@ -1,0 +1,108 @@
+package com.sandstrom.crudOperations;
+
+import com.sandstrom.entities.CityEntity;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+
+
+import java.util.List;
+import java.util.Scanner;
+
+public class CrudOfCities implements CrudOfCityInterface{
+    private Scanner scanner = new Scanner(System.in);
+    private CityEntity city = new CityEntity();
+    @Override
+    public void getAllCities() {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        List<CityEntity> cities = session.createQuery("FROM CityEntity ", CityEntity.class).list();
+        for (CityEntity city : cities){
+            System.out.println("City-id är: " + city.getCityId() + " stan: " + city.getCity() + " landet: " + city.getCountryId() +
+                    "senaste uppdatering: " + city.getLastUpdate());
+        }
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    @Override
+    public void getCityById() {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        city = session.get(CityEntity.class, getAddressIdFromUser());
+        System.out.println("City-id är: " + city.getCityId() + " stan: " + city.getCity() + " landet: " + city.getCountryId() +
+                "senaste uppdatering: " + city.getLastUpdate());
+
+        session.getTransaction().commit();
+        session.close();
+
+    }
+
+    @Override
+    public void saveCity() {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        city.setCityId(getGeneratedId());
+        System.out.println("Stadens namn: ");
+        city.setCity(scanner.nextLine());
+
+
+        session.persist(city);
+        session.getTransaction().commit();
+        session.close();
+
+    }
+
+    @Override
+    public void deleteCity() {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+
+        session.getTransaction().commit();
+        session.close();
+
+    }
+
+    @Override
+    public void updateCity() {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+
+        session.getTransaction().commit();
+        session.close();
+
+    }
+
+    private int getAddressIdFromUser(){
+        System.out.println("Skriv city-Id: du vill hämta? ");
+        int getAddressIdFromUser = scanner.nextInt();
+        return getAddressIdFromUser;
+    }
+
+    private int idGenerating(){
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Query<Integer> query = session.createQuery("SELECT max(a.addressId) FROM AddressEntity a", Integer.class);
+        Integer latestId = query.uniqueResult();
+        session.getTransaction().commit();
+        return latestId != null ? latestId : 0;
+    }
+
+    private int getGeneratedId(){
+        return idGenerating() + 1;
+    }
+}
+

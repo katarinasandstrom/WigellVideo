@@ -218,7 +218,6 @@ public class Main extends Application {
         vBoxStaff.setSpacing(10);
         vBoxStaff.getChildren().addAll(labelStaffChoice, btnRegisterNewStaff, btnUpdateStaff);
 
-
     //REGISTRERA KUND-SIDA
 
         labelRegNewCustomer = new Label("Registrera ny kund");
@@ -230,7 +229,7 @@ public class Main extends Application {
 
         textFieldRegCustomerEmail = new TextField();
         textFieldRegCustomerEmail.setPromptText("Mailadress");
-        Address customerAddress = new Address();
+        RegistryAddress customerAddress = new RegistryAddress();
 
 
         vBoxRegCustomer1 = new VBox();
@@ -288,7 +287,7 @@ public class Main extends Application {
         textFieldUpdateCustomerEmail = new TextField();
          textFieldUpdateCustomerEmail.setPromptText("Mailadress");
 
-        Address updateCustomerAddress = new Address();
+        RegistryAddress updateCustomerAddress = new RegistryAddress();
 
         ToggleButton toggleButtonCustomerIsActive = new ToggleButton("Aktiv");
         toggleButtonCustomerIsActive.setStyle("-fx-background-color: #A5A5A5, #737373; " +
