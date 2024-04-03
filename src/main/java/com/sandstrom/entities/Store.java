@@ -3,6 +3,8 @@ package com.sandstrom.entities;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +34,28 @@ public class Store {
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Address> addresses;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    private Address address;
+
+    public Address getAddress() {
+        return address;
+    }
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    @OneToMany(mappedBy = "store")
+    private Collection<Inventory> inventoriesByStoreId = new ArrayList<>();
+
+    public Collection<Inventory> getInventoriesByStoreId() {
+        return inventoriesByStoreId;
+    }
+
+    public void setInventoriesByStoreId(Collection<Inventory> inventoriesByStoreId) {
+        this.inventoriesByStoreId = inventoriesByStoreId;
+    }
 
     public Store() {
     }
