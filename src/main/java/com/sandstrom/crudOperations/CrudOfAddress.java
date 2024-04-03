@@ -1,5 +1,5 @@
 package com.sandstrom.crudOperations;
-import com.sandstrom.entities.AddressEntity;
+import com.sandstrom.entities.Address;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -9,7 +9,7 @@ import org.hibernate.query.Query;
 import java.util.List;
 import java.util.Scanner;
 public class CrudOfAddress implements CrudOfAddressInterface{
-    private AddressEntity addressEntity = new AddressEntity();
+    private Address addressEntity = new Address();
     private Scanner scanner = new Scanner(System.in);
     @Override
     public void getAllAddresses() {
@@ -17,8 +17,8 @@ public class CrudOfAddress implements CrudOfAddressInterface{
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        List<AddressEntity> addresses = session.createQuery("FROM AddressEntity", AddressEntity.class).list();
-        for(AddressEntity address : addresses){
+        List<Address> addresses = session.createQuery("FROM Address", Address.class).list();
+        for(Address address : addresses){
             System.out.println("address Id är: " + address.getAddressId() + " address 1: "+ address.getAddress() + " address 2: " + address.getAddress2() +
                     " distrikt: " + address.getDistrict() + "stans Id: " + address.getCityId() + " post adress: " + address.getPostalCode() +
                     " telefonnummer: " + address.getPhone() + " location: " + address.getLocation() + " senaste uppdatering: " + address.getLastUpdate());
@@ -34,7 +34,7 @@ public class CrudOfAddress implements CrudOfAddressInterface{
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        addressEntity = session.get(AddressEntity.class, getAddressIdFromUser());
+        addressEntity = session.get(Address.class, getAddressIdFromUser());
 
         System.out.println("address Id är: " + addressEntity.getAddressId() + " address 1: "+ addressEntity.getAddress() + " address 2: " +
                 addressEntity.getAddress2() + " distrikt: " + addressEntity.getDistrict() + "stans Id: " + addressEntity.getCityId() +
@@ -79,7 +79,7 @@ public class CrudOfAddress implements CrudOfAddressInterface{
 
         System.out.println("Skriv adress-id du vill radera?");
         int address_id = scanner.nextInt();
-        AddressEntity address = session.get(AddressEntity.class, address_id);
+        Address address = session.get(Address.class, address_id);
         if(address != null){
             session.delete(address);
             System.out.println("Addressen har raderats");
@@ -113,7 +113,7 @@ public class CrudOfAddress implements CrudOfAddressInterface{
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Query<Integer> query = session.createQuery("SELECT max(a.addressId) FROM AddressEntity a", Integer.class);
+        Query<Integer> query = session.createQuery("SELECT max(a.addressId) FROM Address a", Integer.class);
         Integer latestId = query.uniqueResult();
         session.getTransaction().commit();
         return latestId != null ? latestId : 0;
