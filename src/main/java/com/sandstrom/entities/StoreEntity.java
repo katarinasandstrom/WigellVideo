@@ -27,6 +27,9 @@ public class StoreEntity {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<AddressEntity> addresses;
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<Staff> staff;
+
     public int getStoreId() {
         return storeId;
     }

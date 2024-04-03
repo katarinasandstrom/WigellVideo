@@ -2,6 +2,7 @@ package com.sandstrom.entities;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -47,6 +48,9 @@ public class AddressEntity {
     @ManyToOne
     @JoinColumn(name = "store_id", referencedColumnName = "store_id")
     private StoreEntity store;
+
+    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
+    private List<Staff> staff;
 
     public int getAddressId() {
         return addressId;

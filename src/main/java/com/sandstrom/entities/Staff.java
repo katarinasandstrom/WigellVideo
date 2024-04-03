@@ -57,14 +57,14 @@ public class Staff {
 
     @ManyToOne
     @JoinColumn(name = "address_id")
-    private Address address;
+    private AddressEntity address;
 
     @ManyToOne
     @JoinColumn(name = "store_id")
-    private Store store;
+    private StoreEntity store;
 
     @OneToMany(mappedBy = "manager_staff_id", cascade = CascadeType.ALL)
-    private List<Store> managedStores;
+    private List<StoreEntity> managedStores;
 
     @OneToMany(mappedBy = "staff_id", cascade = CascadeType.ALL)
     private List<Payment> payments;
@@ -178,27 +178,27 @@ public class Staff {
         this.lastUpdate = lastUpdate;
     }
 
-    public Address getAddress() {
+    public AddressEntity getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(AddressEntity address) {
         this.address = address;
     }
 
-    public Store getStore() {
+    public StoreEntity getStore() {
         return store;
     }
 
-    public void setStore(Store store) {
+    public void setStore(StoreEntity store) {
         this.store = store;
     }
 
-    public List<Store> getManagedStores() {
+    public List<StoreEntity> getManagedStores() {
         return managedStores;
     }
 
-    public void setManagedStores(List<Store> managedStores) {
+    public void setManagedStores(List<StoreEntity> managedStores) {
         this.managedStores = managedStores;
     }
 
