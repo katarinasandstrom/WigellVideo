@@ -1,52 +1,30 @@
 package com.sandstrom.entities;
-
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "city", schema = "sakila")
-public class City {
+@Table(name = "country", schema = "sakila")
+public class Country {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "city_id")
-    private short cityId;
-    @Basic
-    @Column(name = "city")
-    private String city;
-    @Basic
     @Column(name = "country_id")
     private short countryId;
+    @Basic
+    @Column(name = "country")
+    private String country;
     @Basic
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    public City() {
+    public Country() {
     }
 
     // Konstruktor med parametrar
-    public City(String city, short countryId, Timestamp lastUpdate) {
-        this.city = city;
-        this.countryId = countryId;
+    public Country(String country, Timestamp lastUpdate) {
+        this.country = country;
         this.lastUpdate = lastUpdate;
-    }
-
-
-    public short getCityId() {
-        return cityId;
-    }
-
-    public void setCityId(short cityId) {
-        this.cityId = cityId;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 
     public short getCountryId() {
@@ -55,6 +33,14 @@ public class City {
 
     public void setCountryId(short countryId) {
         this.countryId = countryId;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public Timestamp getLastUpdate() {
@@ -69,22 +55,22 @@ public class City {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        City that = (City) o;
-        return Objects.equals(cityId, that.cityId) && Objects.equals(city, that.city) && Objects.equals(countryId, that.countryId) && Objects.equals(lastUpdate, that.lastUpdate);
+        Country that = (Country) o;
+        return Objects.equals(countryId, that.countryId) && Objects.equals(country, that.country) && Objects.equals(lastUpdate, that.lastUpdate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cityId, city, countryId, lastUpdate);
+        return Objects.hash(countryId, country, lastUpdate);
     }
 
     @Override
     public String toString() {
-        return "CityEntity{" +
-                "cityId=" + cityId +
-                ", city='" + city + '\'' +
-                ", countryId=" + countryId +
+        return "Country{" +
+                "countryId=" + countryId +
+                ", country='" + country + '\'' +
                 ", lastUpdate=" + lastUpdate +
                 '}';
     }
 }
+

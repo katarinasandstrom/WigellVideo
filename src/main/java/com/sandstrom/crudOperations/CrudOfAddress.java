@@ -1,5 +1,6 @@
 package com.sandstrom.crudOperations;
 import com.sandstrom.entities.Address;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -9,7 +10,7 @@ import org.hibernate.query.Query;
 import java.util.List;
 import java.util.Scanner;
 public class CrudOfAddress implements CrudOfAddressInterface{
-    private Address addressEntity = new Address();
+    private Address address = new Address();
     private Scanner scanner = new Scanner(System.in);
     @Override
     public void getAllAddresses() {
@@ -34,12 +35,12 @@ public class CrudOfAddress implements CrudOfAddressInterface{
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        addressEntity = session.get(Address.class, getAddressIdFromUser());
+        address = session.get(Address.class, getAddressIdFromUser());
 
-        System.out.println("address Id är: " + addressEntity.getAddressId() + " address 1: "+ addressEntity.getAddress() + " address 2: " +
-                addressEntity.getAddress2() + " distrikt: " + addressEntity.getDistrict() + "stans Id: " + addressEntity.getCityId() +
-                " post adress: " + addressEntity.getPostalCode() + " telefonnummer: " + addressEntity.getPhone() +
-                " location: " + addressEntity.getLocation() + " senaste uppdatering: " + addressEntity.getLastUpdate());
+        System.out.println("address Id är: " + address.getAddressId() + " address 1: "+ address.getAddress() + " address 2: " +
+                address.getAddress2() + " distrikt: " + address.getDistrict() + "stans Id: " + address.getCityId() +
+                " post adress: " + address.getPostalCode() + " telefonnummer: " + address.getPhone() +
+                " location: " + address.getLocation() + " senaste uppdatering: " + address.getLastUpdate());
 
         session.getTransaction().commit();
         session.close();
@@ -52,19 +53,19 @@ public class CrudOfAddress implements CrudOfAddressInterface{
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        addressEntity.setAddressId(getGeneratedId());
+        address.setAddressId(getGeneratedId());
         System.out.println("Skriv in address 1");
-        addressEntity.setAddress(scanner.nextLine());
+        address.setAddress(scanner.nextLine());
         System.out.println("Skriv in address 2"); // vi behöver kanske inte det?
-        addressEntity.setAddress2(scanner.nextLine());
+        address.setAddress2(scanner.nextLine());
         System.out.println("Skriv in disrikten");
-        addressEntity.setDistrict(scanner.nextLine());
+        address.setDistrict(scanner.nextLine());
         System.out.println("Stans id genereras automatiskt");
         // addressEntity.setCityId(scanner.nextLine());
         System.out.println("Skriv in post-address");
-        addressEntity.setPostalCode(scanner.nextLine());
+        address.setPostalCode(scanner.nextLine());
         System.out.println("Skriv in telefonnumret");
-        addressEntity.setPhone(scanner.nextLine());
+        address.setPhone(scanner.nextLine());
 
         session.getTransaction().commit();
         session.close();
@@ -119,8 +120,8 @@ public class CrudOfAddress implements CrudOfAddressInterface{
         return latestId != null ? latestId : 0;
     }
 
-    private int getGeneratedId(){
-        return idGenerating() + 1;
+    private short getGeneratedId(){
+        return (short) (idGenerating() + 1);
     }
 
 

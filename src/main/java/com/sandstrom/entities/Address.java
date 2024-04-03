@@ -3,8 +3,9 @@ package com.sandstrom.entities;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;;
+import java.util.Objects;
 
 @Entity
 @Table(name = "address", schema = "sakila")
@@ -12,7 +13,7 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
-    private int addressId;
+    private short addressId;
 
     @Basic
     @Column(name = "address")
@@ -28,7 +29,7 @@ public class Address {
 
     @Basic
     @Column(name = "city_id")
-    private int cityId;
+    private short cityId;
 
     @Basic
     @Column(name = "postal_code")
@@ -46,27 +47,33 @@ public class Address {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    @ManyToOne
-    @JoinColumn(name = "store_id", referencedColumnName = "store_id")
-    private Store store;
+    @OneToMany(mappedBy = "address")
+    private List<Store> storesByAddressId = new ArrayList<>();
 
-    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
-    private List<Staff> staff;
+    public List<Store> getStoresByAddressId() {
+        return storesByAddressId;
+    }
+    public void setStoresByAddressId(List<Store> storesByAddressId) {
+        this.storesByAddressId = storesByAddressId;
+    }
 
-    public int getAddressId() {
+    @OneToMany(mappedBy = "address")
+    private List<Staff> staffByAddressId = new ArrayList<>();
+
+    public List<Staff> getStaffByAddressId() {
+        return staffByAddressId;
+    }
+
+    public void setStaffByAddressId(List<Staff> staffByAddressId) {
+        this.staffByAddressId = staffByAddressId;
+    }
+
+    public short getAddressId() {
         return addressId;
     }
 
-    public void setAddressId(int addressId) {
+    public void setAddressId(short addressId) {
         this.addressId = addressId;
-    }
-
-    public Store getStore() {
-        return store;
-    }
-
-    public void setStore(Store store) {
-        this.store = store;
     }
 
     public String getAddress() {
@@ -93,11 +100,11 @@ public class Address {
         this.district = district;
     }
 
-    public int getCityId() {
+    public short getCityId() {
         return cityId;
     }
 
-    public void setCityId(int cityId) {
+    public void setCityId(short cityId) {
         this.cityId = cityId;
     }
 
@@ -133,6 +140,22 @@ public class Address {
         this.lastUpdate = lastUpdate;
     }
 
+    public Address() {
+    }
+
+    // Konstruktor med parametrar
+    public Address(String address, String address2, String district, short cityId, String postalCode, String phone, String location, Timestamp lastUpdate) {
+        this.address = address;
+        this.address2 = address2;
+        this.district = district;
+        this.cityId = cityId;
+        this.postalCode = postalCode;
+        this.phone = phone;
+        this.location = location;
+        this.lastUpdate = lastUpdate;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -166,7 +189,8 @@ public class Address {
                 ", phone='" + phone + '\'' +
                 ", location='" + location + '\'' +
                 ", lastUpdate=" + lastUpdate +
-                ", store=" + store +
+                ", storesByAddressId=" + storesByAddressId +
+                ", staffByAddressId=" + staffByAddressId +
                 '}';
     }
 }

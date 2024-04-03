@@ -11,13 +11,13 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "inventory_id")
-    private int inventoryId;
+    private Integer inventoryId;
     @Basic
-    @Column(name = "film_id")
-    private int filmId;
+    @Column(name = "film_id", insertable=false, updatable=false)
+    private short filmId;
     @Basic
-    @Column(name = "store_id")
-    private int storeId;
+    @Column(name = "store_id", insertable=false, updatable=false)
+    private Byte storeId;
     @Basic
     @Column(name = "last_update")
     private Timestamp lastUpdate;
@@ -30,29 +30,38 @@ public class Inventory {
     @OneToMany(mappedBy = "inventory")
     private List<Rental> rentals; //
 
+    public Inventory() {
+    }
+
+    // Konstruktor med parametrar
+    public Inventory(short filmId, Byte storeId, Timestamp lastUpdate) {
+        this.filmId = filmId;
+        this.storeId = storeId;
+        this.lastUpdate = lastUpdate;
+    }
 
 
-    public int getInventoryId() {
+    public Integer getInventoryId() {
         return inventoryId;
     }
 
-    public void setInventoryId(int inventoryId) {
+    public void setInventoryId(Integer inventoryId) {
         this.inventoryId = inventoryId;
     }
 
-    public int getFilmId() {
+    public short getFilmId() {
         return filmId;
     }
 
-    public void setFilmId(int filmId) {
+    public void setFilmId(short filmId) {
         this.filmId = filmId;
     }
 
-    public int getStoreId() {
+    public Byte getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(int storeId) {
+    public void setStoreId(Byte storeId) {
         this.storeId = storeId;
     }
 

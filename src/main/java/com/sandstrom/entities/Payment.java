@@ -15,15 +15,15 @@ public class Payment {
     private short paymentId;
 
     @Basic
-    @Column(name = "customer_id")
+    @Column(name = "customer_id", insertable=false, updatable=false)
     private short customerId;
 
     @Basic
-    @Column(name = "staff_id")
+    @Column(name = "staff_id", insertable=false, updatable=false)
     private Byte staffId;
 
     @Basic
-    @Column(name = "rental_id")
+    @Column(name = "rental_id", insertable=false, updatable=false)
     private Integer rentalId;
 
     @Basic

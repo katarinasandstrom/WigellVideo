@@ -1,6 +1,7 @@
 package com.sandstrom.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "staff", schema = "sakila", catalog = "")
+@Table(name = "staff", schema = "sakila")
 public class Staff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -24,7 +25,7 @@ public class Staff {
     private String lastName;
 
     @Basic
-    @Column(name = "address_id")
+    @Column(name = "address_id", insertable=false, updatable=false)
     private short addressId;
 
     @Basic
@@ -36,7 +37,7 @@ public class Staff {
     private String email;
 
     @Basic
-    @Column(name = "store_id")
+    @Column(name = "store_id", insertable=false, updatable=false)
     private Byte storeId;
 
     @Basic
@@ -44,6 +45,7 @@ public class Staff {
     private byte active;
 
     @Basic
+    @NaturalId
     @Column(name = "username")
     private String username;
 
@@ -55,21 +57,21 @@ public class Staff {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
-    @ManyToOne
-    @JoinColumn(name = "store_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "store_id", referencedColumnName = "store_id")
     private Store store;
 
-    @OneToMany(mappedBy = "manager_staff_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "staff")
     private List<Store> managedStores;
 
-    @OneToMany(mappedBy = "staff_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "staff")
     private List<Payment> payments;
 
-    @OneToMany(mappedBy = "staff_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "staff")
     private List<Rental> rentals;
 
     public Staff() {

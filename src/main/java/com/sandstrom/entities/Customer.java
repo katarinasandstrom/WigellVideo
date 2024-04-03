@@ -15,7 +15,7 @@ public class Customer {
     private short customerId;
 
     @Basic
-    @Column(name = "store_id")
+    @Column(name = "store_id", insertable=false, updatable=false)
     private Byte storeId;
 
     @Basic
@@ -31,7 +31,7 @@ public class Customer {
     private String email;
 
     @Basic
-    @Column(name = "address_id")
+    @Column(name = "address_id", insertable=false, updatable=false)
     private short addressId;
 
     @Basic
