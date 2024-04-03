@@ -20,22 +20,23 @@
         <property name="hbm2ddl.auto">update</property>
         <!-- mapping class="com.mcnz.jpa.examples.Player" / -->
 
-        <mapping class="com.sandstrom.entities.Staff"/>
+
         <mapping class="com.sandstrom.entities.Actor"/>
+        <mapping class="com.sandstrom.entities.Address"/>
         <mapping class="com.sandstrom.entities.Category"/>
+        <mapping class="com.sandstrom.entities.City"/>
+        <mapping class="com.sandstrom.entities.Country"/>
+        <mapping class="com.sandstrom.entities.Customer"/>
         <mapping class="com.sandstrom.entities.Film"/>
         <mapping class="com.sandstrom.entities.FilmActor"/>
         <mapping class="com.sandstrom.entities.FilmCategory"/>
+        <mapping class="com.sandstrom.entities.FilmText"/>
+        <mapping class="com.sandstrom.entities.Inventory"/>
         <mapping class="com.sandstrom.entities.Language"/>
-        <mapping class="com.sandstrom.entities.Customer"/>
         <mapping class="com.sandstrom.entities.Payment"/>
-        <mapping class="com.sandstrom.entities.FilmText"/>
         <mapping class="com.sandstrom.entities.Rental"/>
-
-        <mapping class="com.sandstrom.entities.Customer"/>
-        <mapping class="com.sandstrom.entities.Payment"/>
-        <mapping class="com.sandstrom.entities.FilmText"/>
-        <mapping class="com.sandstrom.entities.Rental"/>
+        <mapping class="com.sandstrom.entities.Staff"/>
+        <mapping class="com.sandstrom.entities.Store"/>
 
 
     </session-factory>
