@@ -1,4 +1,5 @@
 package com.sandstrom.entities;
+
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -6,8 +7,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "city", schema = "sakila")
-
-public class CityEntity {
+public class City {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "city_id")
@@ -59,7 +59,7 @@ public class CityEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CityEntity that = (CityEntity) o;
+        City that = (City) o;
         return Objects.equals(cityId, that.cityId) && Objects.equals(city, that.city) && Objects.equals(countryId, that.countryId) && Objects.equals(lastUpdate, that.lastUpdate);
     }
 
