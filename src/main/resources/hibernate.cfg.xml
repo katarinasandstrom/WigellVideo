@@ -28,6 +28,11 @@
         <mapping class="com.sandstrom.entities.FilmCategory"/>
         <mapping class="com.sandstrom.entities.Language"/>
 
+        <mapping class="com.sandstrom.entities.Customer"/>
+        <mapping class="com.sandstrom.entities.Payment"/>
+        <mapping class="com.sandstrom.entities.FilmText"/>
+        <mapping class="com.sandstrom.entities.Rental"/>
+
 
     </session-factory>
 </hibernate-configuration>
