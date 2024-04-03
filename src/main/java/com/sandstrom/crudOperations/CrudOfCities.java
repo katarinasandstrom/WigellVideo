@@ -1,6 +1,6 @@
 package com.sandstrom.crudOperations;
 
-import com.sandstrom.entities.CityEntity;
+import com.sandstrom.entities.City;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -12,15 +12,15 @@ import java.util.Scanner;
 
 public class CrudOfCities implements CrudOfCityInterface{
     private Scanner scanner = new Scanner(System.in);
-    private CityEntity city = new CityEntity();
+    private City city = new City();
     @Override
     public void getAllCities() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        List<CityEntity> cities = session.createQuery("FROM CityEntity ", CityEntity.class).list();
-        for (CityEntity city : cities){
+        List<City> cities = session.createQuery("FROM City ", City.class).list();
+        for (City city : cities){
             System.out.println("City-id är: " + city.getCityId() + " stan: " + city.getCity() + " landet: " + city.getCountryId() +
                     "senaste uppdatering: " + city.getLastUpdate());
         }
@@ -35,7 +35,7 @@ public class CrudOfCities implements CrudOfCityInterface{
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        city = session.get(CityEntity.class, getAddressIdFromUser());
+        city = session.get(City.class, getAddressIdFromUser());
         System.out.println("City-id är: " + city.getCityId() + " stan: " + city.getCity() + " landet: " + city.getCountryId() +
                 "senaste uppdatering: " + city.getLastUpdate());
 
