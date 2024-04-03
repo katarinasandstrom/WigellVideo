@@ -55,21 +55,21 @@ public class Staff {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
-    @ManyToOne
-    @JoinColumn(name = "store_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "store_id", referencedColumnName = "store_id")
     private Store store;
 
-    @OneToMany(mappedBy = "manager_staff_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "staff")
     private List<Store> managedStores;
 
-    @OneToMany(mappedBy = "staff_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "staff")
     private List<Payment> payments;
 
-    @OneToMany(mappedBy = "staff_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "staff")
     private List<Rental> rentals;
 
     public Staff() {
