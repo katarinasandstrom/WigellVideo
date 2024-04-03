@@ -5,11 +5,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class Address extends VBox {
+public class RegistryAddress extends VBox {
     TextField textFieldRegAddress, textFieldRegDistrict, textFieldRegPostalCode, textFieldRegPhone,
             textFieldRegCity, textFieldRegCountry;
 
-    public Address() {
+    public RegistryAddress() {
 
 
         textFieldRegAddress = new TextField();

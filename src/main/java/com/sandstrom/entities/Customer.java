@@ -51,11 +51,11 @@ public class Customer {
 
     @ManyToOne
     @JoinColumn(name = "address_id")
-    private Address address;
+    private AddressEntity address;
 
     @ManyToOne
     @JoinColumn(name = "store_id")
-    private Store store;
+    private StoreEntity store;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Rental> rentals;
@@ -155,19 +155,19 @@ public class Customer {
         this.payments = payments;
     }
 
-    public Address getAddress() {
+    public AddressEntity getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(AddressEntity address) {
         this.address = address;
     }
 
-    public Store getStore() {
+    public StoreEntity getStore() {
         return store;
     }
 
-    public void setStore(Store store) {
+    public void setStore(StoreEntity store) {
         this.store = store;
     }
 
