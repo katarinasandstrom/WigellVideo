@@ -13,10 +13,10 @@ public class Inventory {
     @Column(name = "inventory_id")
     private Integer inventoryId;
     @Basic
-    @Column(name = "film_id")
+    @Column(name = "film_id", insertable=false, updatable=false)
     private short filmId;
     @Basic
-    @Column(name = "store_id")
+    @Column(name = "store_id", insertable=false, updatable=false)
     private Byte storeId;
     @Basic
     @Column(name = "last_update")

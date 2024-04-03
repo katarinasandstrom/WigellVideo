@@ -19,11 +19,11 @@ public class Rental {
     private Timestamp rentalDate;
 
     @Basic
-    @Column(name = "inventory_id")
+    @Column(name = "inventory_id", insertable=false, updatable=false)
     private Integer inventoryId;
 
     @Basic
-    @Column(name = "customer_id")
+    @Column(name = "customer_id", insertable=false, updatable=false)
     private short customerId;
 
     @Basic
@@ -31,7 +31,7 @@ public class Rental {
     private Timestamp returnDate;
 
     @Basic
-    @Column(name = "staff_id")
+    @Column(name = "staff_id", insertable=false, updatable=false)
     private Byte staffId;
 
     @Basic

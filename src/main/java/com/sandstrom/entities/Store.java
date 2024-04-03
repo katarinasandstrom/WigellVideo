@@ -17,25 +17,22 @@ public class Store {
     private Byte storeId;
 
     @Basic
-    @Column(name = "manager_staff_id")
+    @Column(name = "manager_staff_id", insertable=false, updatable=false)
     private Byte managerStaffId;
 
     @Basic
-    @Column(name = "address_id")
+    @Column(name = "address_id", insertable=false, updatable=false)
     private short addressId;
 
     @Basic
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)// Many-To-One store to staff
     @JoinColumn(name = "manager_staff_id", referencedColumnName = "staff_id")
     private Staff staff;
 
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private List<Address> addresses;
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)// Many-To-One store to address
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
@@ -44,9 +41,23 @@ public class Store {
     }
     public void setAddress(Address address) {
         this.address = address;
+
     }
 
-    @OneToMany(mappedBy = "store")
+
+    @OneToMany(mappedBy = "store")// One-To-Many store to staff
+    private Collection<Inventory> staffByStoreId = new ArrayList<>();
+
+    public Collection<Inventory> getStaffByStoreId() {
+        return staffByStoreId;
+    }
+
+    public void setStaffByStoreId(Collection<Inventory> staffByStoreId) {
+        this.staffByStoreId = staffByStoreId;
+    }
+
+
+    @OneToMany(mappedBy = "store")// One-To-Many store to inventory
     private Collection<Inventory> inventoriesByStoreId = new ArrayList<>();
 
     public Collection<Inventory> getInventoriesByStoreId() {
@@ -106,15 +117,6 @@ public class Store {
     public void setStaff(Staff staff) {
         this.staff = staff;
     }
-
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -139,7 +141,9 @@ public class Store {
                 ", addressId=" + addressId +
                 ", lastUpdate=" + lastUpdate +
                 ", staff=" + staff +
-                ", addresses=" + addresses +
+                ", address=" + address +
+                ", staffByStoreId=" + staffByStoreId +
+                ", inventoriesByStoreId=" + inventoriesByStoreId +
                 '}';
     }
 }
