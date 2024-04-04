@@ -2,42 +2,35 @@
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
-<!-- Version 8 MySQL hiberante-cfg.xml example for Hibernate 5 -->
+
 <hibernate-configuration>
     <session-factory>
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <!-- property name="connection.driver_class">com.mysql.jdbc.Driver</property -->
-        <property name="connection.url">jdbc:mysql://localhost:3306/sakila</property>
-
-        <!--400Lingon!-->
+        <property name="connection.url">jdbc:mysql://localhost/sakila</property>
         <property name="connection.username">root</property>
-        <property name="connection.password">201720</property>
+        <property name="connection.password">root</property>
         <property name="connection.pool_size">3</property>
-        <!--property name="dialect">org.hibernate.dialect.MySQLDialect</property-->
         <property name="current_session_context_class">thread</property>
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
         <property name="hbm2ddl.auto">update</property>
-        <!-- mapping class="com.mcnz.jpa.examples.Player" / -->
 
-
+        <mapping class="com.sandstrom.entities.Staff"/>
         <mapping class="com.sandstrom.entities.Actor"/>
-        <mapping class="com.sandstrom.entities.Address"/>
         <mapping class="com.sandstrom.entities.Category"/>
-        <mapping class="com.sandstrom.entities.City"/>
-        <mapping class="com.sandstrom.entities.Country"/>
-        <mapping class="com.sandstrom.entities.Customer"/>
         <mapping class="com.sandstrom.entities.Film"/>
         <mapping class="com.sandstrom.entities.FilmActor"/>
         <mapping class="com.sandstrom.entities.FilmCategory"/>
-        <mapping class="com.sandstrom.entities.FilmText"/>
-        <mapping class="com.sandstrom.entities.Inventory"/>
         <mapping class="com.sandstrom.entities.Language"/>
+        <mapping class="com.sandstrom.entities.Address"/>
+        <mapping class="com.sandstrom.entities.Customer"/>
         <mapping class="com.sandstrom.entities.Payment"/>
-        <mapping class="com.sandstrom.entities.Rental"/>
-        <mapping class="com.sandstrom.entities.Staff"/>
+        <mapping class="com.sandstrom.entities.FilmText"/>
+        <mapping class="com.sandstrom.entities.City"/>
+        <mapping class="com.sandstrom.entities.Country"/>
+        <mapping class="com.sandstrom.entities.Inventory"/>
         <mapping class="com.sandstrom.entities.Store"/>
-
+        <mapping class="com.sandstrom.entities.Rental"/>
 
     </session-factory>
 </hibernate-configuration>

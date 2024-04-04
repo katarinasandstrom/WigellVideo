@@ -123,33 +123,50 @@ public class Main extends Application {
         //LOGIN-SIDAN
 
         labelLogin = new Label("Wigell Video");
-        labelLogin.setMinSize(150,30);
-        labelLogin.setMaxSize(150,30);
+        labelLogin.setMinSize(300,60);
+        labelLogin.setMaxSize(300,60);
         labelLogin.setAlignment(Pos.CENTER);
         labelLogin.setStyle("-fx-font-family: Broadway;"+
-                            "-fx-font-size: 21;" +
-                            "-fx-text-fill: BLACK;"+
-                            "-fx-background-color: #FE8D01;"+
-                            "-fx-border-color: #AA327C;" +
+                            "-fx-font-size: 40;" +
+                            "-fx-background-color: #CE8DA7;" +
+                            "-fx-border-color: #792A47;" +
+                            "-fx-text-fill: #0C191D;" +
                             "-fx-border-width: 3px");
 
+        borderPaneFirstPage.setStyle("-fx-background-color: #E3CAD3;");
 
 
         textFieldUsername = new TextField();
         textFieldUsername.setPromptText("Användarnamn");
         textFieldUsername.setMinSize(150, 30);
         textFieldUsername.setMaxSize(150, 30);
+        textFieldUsername.setStyle(
+                "-fx-background-color: #E3CAD3;" +
+                "-fx-border-color: #792A47;" +
+                "-fx-text-fill: #0C191D;" +
+                "-fx-font-size: 10pt;");
      //
         textFieldPassword = new TextField();
         textFieldPassword.setPromptText("Lösenord");
         textFieldPassword.setMinSize(150, 30);
         textFieldPassword.setMaxSize(150, 30);
+        textFieldPassword.setStyle(
+                "-fx-background-color: #E3CAD3;" +
+                        "-fx-border-color: #792A47;" +
+                        "-fx-text-fill: #0C191D;" +
+                        "-fx-font-size: 10pt;");
         //String passWord = textFieldPassword.getText();
 
         labelErrorLogin = new Label(" ");
+        labelErrorLogin.setStyle("-fx-text-fill: #0C191D;");
         btnLogin = new Button("Logga in");
         btnLogin.setMinSize(150, 30);
         btnLogin.setMaxSize(150, 30);
+        btnLogin.setStyle(
+                "-fx-background-color: #E3CAD3;" +
+                "-fx-border-color: #792A47;" +
+                "-fx-text-fill: #0C191D;" +
+                "-fx-font-size: 10pt;");
 
         btnLogin.setOnAction(e -> {
             String userName = textFieldUsername.getText();
