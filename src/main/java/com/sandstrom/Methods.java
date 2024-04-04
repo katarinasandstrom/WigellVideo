@@ -1,6 +1,6 @@
 package com.sandstrom;
 
-import com.sandstrom.Entities.Staff;
+import com.sandstrom.entities.Staff;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -34,4 +34,16 @@ public class Methods {
         }
         return false;
     }
+
+    // test för att skriva ut hela filmlistan.
+    /*  private Session session;
+    public TestCRUD(Session session){
+        this.session = session;
+    }
+    public void testForRead(){
+        TypedQuery<Film> arenaQuery = session.createNamedQuery("Film.table", Film.class);
+        for(Film arena : arenaQuery.getResultList()){
+            System.out.println(arena);
+        }
+    }*/
 }

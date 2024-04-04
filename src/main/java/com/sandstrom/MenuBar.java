@@ -11,37 +11,46 @@ import javafx.stage.Stage;
 public class MenuBar extends HBox {
 
     private Scene registerNewtaffScene, updateStaffScene, registerNewCustomerScene,
-            updateCustomerScene, storeScene, checkOutScene, filmScene;
-    private Button menuBtnStaff,  menuBtnStore, menuBtnCheckout, menuBtnFilm;
-    private MenuButton menuBtnCustomer;
+            updateCustomerScene, registerNewStoreScene, updateStoreScene, checkOutScene, searchFilmScene,
+            registerFilmScene;
+    private Button   menuBtnCheckout;
+    private MenuButton menuBtnCustomer, menuBtnStore, menuBtnStaff, menuBtnFilm;
 
     private MenuItem menuItemRegisterCustomer, menuItemUpdateCustomer;
     Label labelLogo;
 
     public MenuBar(Stage primaryStage, Scene registerNewStaffScene,Scene updateStaffScene,
-                   Scene registerNewCustomerScene, Scene updateCustomerScene, Scene storeScene,
-                   Scene checkOutScene, Scene filmScene) {
+                   Scene registerNewCustomerScene, Scene updateCustomerScene, Scene registerNewStoreScene,
+                   Scene updateStoreScene, Scene checkOutScene, Scene searchFilmScene, Scene registerFilmScene) {
         this.registerNewtaffScene = registerNewtaffScene;
         this.updateStaffScene = updateStaffScene;
         this.registerNewCustomerScene = registerNewCustomerScene;
         this.updateCustomerScene = updateCustomerScene;
-        this.storeScene = storeScene;
+        this.registerNewStoreScene = registerNewStoreScene;
+        this.updateStoreScene = updateStoreScene;
         this.checkOutScene = checkOutScene;
-        this.filmScene = filmScene;
+        this.searchFilmScene = searchFilmScene;
+        this.registerFilmScene = registerFilmScene;
 
         labelLogo = new Label("Wigell Video");
         labelLogo.setStyle("-fx-font-family: Broadway;" +
                 "-fx-font-size: 30");
 
-        menuBtnStaff = new Button("Personal");
+        menuBtnStaff = new MenuButton("Personal");
+        MenuItem menuItemRegNewStaff = new MenuItem("Registrera ny personal");
+        menuItemRegNewStaff.setOnAction(e->primaryStage.setScene(registerNewStaffScene));
+        MenuItem menuItemUpdateStaff = new MenuItem("Uppdatera personal");
+        menuItemUpdateStaff.setOnAction(e->primaryStage.setScene(updateStaffScene));
         menuBtnStaff.setStyle("-fx-max-width: 80; " +
                 "-fx-min-width: 80; " +
                 "-fx-max-height: 30; " +
-                "-fx-min-height: 30;");
+                "-fx-min-height: 30;" +
+                "-fx-background-color:#E3CAD3");
+        menuBtnStaff.getItems().addAll(menuItemRegNewStaff, menuItemUpdateStaff);
 
 
 
-        // DropdownKnapp för Kund
+        // Dropdownmeny för kund
         menuBtnCustomer = new MenuButton("Kund");
         menuItemRegisterCustomer = new MenuItem("Registrera ny kund");
         menuItemRegisterCustomer.setOnAction(e -> primaryStage.setScene(registerNewCustomerScene));
@@ -59,16 +68,20 @@ public class MenuBar extends HBox {
             System.out.println("Nu är vi på Kund-sidan");
         });*/
 
-        menuBtnStore = new Button("Butik");
+        //   Dropdownmeny för Store
+        menuBtnStore = new MenuButton("Butik");
+        MenuItem menuItemRegisterStore = new MenuItem("Registrera ny butik");
+        menuItemRegisterStore.setOnAction(e-> primaryStage.setScene(registerNewStoreScene));
+        MenuItem menuItemUpdateStore = new MenuItem("Uppdatera butik");
+        menuItemUpdateStore.setOnAction(e-> primaryStage.setScene(updateStoreScene));
+        menuBtnStore.getItems().addAll(menuItemRegisterStore, menuItemUpdateStore);
         menuBtnStore.setStyle("-fx-max-width: 80; " +
                 "-fx-min-width: 80; " +
                 "-fx-max-height: 30; " +
                 "-fx-min-height: 30;");
-        menuBtnStore.setOnAction(e -> {
-            primaryStage.setScene(storeScene);
-            System.out.println("Nu är vi på Butik-sidan");
-        });
 
+
+        //Menyknapp för kassa
         menuBtnCheckout = new Button("Kassa");
         menuBtnCheckout.setStyle("-fx-max-width: 80; " +
                 "-fx-min-width: 80; " +
@@ -79,15 +92,18 @@ public class MenuBar extends HBox {
             System.out.println("Nu är vi på Kassa-sidan");
         });
 
-        menuBtnFilm = new Button("Film");
+
+        //  Menyknapp för film
+        menuBtnFilm = new MenuButton("Film");
         menuBtnFilm.setStyle("-fx-max-width: 80; " +
                 "-fx-min-width: 80; " +
                 "-fx-max-height: 30; " +
                 "-fx-min-height: 30;");
-        menuBtnFilm.setOnAction(e -> {
-            primaryStage.setScene(filmScene);
-            System.out.println("Nu är vi på Film-sidan");
-        });
+        MenuItem menuItemSearchFilm = new MenuItem("Sök film");
+        menuItemSearchFilm.setOnAction(e-> primaryStage.setScene(searchFilmScene));
+        MenuItem menuItemRegisterNewFilm = new MenuItem("Registrera ny film");
+        menuItemRegisterNewFilm.setOnAction(e-> primaryStage.setScene(registerFilmScene));
+        menuBtnFilm.getItems().addAll(menuItemSearchFilm, menuItemRegisterNewFilm);
 
         this.getChildren().addAll(labelLogo,menuBtnCheckout,menuBtnCustomer, menuBtnStaff,  menuBtnStore, menuBtnFilm);
         this.setStyle("-fx-alignment: center; " +
