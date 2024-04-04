@@ -46,10 +46,11 @@ public class Rental {
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "rental", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "rental")
     private List<Payment> payments;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "inventory_id", referencedColumnName = "inventory_id")
     private Inventory inventory;
 
 

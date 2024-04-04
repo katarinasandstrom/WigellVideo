@@ -27,11 +27,6 @@
             <artifactId>hibernate-core</artifactId>
             <version>6.3.1.Final</version>
         </dependency>
-        <dependency>
-            <groupId>org.geolatte</groupId>
-            <artifactId>geolatte-geom</artifactId>
-            <version>1.8.2</version>
-        </dependency>
     </dependencies>
 
 </project>
