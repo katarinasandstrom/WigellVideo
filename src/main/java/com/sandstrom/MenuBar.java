@@ -45,7 +45,7 @@ public class MenuBar extends HBox {
                 "-fx-min-width: 80; " +
                 "-fx-max-height: 30; " +
                 "-fx-min-height: 30;" +
-                "-fx-background-color: ");
+                "-fx-background-color:#E3CAD3");
         menuBtnStaff.getItems().addAll(menuItemRegNewStaff, menuItemUpdateStaff);
 
 
