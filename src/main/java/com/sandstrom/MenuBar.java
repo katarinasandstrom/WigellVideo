@@ -17,12 +17,13 @@ public class MenuBar extends HBox {
     private MenuButton menuBtnCustomer, menuBtnStore, menuBtnStaff, menuBtnFilm;
 
     private MenuItem menuItemRegisterCustomer, menuItemUpdateCustomer,menuItemSeeCustomer, menuItemRegisterStore,
-            menuItemUpdateStore;
+            menuItemUpdateStore, menuItemShowCustomers, menuItemShowStaff, menuItemShowStores, menuItemShowAllRentals;
     Label labelLogo;
 
     public MenuBar(Stage primaryStage, Scene registerNewStaffScene,Scene updateStaffScene,
                    Scene registerNewCustomerScene, Scene updateCustomerScene, Scene registerNewStoreScene,
-                   Scene updateStoreScene, Scene checkOutScene, Scene searchFilmScene, Scene registerFilmScene) {
+                   Scene updateStoreScene, Scene checkOutScene, Scene searchFilmScene, Scene registerFilmScene,
+                   Scene showCustomersScene, Scene showStaffScene, Scene showStoresScene, Scene showRentalScene) {
         this.registerNewtaffScene = registerNewtaffScene;
         this.updateStaffScene = updateStaffScene;
         this.registerNewCustomerScene = registerNewCustomerScene;
@@ -43,8 +44,10 @@ public class MenuBar extends HBox {
         menuItemRegNewStaff.setOnAction(e->primaryStage.setScene(registerNewStaffScene));
         MenuItem menuItemUpdateStaff = new MenuItem("Uppdatera personal");
         menuItemUpdateStaff.setOnAction(e->primaryStage.setScene(updateStaffScene));
+        menuItemShowStaff = new MenuItem("Se befintlig personal");
+        menuItemShowStaff.setOnAction(e->primaryStage.setScene(showStaffScene));
 
-        menuBtnStaff.getItems().addAll(menuItemRegNewStaff, menuItemUpdateStaff);
+        menuBtnStaff.getItems().addAll(menuItemRegNewStaff, menuItemUpdateStaff, menuItemShowStaff);
 
 
 
@@ -55,8 +58,9 @@ public class MenuBar extends HBox {
         menuItemRegisterCustomer.setOnAction(e -> primaryStage.setScene(registerNewCustomerScene));
         menuItemUpdateCustomer = new MenuItem("Uppdatera befintlig kund");
         menuItemUpdateCustomer.setOnAction(e-> primaryStage.setScene(updateCustomerScene));
-        menuItemSeeCustomer = new MenuItem();
-        menuBtnCustomer.getItems().addAll(menuItemRegisterCustomer, menuItemUpdateCustomer);
+        menuItemShowCustomers= new MenuItem("Se befintliga kunder");
+        menuItemShowCustomers.setOnAction(e->primaryStage.setScene(showCustomersScene));
+        menuBtnCustomer.getItems().addAll(menuItemRegisterCustomer, menuItemUpdateCustomer, menuItemShowCustomers);
 
 
 
@@ -67,31 +71,34 @@ public class MenuBar extends HBox {
         menuItemRegisterStore.setOnAction(e-> primaryStage.setScene(registerNewStoreScene));
         menuItemUpdateStore = new MenuItem("Uppdatera butik");
         menuItemUpdateStore.setOnAction(e-> primaryStage.setScene(updateStoreScene));
-        menuBtnStore.getItems().addAll(menuItemRegisterStore, menuItemUpdateStore);
-      /*  menuBtnStore.setStyle("-fx-max-width: 80; " +
-                "-fx-min-width: 80; " +
-                "-fx-max-height: 30; " +
-                "-fx-min-height: 30;");*/
+        menuItemShowStores = new MenuItem("Se butiker");
+        menuItemShowStores.setOnAction(e-> primaryStage.setScene(showStoresScene));
+        menuItemShowAllRentals = new MenuItem("Visa uthyrningshistorik");
+        menuItemShowAllRentals.setOnAction(e-> primaryStage.setScene(showRentalScene));
+        menuBtnStore.getItems().addAll(menuItemRegisterStore, menuItemUpdateStore, menuItemShowStores, menuItemShowAllRentals);
+
 
 
         //Menyknapp för kassa
         menuBtnCheckout = new Button("Kassa");
-        menuBtnCheckout.setStyle("-fx-alignment: LEFT");
+        menuBtnCheckout.setStyle("-fx-alignment: center-left");
+        menuBtnCheckout.setOnAction(e->primaryStage.setScene(checkOutScene));
 
 
 
 
         //  Menyknapp för film
         menuBtnFilm = new MenuButton("Film");
-       /* menuBtnFilm.setStyle("-fx-max-width: 80; " +
-                "-fx-min-width: 80; " +
-                "-fx-max-height: 30; " +
-                "-fx-min-height: 30;");*/
+
         MenuItem menuItemSearchFilm = new MenuItem("Sök film");
         menuItemSearchFilm.setOnAction(e-> primaryStage.setScene(searchFilmScene));
         MenuItem menuItemRegisterNewFilm = new MenuItem("Registrera ny film");
         menuItemRegisterNewFilm.setOnAction(e-> primaryStage.setScene(registerFilmScene));
         menuBtnFilm.getItems().addAll(menuItemSearchFilm, menuItemRegisterNewFilm);
+
+        menuBtnCustomer.getStyleClass().add("menu-button");
+        menuBtnStore.getStyleClass().add("menu-button");
+        menuBtnFilm.getStyleClass().add("menu-button");
 
         this.getChildren().addAll(labelLogo,menuBtnCheckout,menuBtnCustomer, menuBtnStaff,  menuBtnStore, menuBtnFilm);
         this.setStyle("-fx-alignment: center; " +

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -19,14 +20,21 @@ import static com.sandstrom.Methods.login;
 
 public class Main extends Application {
     Scene loginScene, staffScene, customerScene, registerNewStoreScene,updateStoreScene, checkOutScene, searchFilmScene,registerFilmScene,  registerNewStaffScene,
-           updateStaffScene, registerNewCustomerScene, updateCustomerScene,  firstPageScene;
+           updateStaffScene, registerNewCustomerScene, updateCustomerScene,  firstPageScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene;
     BorderPane borderPaneLogin,borderPaneRegNewCustomer,borderPaneUpdateCustomer, borderPaneRegisterStore,
-            borderPanecheckOut, borderPaneRegisterFilm,borderPaneSearchFilm, borderPaneUpdateStaff,borderPaneRegNewStaff, borderPaneFirstPage, borderPaneUpdateStore;
+            borderPanecheckOut, borderPaneRegisterFilm,borderPaneSearchFilm, borderPaneUpdateStaff,borderPaneRegNewStaff, borderPaneFirstPage, borderPaneUpdateStore,
+    borderPaneShowCustomers, borderPaneShowStaff, borderPaneShowStores, borderPaneShowRentals;
     MenuBar menuBarLogin, menuBarRegNewStaff,menuBarUpdateStaff, menuBarRegisterNewCustomer,menuBarUpdateCustomer, menuBarRegStore, menuBarCheckOut, menuBarFilm,  menuBarFirstPage,
-            menuBarUpdateStore,menuBarSearchFilm, menuBarRegisterFilm;
+            menuBarUpdateStore,menuBarSearchFilm, menuBarRegisterFilm,  menuBarShowCustomers, menuBarShowStaff, menuBarShowStores,  menuBarShowAllRentals;
 
     Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore;
-    Button btnLogin,  btnRegisterNewStaff, btnUpdateStaff,  btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer;
+    Button btnLogin;
+    Button btnUpdateStaff;
+    Button btnRent;
+    Button btnCardPay;
+    Button btnCashPay;
+    Button btnRegStore;
+    Button btnRegisterNewCustomer;
 
 
     DatePicker datePickerRentalDate, datePickerReturnDate;
@@ -45,7 +53,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         // Sökväg till bildfil
-        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\e01e11f9-8ecb-46b2-bfce-4d9123c14687 (1).png";
+        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
 
 
         // Skapar en ImageView och laddar in bilden
@@ -62,13 +70,17 @@ public class Main extends Application {
         borderPaneUpdateCustomer = new BorderPane();
         borderPaneRegisterStore = new BorderPane();
         borderPaneUpdateStore = new BorderPane();
-
         borderPaneRegisterFilm = new BorderPane();
         borderPaneRegNewStaff = new BorderPane();
         borderPaneUpdateStaff = new BorderPane();
         borderPanecheckOut = new BorderPane();
         borderPaneSearchFilm = new BorderPane();
         borderPaneFirstPage = new BorderPane();
+        borderPaneShowCustomers = new BorderPane();
+        borderPaneShowStaff = new BorderPane();
+        borderPaneShowStores = new BorderPane();
+        borderPaneShowRentals = new BorderPane();
+
 
         //StackPanes
         stackPaneLogin = new StackPane();
@@ -76,8 +88,10 @@ public class Main extends Application {
         // scener
         loginScene = new Scene(stackPaneLogin, 1000, 700);
         loginScene.getStylesheets().add("style.css");
-        firstPageScene = new Scene (borderPaneFirstPage, 1000, 700);
+       /* firstPageScene = new Scene (borderPaneFirstPage, 1000, 700);
         firstPageScene.getStylesheets().add("style.css");
+        Används inte längre
+        */
         registerNewStaffScene = new Scene(borderPaneRegNewStaff, 1000, 700);
         registerNewStaffScene.getStylesheets().add("style.css");
         updateStaffScene = new Scene(borderPaneUpdateStaff, 1000, 700);
@@ -91,47 +105,68 @@ public class Main extends Application {
         updateStoreScene = new Scene( borderPaneUpdateStore, 1000, 700);
         updateStoreScene.getStylesheets().add("style.css");
         checkOutScene = new Scene(borderPanecheckOut, 1000, 700);
-      //  checkOutScene.getStylesheets().add("style.css");
+
         searchFilmScene = new Scene(borderPaneSearchFilm, 1000, 700);
         searchFilmScene.getStylesheets().add("style.css");
         registerFilmScene = new Scene(borderPaneRegisterFilm, 1000, 700);
+        registerFilmScene.getStylesheets().add("style.css");
+        showCustomersScene= new Scene(borderPaneShowCustomers, 1000, 700);
+        showCustomersScene.getStylesheets().add("style.css");
+        showStaffScene = new Scene(borderPaneShowStaff, 1000, 700);
+        showStaffScene.getStylesheets().add("style.css");
+        showStoresScene = new Scene(borderPaneShowStores, 1000, 700);
+        showStoresScene.getStylesheets().add("style.css");
+        showRentalScene = new Scene(borderPaneShowRentals, 1000, 700);
+        showRentalScene.getStylesheets().add("style.css");
 
 
 
                 // menyer
         menuBarLogin = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
         menuBarRegNewStaff = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
         menuBarUpdateStaff = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
         menuBarRegisterNewCustomer = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
         menuBarUpdateCustomer = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
         menuBarRegStore = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
         menuBarUpdateStore = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
         menuBarCheckOut =new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
         menuBarSearchFilm = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
         menuBarRegisterFilm = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
-        menuBarFirstPage = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
+        menuBarFirstPage =new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
-                checkOutScene, searchFilmScene, registerFilmScene);
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
+        menuBarShowCustomers= new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
+                registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
+        menuBarShowStaff= new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
+                registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
+        menuBarShowStores= new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
+                registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
+        menuBarShowAllRentals = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
+                registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
+                checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
 
         // Lägg till menyer till varje BorderPane
       //  borderPaneLogin.setTop(menuBarLogin);
@@ -146,6 +181,10 @@ public class Main extends Application {
         borderPaneSearchFilm.setTop(menuBarSearchFilm);
         borderPaneRegisterFilm.setTop(menuBarRegisterFilm);
         borderPaneFirstPage.setTop(menuBarFirstPage);
+        borderPaneShowCustomers.setTop(menuBarShowCustomers);
+        borderPaneShowStaff.setTop(menuBarShowStaff);
+        borderPaneShowStores.setTop(menuBarShowStores);
+        borderPaneShowRentals.setTop(menuBarShowAllRentals);
 
 
 
@@ -179,10 +218,24 @@ public class Main extends Application {
         textFieldPassword.setPromptText("Lösenord");
         textFieldPassword.setMinSize(150, 30);
         textFieldPassword.setMaxSize(150, 30);
+        textFieldPassword.setOnKeyPressed(e -> {
+            String userName = textFieldUsername.getText();
+            String passWord = textFieldPassword.getText();
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                //  e.consume();
+                if (login(userName, passWord)) {
+                    primaryStage.setScene(checkOutScene);
+                } else {
+                    labelErrorLogin.setText("Fel inloggningsuppgifter. Försök igen.");
+                }
+            }
+        });
         //String passWord = textFieldPassword.getText();
 
         labelErrorLogin = new Label(" ");
         btnLogin = new Button("Logga in");
+        btnLogin.getStyleClass().add("btnLogin");
+        btnLogin.getStylesheets().add("style.css");
         btnLogin.setMinSize(150, 30);
         btnLogin.setMaxSize(150, 30);
         btnLogin.setOnAction(e -> {
@@ -209,34 +262,23 @@ public class Main extends Application {
         vBoxLogin2.setSpacing(10);
 
 
+
         stackPaneLogin.getChildren().addAll(borderPaneLogin, vBoxLogin2);
 
 
-        //PERSONAL-SIDA
+        //REGISTRERA PERSONAL-SIDA
 
 
-        labelStaffChoice = new Label("Wigell Video: Personalsida");
-        labelStaffChoice.setMinSize(150,30);
-        labelStaffChoice.setMaxSize(150,30);
-        labelStaffChoice.setAlignment(Pos.CENTER);
-        labelStaffChoice.setStyle("-fx-font-family: Broadway;"+
-                "-fx-font-size: 21;" +
-                "-fx-text-fill: BLACK;"+
-                "-fx-background-color: #FE8D01;"+
-                "-fx-border-color: #AA327C;" +
-                "-fx-border-width: 3px");
 
-        btnRegisterNewStaff = new Button("Registrera ny personal");
-        btnRegisterNewStaff.setMinSize(150, 30);
-        btnRegisterNewStaff.setMaxSize(150, 30);
+
+
 
         btnUpdateStaff = new Button("Uppdatera befintlig personal");
-        btnUpdateStaff.setMinSize(150, 30);
-        btnUpdateStaff.setMaxSize(150, 30);
+
 
         vBoxStaff = new VBox();
-        vBoxStaff.setSpacing(10);
-        vBoxStaff.getChildren().addAll(labelStaffChoice, btnRegisterNewStaff, btnUpdateStaff);
+
+        borderPaneRegNewStaff.setCenter(vBoxStaff);
 
     //REGISTRERA KUND-SIDA
 
@@ -369,6 +411,7 @@ public class Main extends Application {
         datePickerRentalDate = new DatePicker();
         datePickerReturnDate = new DatePicker();
 
+
         datePickerRentalDate.setValue(LocalDate.now());
 
         textFieldInventoryId.setPromptText("Streckkod");
@@ -377,10 +420,24 @@ public class Main extends Application {
         textFieldAmount.setPromptText("Totalsumma");
         datePickerReturnDate.setPromptText("Återlämnas");
 
+        textFieldInventoryId.setStyle(" -fx-background-color:#F9F7DC ;\n" +
+                "        -fx-text-fill: #303538;");
+        textFieldStaffId.setStyle(" -fx-background-color:#F9F7DC ;\n" +
+                        "        -fx-text-fill: #303538;");
+        textFieldCustomerId.setStyle(" -fx-background-color:#F9F7DC ;\n" +
+                        "        -fx-text-fill: #303538;");
+        textFieldAmount.setStyle(" -fx-background-color:#F9F7DC ;\n" +
+                        "        -fx-text-fill: #303538;");
+        datePickerReturnDate.setStyle(" -fx-background-color:#F9F7DC ;\n" +
+                        "        -fx-text-fill: #303538;");
+
+
+
         datePickerRentalDate.setMinSize(120, 40);
         datePickerRentalDate.setMaxSize(120, 40);
         datePickerReturnDate.setMinSize(120, 40);
         datePickerReturnDate.setMaxSize(120, 40);
+
 
         btnRent.setMinSize(120, 40);
         btnRent.setMaxSize(120, 40);
@@ -421,6 +478,7 @@ public class Main extends Application {
         vBoxCheckOut.getChildren().addAll(hBoxId, textFieldInventoryId, hBoxCheckOutDatePickers, hBoxPayMethod);
 
         borderPanecheckOut.setCenter(vBoxCheckOut);
+        borderPanecheckOut.setStyle("-fx-background-color: #94B1B3;");
 
         btnRent.setOnAction(e -> {
             System.out.println("Film tillagd\nHyresperiod: " + datePickerRentalDate.getValue() +

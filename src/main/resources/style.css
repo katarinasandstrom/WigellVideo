@@ -26,7 +26,12 @@
 
 }
 
-
+.btnLogin{
+    -fx-min-width: 140;
+    -fx-max-width: 140;
+    -fx-min-height: 40;
+    -fx-max-height: 40;
+}
 
 .menu-button{
     -fx-background-color: #C57C07;
@@ -38,7 +43,6 @@
     -fx-max-height: 40;
     -fx-min-width: 120;
     -fx-max-width: 120;
-    -fx-alignment: left;
     -fx-background-color: linear-gradient(to bottom,#F69F13, #C57C07 );
 }
 
