@@ -68,13 +68,15 @@ public class Main extends Application {
     HBox hBoxregCustomer, hBoxUpdateCustomer,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore, hBoxShowCustomers;
     StackPane stackPaneLogin;
 
+    TextArea textAreaCheckOut;
+
     //Comment for push
 
     @Override
     public void start(Stage primaryStage) {
 
         // Sökväg till bildfil
-        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
+        String imagePath = "C:\\Users\\helga\\OneDrive\\Skrivbord\\Skola\\Software Development Process\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
 
 
         // Skapar en ImageView och laddar in bilden
@@ -83,6 +85,8 @@ public class Main extends Application {
         imageViewVideoStore.setFitHeight(primaryStage.getHeight());
 
         imageViewVideoStore.setPreserveRatio(true);
+
+
 
 
         // BorderPanes för varje scen
@@ -109,10 +113,8 @@ public class Main extends Application {
         // scener
         loginScene = new Scene(stackPaneLogin, 1000, 700);
         loginScene.getStylesheets().add("style.css");
-       /* firstPageScene = new Scene (borderPaneFirstPage, 1000, 700);
+        firstPageScene = new Scene (borderPaneFirstPage, 1000, 700);
         firstPageScene.getStylesheets().add("style.css");
-        Används inte längre
-        */
         registerNewStaffScene = new Scene(borderPaneRegNewStaff, 1000, 700);
         registerNewStaffScene.getStylesheets().add("style.css");
         updateStaffScene = new Scene(borderPaneUpdateStaff, 1000, 700);
@@ -532,7 +534,6 @@ public class Main extends Application {
         datePickerReturnDate.setMinSize(120, 40);
         datePickerReturnDate.setMaxSize(120, 40);
 
-
         btnRent.setMinSize(120, 40);
         btnRent.setMaxSize(120, 40);
         btnCardPay.setMinSize(120, 40);
@@ -570,6 +571,9 @@ public class Main extends Application {
                 "-fx-min-width: 120;"+
                 "-fx-max-width: 120;"+
                 "-fx-background-color: linear-gradient(to bottom,#F69F13, #C57C07 );");
+
+        datePickerRentalDate.setStyle("-fx-control-inner-background: #F9F7DC;");
+        datePickerReturnDate.setStyle("-fx-control-inner-background: #F9F7DC;");
 
         textFieldInventoryId.setMinSize(390, 40);
         textFieldInventoryId.setMaxSize(390, 40);
