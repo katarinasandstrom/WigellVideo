@@ -26,7 +26,7 @@ public class Main extends Application {
             menuBarUpdateStore,menuBarSearchFilm, menuBarRegisterFilm;
 
     Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore;
-    Button btnLogin,  btnRegisterNewStaff, btnUpdateStaff,  btnRent, btnCardPay, btnCashPay, btnRegStore;
+    Button btnLogin,  btnRegisterNewStaff, btnUpdateStaff,  btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer;
 
 
     DatePicker datePickerRentalDate, datePickerReturnDate;
@@ -45,7 +45,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         // Sökväg till bildfil
-        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\rättstavad!.png";
+        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\e01e11f9-8ecb-46b2-bfce-4d9123c14687 (1).png";
 
 
         // Skapar en ImageView och laddar in bilden
@@ -157,17 +157,17 @@ public class Main extends Application {
 
         //LOGIN-SIDAN
 
-        labelLogin = new Label("Wigell Video");
+      /*  labelLogin = new Label("Wigell Video");
         labelLogin.setMinSize(150,30);
         labelLogin.setMaxSize(150,30);
         labelLogin.setAlignment(Pos.CENTER);
         labelLogin.setStyle("-fx-font-family: Broadway;"+
                             "-fx-font-size: 21;" +
-                            "-fx-text-fill: #792A47;"+
-                            "-fx-background-color: #E3CAD3;"+
-                            "-fx-border-color: #792A47;" +
+                            "-fx-text-fill: #303538;"+
+                            "-fx-background-color: #f9f7dc;"+
+                            "-fx-border-color: #303538;" +
                             "-fx-border-width: 3px");
-
+*/
 
 
         textFieldUsername = new TextField();
@@ -204,7 +204,7 @@ public class Main extends Application {
         borderPaneLogin.setStyle("-fx-background-color: #BDF1FE");
 
         VBox vBoxLogin2 = new VBox();
-        vBoxLogin2.getChildren().addAll(labelLogin, textFieldUsername, textFieldPassword, btnLogin, labelErrorLogin);
+        vBoxLogin2.getChildren().addAll( textFieldUsername, textFieldPassword, btnLogin, labelErrorLogin);
         vBoxLogin2.setAlignment(Pos.CENTER);
         vBoxLogin2.setSpacing(10);
 
@@ -252,7 +252,7 @@ public class Main extends Application {
 
         RegistryAddress customerAddress = new RegistryAddress();
 
-
+        btnRegisterNewCustomer = new Button("Registrera kund");
         vBoxRegCustomer1 = new VBox();
         vBoxRegCustomer1.getChildren().addAll(textFieldRegCustomerFName,
                 textFieldRegCustomerLName, textFieldRegCustomerEmail);
@@ -271,7 +271,7 @@ public class Main extends Application {
         hBoxregCustomer.setSpacing(10);
 
         vBoxRegCustomer3 = new VBox();
-        vBoxRegCustomer3.getChildren().addAll(labelRegNewCustomer, hBoxregCustomer);
+        vBoxRegCustomer3.getChildren().addAll(labelRegNewCustomer, hBoxregCustomer, btnRegisterNewCustomer );
         vBoxRegCustomer3.setSpacing(10);
         vBoxRegCustomer3.setAlignment(Pos.CENTER);
         borderPaneRegNewCustomer.setCenter(vBoxRegCustomer3);
