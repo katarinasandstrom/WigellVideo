@@ -3,6 +3,7 @@ package com.sandstrom.entities;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;;
 
@@ -12,7 +13,7 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
-    private int addressId;
+    private short addressId;
 
     @Basic
     @Column(name = "address")
@@ -27,8 +28,8 @@ public class Address {
     private String district;
 
     @Basic
-    @Column(name = "city_id")
-    private int cityId;
+    @Column(name = "city_id", insertable=false, updatable=false)
+    private short cityId;
 
     @Basic
     @Column(name = "postal_code")
@@ -46,27 +47,46 @@ public class Address {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    @ManyToOne
-    @JoinColumn(name = "store_id", referencedColumnName = "store_id")
-    private Store store;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "city_id", referencedColumnName = "city_id")
+    private City city;
+    public City getCity() {
+        return city;
+    }
 
-    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
-    private List<Staff> staff;
+    public void setCity(City city) {
+        this.city = city;
+    }
 
-    public int getAddressId() {
+
+    @OneToMany(mappedBy = "address")
+    private Collection<Staff> staffByAddresId;
+
+    public Collection<Staff> getStaffByAddresId() {
+        return staffByAddresId;
+    }
+
+    public void setStaffByAddresId(Collection<Staff> staffByAddresId) {
+        this.staffByAddresId = staffByAddresId;
+    }
+
+    @OneToMany(mappedBy = "address")
+    private Collection<Staff> customersByAddresId;
+
+    public Collection<Staff> getCustomersByAddresId() {
+        return customersByAddresId;
+    }
+
+    public void setCustomersByAddresId(Collection<Staff> customersByAddresId) {
+        this.customersByAddresId = customersByAddresId;
+    }
+
+    public short getAddressId() {
         return addressId;
     }
 
-    public void setAddressId(int addressId) {
+    public void setAddressId(short addressId) {
         this.addressId = addressId;
-    }
-
-    public Store getStore() {
-        return store;
-    }
-
-    public void setStore(Store store) {
-        this.store = store;
     }
 
     public String getAddress() {
@@ -93,11 +113,11 @@ public class Address {
         this.district = district;
     }
 
-    public int getCityId() {
+    public short getCityId() {
         return cityId;
     }
 
-    public void setCityId(int cityId) {
+    public void setCityId(short cityId) {
         this.cityId = cityId;
     }
 
@@ -166,7 +186,7 @@ public class Address {
                 ", phone='" + phone + '\'' +
                 ", location='" + location + '\'' +
                 ", lastUpdate=" + lastUpdate +
-                ", store=" + store +
+                ", city=" + city +
                 '}';
     }
 }
