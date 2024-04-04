@@ -9,10 +9,10 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 import java.util.Scanner;
-public class CrudOfAddress implements CrudOfAddressInterface{
+public class CrudOfAddress{
     private Address address = new Address();
     private Scanner scanner = new Scanner(System.in);
-    @Override
+
     public void getAllAddresses() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -29,7 +29,7 @@ public class CrudOfAddress implements CrudOfAddressInterface{
         session.close();
     }
 
-    @Override
+
     public void getAddressById() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -47,7 +47,7 @@ public class CrudOfAddress implements CrudOfAddressInterface{
 
     }
 
-    @Override
+
     public void saveAddress() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -72,7 +72,7 @@ public class CrudOfAddress implements CrudOfAddressInterface{
 
     }
 
-    @Override
+
     public void deleteAddress() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -93,7 +93,7 @@ public class CrudOfAddress implements CrudOfAddressInterface{
 
     }
 
-    @Override
+
     public void updateAddress() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();

@@ -10,10 +10,10 @@ import org.hibernate.query.Query;
 import java.util.List;
 import java.util.Scanner;
 
-public class CrudOfCities implements CrudOfCityInterface{
+public class CrudOfCities{
     private Scanner scanner = new Scanner(System.in);
     private City city = new City();
-    @Override
+
     public void getAllCities() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -29,7 +29,7 @@ public class CrudOfCities implements CrudOfCityInterface{
         session.close();
     }
 
-    @Override
+
     public void getCityById() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -44,7 +44,7 @@ public class CrudOfCities implements CrudOfCityInterface{
 
     }
 
-    @Override
+
     public void saveCity() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -61,7 +61,7 @@ public class CrudOfCities implements CrudOfCityInterface{
 
     }
 
-    @Override
+
     public void deleteCity() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -73,7 +73,7 @@ public class CrudOfCities implements CrudOfCityInterface{
 
     }
 
-    @Override
+
     public void updateCity() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
