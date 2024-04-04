@@ -121,6 +121,7 @@ public class Main extends Application {
 
 
 
+
                 // menyer
         menuBarLogin = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
