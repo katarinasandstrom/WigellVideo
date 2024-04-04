@@ -20,9 +20,14 @@
     -fx-min-height: 40;
     -fx-min-width: 120;
     -fx-max-width: 120;
-    -fx-background-color: linear-gradient(to bottom,#F69F13, #C57C07 );
+    -fx-background-color: linear-gradient(to bottom, #F69F13, #C57C07);
+}
 
-
+.text-area {
+    -fx-text-fill: #F9F7DC;
+    -fx-font-size: 12px;
+    -fx-border-width: 2;
+    -fx-border-radius: 3;
 
 }
 

@@ -81,10 +81,9 @@ public class MenuBar extends HBox {
 
         //Menyknapp för kassa
         menuBtnCheckout = new Button("Kassa");
-        menuBtnCheckout.setStyle("-fx-alignment: center-left");
+        menuBtnCheckout.setStyle("-fx-alignment: center-left;"+
+                "-fx-text-fill: #F9F7DC;");
         menuBtnCheckout.setOnAction(e->primaryStage.setScene(checkOutScene));
-
-
 
 
         //  Menyknapp för film

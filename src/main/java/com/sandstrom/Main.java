@@ -1,10 +1,17 @@
 package com.sandstrom;
 
+import com.sandstrom.entities.Address;
+import com.sandstrom.entities.City;
+import com.sandstrom.entities.Country;
+import com.sandstrom.entities.Customer;
 import javafx.application.Application;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -13,6 +20,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 
@@ -27,24 +36,36 @@ public class Main extends Application {
     MenuBar menuBarLogin, menuBarRegNewStaff,menuBarUpdateStaff, menuBarRegisterNewCustomer,menuBarUpdateCustomer, menuBarRegStore, menuBarCheckOut, menuBarFilm,  menuBarFirstPage,
             menuBarUpdateStore,menuBarSearchFilm, menuBarRegisterFilm,  menuBarShowCustomers, menuBarShowStaff, menuBarShowStores,  menuBarShowAllRentals;
 
-    Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore;
-    Button btnLogin;
-    Button btnUpdateStaff;
-    Button btnRent;
-    Button btnCardPay;
-    Button btnCashPay;
-    Button btnRegStore;
-    Button btnRegisterNewCustomer;
+    Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore, labelShowCustomers;
+    Button btnLogin, btnUpdateStaff, btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer,  btnSearchCustomer;
 
+    TextArea textAreaAllCustomers;
+    TableView tableViewCustomers;
+    TableColumn <Customer, Short> columnCustomerId;
+    TableColumn<Customer, String>  columnFirstName, columnLastName, columnEmail;
+    TableColumn <Customer, Byte> columnActive;
+    TableColumn <Customer, Timestamp> columnCustomerCreateDate, columnLastUpdateCustomer;
 
+    TableColumn <Address, Short> columnAddressId;
+    TableColumn <Address, String> columnAddress, columnDistrict,
+                     columnPostalCode, columnPhone, columnLocation;
+    TableColumn <Address, Timestamp> columnLastUpdateAddress ;
+
+    TableColumn <City, Short> columnCityId;
+    TableColumn <City, String> columnCity;
+    TableColumn<City, Timestamp> columnLastUpdateCity;
+    TableColumn <Country, Short> columnCountryId;
+    TableColumn <Country, String> columnCountry;
+    TableColumn<Country, Timestamp> columnLastUpdateCountry;
     DatePicker datePickerRentalDate, datePickerReturnDate;
 
     TextField textFieldUsername, textFieldPassword, textFieldRegCustomerFName, textFieldRegCustomerLName,textFieldRegCustomerEmail, textFieldUpdateCustomerFName,
-    textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail,textFieldInventoryId, textFieldStaffId, textFieldCustomerId, textFieldAmount, textFieldManagerId ;
+    textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail,textFieldInventoryId, textFieldStaffId, textFieldCustomerId, textFieldAmount, textFieldManagerId,
+            textFieldSearchCustomer ;
 
     VBox vBoxStaff, vBoxRegCustomer1, vBoxRegCustomer2, vBoxRegCustomer3, vBoxUpdateCustomer1, vBoxUpdateCustomer2, vBoxRegStore1, vBoxRegStore2,
-    vBoxUpdateCustomer3, vBoxCheckOut, vBoxRegStore3 ;
-    HBox hBoxregCustomer, hBoxUpdateCustomer,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore;
+    vBoxUpdateCustomer3, vBoxCheckOut, vBoxRegStore3, vBoxShowCustomers ;
+    HBox hBoxregCustomer, hBoxUpdateCustomer,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore, hBoxShowCustomers;
     StackPane stackPaneLogin;
 
     //Comment for push
@@ -322,25 +343,7 @@ public class Main extends Application {
 
         //UPPDATERA BEFINTLIG KUND
 
-       /* (customer_id - i uppdatera, men även dyka upp nånstans efter att en kund blivit reggad)
-        first_name
-                last_name
-        email
-        address_id - auto - skapas när kund reggas. Är sen kopplat till den kunden. ju.
-        (active - slidebox - ska va default active när kund registreras - i uppdatera)
-        create_date - autogenererar dagens datum (om det går att fixa :)))
-        (last_update - klockslag auto lägg under setOnAction)
 
-        Adress:
-        Lösa på liknande sätt som menuBar?!
-                address_id - auto - ingen ruta osv
-        address - gata och gatunummer
-        district - delstat?! typ län?!
-                city_id - auto
-        postal_code
-                phone
-        location ?? Kolla med databasgänget
-                (last_update - klockslag auto lägg under setOnAction)*/
         labelUpdateCustomer = new Label ("Uppdatera befintlig kund");
         textFieldUpdateCustomerFName = new TextField();
         textFieldUpdateCustomerFName.setPromptText("Förnamn");
@@ -359,21 +362,20 @@ public class Main extends Application {
                 "-fx-background-radius: 3, 2; " +
                 "-fx-text-fill: black;");
 
-        // Skapa en etikett för att visa den aktuella aktivitetsstatusen
-        Label statusLabel = new Label("Kunden är aktiv");
-        Boolean buttonIsActive = true;
+        //
+
 
 
         // Lyssnare för att hantera ändringar i knappens tillstånd
         toggleButtonCustomerIsActive.setOnAction(event -> {
             if (toggleButtonCustomerIsActive.isSelected()) {
                 toggleButtonCustomerIsActive.setText("Inaktiv");
-                statusLabel.setText("Kunden är inaktiv");
-                // Här kan du lägga till kod för att ändra kundens status i din databas
+
+                // KOD FÖR ATT UPPDATERA OM KUNDEN HAR AVSLUTAT SITT MEDLEMSKAP
             } else {
                 toggleButtonCustomerIsActive.setText("Aktiv");
-                statusLabel.setText("Kunden är aktiv");
-                // Här kan du lägga till kod för att ändra kundens status i din databas
+
+                // KOD FÖR ATT UPPDATERA OM KUNDEN ÄR AKTIV
             }
         });
         vBoxUpdateCustomer1 = new VBox();
@@ -394,10 +396,101 @@ public class Main extends Application {
         hBoxUpdateCustomer.setSpacing(10);
 
         vBoxUpdateCustomer3 = new VBox();
-        vBoxUpdateCustomer3.getChildren().addAll(labelUpdateCustomer, hBoxUpdateCustomer,statusLabel, toggleButtonCustomerIsActive);
+        vBoxUpdateCustomer3.getChildren().addAll(labelUpdateCustomer, hBoxUpdateCustomer, toggleButtonCustomerIsActive);
         vBoxUpdateCustomer3.setSpacing(10);
         vBoxUpdateCustomer3.setAlignment(Pos.CENTER);
         borderPaneUpdateCustomer.setCenter(vBoxUpdateCustomer3);
+
+
+        // SIDA FÖR ATT SE ALLA KUNDER
+
+        labelShowCustomers = new Label("Kundöversikt");
+
+        /* textAreaAllCustomers = new TextArea();
+        textAreaAllCustomers.setMinSize(500, 500);
+        textAreaAllCustomers.setMaxSize(500, 500);
+
+
+         */
+        tableViewCustomers = new TableView<>();
+        tableViewCustomers.setMinSize(800, 500);
+        tableViewCustomers.setMaxSize(800, 500);
+        tableViewCustomers.setStyle("-fx-background-color: #F9F7DC;");
+
+
+        tableViewCustomers.getItems().clear();
+
+       columnCustomerId = new TableColumn<>("Kundid");
+       columnFirstName = new TableColumn<>("Förnamn");
+       columnLastName  = new TableColumn<>("Efternamn");
+       columnEmail = new TableColumn<>("Email");
+       columnActive = new TableColumn<>("Inaktiv");
+       columnCustomerCreateDate = new TableColumn<>("Kund sedan");
+       columnLastUpdateCustomer = new TableColumn<>("Senast uppdaterad");
+       columnAddressId = new TableColumn<>("Addressid");
+       columnAddress = new TableColumn<>("Adress");
+       columnDistrict = new TableColumn<>("Distrikt");
+       columnPostalCode = new TableColumn<>("Postnr");
+       columnPhone = new TableColumn<>("Telefonnr");
+       columnLocation = new TableColumn<>("Location");
+       columnLastUpdateAddress = new TableColumn<>("Uppdaterad");
+       columnCityId = new TableColumn<>("Postortsid");
+       columnCity = new TableColumn<>("Postort");
+       columnLastUpdateCity = new TableColumn<>("Uppdaterad");
+       columnCountryId = new TableColumn<>("Landsid");
+       columnCountry = new TableColumn<>("Land");
+       columnLastUpdateCountry = new TableColumn<>("Uppdaterad");
+
+        columnCustomerId.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getCustomerId()));
+        columnFirstName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFirstName()));
+        columnLastName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLastName()));
+        columnEmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
+        columnActive.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getActive()));
+        columnCustomerCreateDate.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getCreateDate()));
+        columnLastUpdateCustomer.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+        columnAddressId.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddressId()));
+        columnAddress.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress()));
+        columnDistrict.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDistrict()));
+        columnPostalCode.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPostalCode()));
+        columnPhone.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhone()));
+        columnLocation.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLocation()));
+        columnLastUpdateAddress.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+        columnCityId.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getCityId()));
+        columnCity.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCity()));
+        columnLastUpdateCity.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+        columnCountryId.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getCountryId()));
+        columnCountry.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCountry()));
+        columnLastUpdateCountry.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+
+        tableViewCustomers.getColumns().addAll( columnCustomerId,columnFirstName,columnLastName, columnEmail, columnActive, columnCustomerCreateDate,
+        columnLastUpdateCustomer, columnAddressId, columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
+        columnLastUpdateAddress, columnCityId, columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry);
+
+      //  tableViewCustomers.setItems(customerList);
+      //  tableViewCustomers.refresh();
+
+        textFieldSearchCustomer = new TextField();
+        textFieldSearchCustomer.setPromptText("Kundnummer");
+        btnSearchCustomer= new Button("Sök kund");
+
+        hBoxShowCustomers = new HBox();
+        hBoxShowCustomers.getChildren().addAll(textFieldSearchCustomer, btnSearchCustomer);
+        hBoxShowCustomers.setSpacing(10);
+        hBoxShowCustomers.setAlignment(Pos.CENTER);
+
+        vBoxShowCustomers = new VBox();
+        vBoxShowCustomers.setAlignment(Pos.CENTER);
+        vBoxShowCustomers.getChildren().addAll(labelShowCustomers,tableViewCustomers, hBoxShowCustomers);
+
+        borderPaneShowCustomers.setCenter(vBoxShowCustomers);
+
+
 
 // KASSA
         textFieldInventoryId = new TextField();
