@@ -1,11 +1,17 @@
 package com.sandstrom;
 
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class MenuBar extends HBox {
@@ -20,7 +26,7 @@ public class MenuBar extends HBox {
             menuItemUpdateStore, menuItemShowCustomers, menuItemShowStaff, menuItemShowStores, menuItemShowAllRentals;
     Label labelLogo;
 
-    public MenuBar(Stage primaryStage, Scene registerNewStaffScene,Scene updateStaffScene,
+    public MenuBar(Stage primaryStage, Scene registerNewStaffScene, Scene updateStaffScene,
                    Scene registerNewCustomerScene, Scene updateCustomerScene, Scene registerNewStoreScene,
                    Scene updateStoreScene, Scene checkOutScene, Scene searchFilmScene, Scene registerFilmScene,
                    Scene showCustomersScene, Scene showStaffScene, Scene showStoresScene, Scene showRentalScene) {
@@ -33,6 +39,17 @@ public class MenuBar extends HBox {
         this.checkOutScene = checkOutScene;
         this.searchFilmScene = searchFilmScene;
         this.registerFilmScene = registerFilmScene;
+
+        // Sökväg till bildfil till logga
+        String imagePathLogo = "C:\\Users\\helga\\OneDrive\\Skrivbord\\Skola\\Software Development Process\\WigellVideoLogo.png";
+
+        Image image = new Image("file:" + imagePathLogo);
+
+        // Skapa en ImageView
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(200); // Ange önskad bredd
+        imageView.setPreserveRatio(true); // Bevara bildens proportioner
+
 
         labelLogo = new Label("Wigell Video");
         labelLogo.setStyle("-fx-font-family: Broadway;" +
@@ -100,9 +117,10 @@ public class MenuBar extends HBox {
         menuBtnStore.getStyleClass().add("menu-button");
         menuBtnFilm.getStyleClass().add("menu-button");
 
-        this.getChildren().addAll(labelLogo,menuBtnCheckout,menuBtnCustomer, menuBtnStaff,  menuBtnStore, menuBtnFilm);
+
+        this.getChildren().addAll(imageView,menuBtnCheckout,menuBtnCustomer, menuBtnStaff,  menuBtnStore, menuBtnFilm);
         this.setStyle("-fx-alignment: center; " +
-                "-fx-spacing: 10px;" +
+                "-fx-spacing: 15px;" +
                 "-fx-padding:10;");
         this.getStylesheets().add("style.css");
     }
