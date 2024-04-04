@@ -1,19 +1,20 @@
 package com.sandstrom;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.time.LocalDate;
 
 import static com.sandstrom.Methods.login;
 
@@ -25,12 +26,16 @@ public class Main extends Application {
     MenuBar menuBarLogin, menuBarStaff, menuBarRegisterNewCustomer,menuBarUpdateCustomer, menuBarStore, menuBarCheckOut, menuBarFilm,  menuBarFirstPage;
 
     Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer;
-    Button btnLogin,  btnRegisterNewStaff, btnUpdateStaff;
+    Button btnLogin,  btnRegisterNewStaff, btnUpdateStaff, btnRent, btnCashPay, btnCardPay;
     TextField textFieldUsername, textFieldPassword, textFieldRegCustomerFName, textFieldRegCustomerLName,textFieldRegCustomerEmail, textFieldUpdateCustomerFName,
-    textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail;
+    textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail, textFieldInventoryId, textFieldStaffId,
+            textFieldCustomerId, textFieldAmount;
 
+    DatePicker datePickerRentalDate, datePickerReturnDate;
+
+    HBox hBoxCheckOutDatePickers, hBoxPayMethod, hBoxId;
     VBox vBoxStaff, vBoxRegCustomer1, vBoxRegCustomer2, vBoxRegCustomer3, vBoxUpdateCustomer1, vBoxUpdateCustomer2,
-    vBoxUpdateCustomer3 ;
+    vBoxUpdateCustomer3, vBoxCheckOut ;
     HBox hBoxregCustomer, hBoxUpdateCustomer;
     StackPane stackPaneLogin;
 
@@ -40,7 +45,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         // Sökväg till bildfil
-        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo\\0a967b9833ba12e18a75a87fd67a94f90bc8db0c.jpg";
+        String imagePath = "C:\\Users\\helga\\IdeaProjects\\WigellVideo1\\0a967b9833ba12e18a75a87fd67a94f90bc8db0c.jpg";
 
 
         // Skapar en ImageView och laddar in bilden
@@ -118,33 +123,51 @@ public class Main extends Application {
         //LOGIN-SIDAN
 
         labelLogin = new Label("Wigell Video");
-        labelLogin.setMinSize(150,30);
-        labelLogin.setMaxSize(150,30);
+        labelLogin.setMinSize(300,60);
+        labelLogin.setMaxSize(300,60);
         labelLogin.setAlignment(Pos.CENTER);
         labelLogin.setStyle("-fx-font-family: Broadway;"+
-                            "-fx-font-size: 21;" +
-                            "-fx-text-fill: BLACK;"+
-                            "-fx-background-color: #FE8D01;"+
-                            "-fx-border-color: #AA327C;" +
+                            "-fx-font-size: 40;" +
+                            "-fx-background-color: #CE8DA7;" +
+                            "-fx-border-color: #792A47;" +
+                            "-fx-text-fill: #0C191D;" +
                             "-fx-border-width: 3px");
 
+        borderPaneFirstPage.setStyle("-fx-background-color: #E3CAD3;");
 
 
         textFieldUsername = new TextField();
         textFieldUsername.setPromptText("Användarnamn");
         textFieldUsername.setMinSize(150, 30);
         textFieldUsername.setMaxSize(150, 30);
+        textFieldUsername.setStyle(
+                "-fx-background-color: #E3CAD3;" +
+                "-fx-border-color: #792A47;" +
+                "-fx-text-fill: #0C191D;" +
+                "-fx-font-size: 10pt;");
      //
         textFieldPassword = new TextField();
         textFieldPassword.setPromptText("Lösenord");
         textFieldPassword.setMinSize(150, 30);
         textFieldPassword.setMaxSize(150, 30);
+        textFieldPassword.setStyle(
+                "-fx-background-color: #E3CAD3;" +
+                        "-fx-border-color: #792A47;" +
+                        "-fx-text-fill: #0C191D;" +
+                        "-fx-font-size: 10pt;");
         //String passWord = textFieldPassword.getText();
 
         labelErrorLogin = new Label(" ");
+        labelErrorLogin.setStyle("-fx-text-fill: #0C191D;");
         btnLogin = new Button("Logga in");
         btnLogin.setMinSize(150, 30);
         btnLogin.setMaxSize(150, 30);
+        btnLogin.setStyle(
+                "-fx-background-color: #E3CAD3;" +
+                "-fx-border-color: #792A47;" +
+                "-fx-text-fill: #0C191D;" +
+                "-fx-font-size: 10pt;");
+
         btnLogin.setOnAction(e -> {
             String userName = textFieldUsername.getText();
             String passWord = textFieldPassword.getText();
@@ -153,6 +176,20 @@ public class Main extends Application {
             } else {
               //  primaryStage.setScene(firstPageScene);
                 labelErrorLogin.setText("Fel inloggningsuppgifter. Försök igen.");
+            }
+        });
+
+        //LOGGA IN GENOM ATT TRYCKA ENTER
+        textFieldPassword.setOnKeyPressed(e -> {
+            String userName = textFieldUsername.getText();
+            String passWord = textFieldPassword.getText();
+            if (e.getCode().equals(KeyCode.ENTER)) {
+              //  e.consume();
+                if (login(userName, passWord)) {
+                    primaryStage.setScene(firstPageScene);
+                } else {
+                    labelErrorLogin.setText("Fel inloggningsuppgifter. Försök igen.");
+                }
             }
         });
 
@@ -314,6 +351,87 @@ public class Main extends Application {
         vBoxUpdateCustomer3.setSpacing(10);
         vBoxUpdateCustomer3.setAlignment(Pos.CENTER);
         borderPaneUpdateCustomer.setCenter(vBoxUpdateCustomer3);
+
+
+        // KASSA
+        textFieldInventoryId = new TextField();
+        textFieldStaffId = new TextField();
+        textFieldCustomerId = new TextField();
+        textFieldAmount = new TextField();
+
+        btnRent = new Button("Lägg till film");
+        btnCardPay = new Button("Kortbetalning");
+        btnCashPay = new Button("Kontant betalning");
+
+        datePickerRentalDate = new DatePicker();
+        datePickerReturnDate = new DatePicker();
+
+        datePickerRentalDate.setValue(LocalDate.now());
+
+        textFieldInventoryId.setPromptText("Streckkod");
+        textFieldStaffId.setPromptText("PersonalID");
+        textFieldCustomerId.setPromptText("Kundnummer");
+        textFieldAmount.setPromptText("Totalsumma");
+        datePickerReturnDate.setPromptText("Återlämnas");
+
+        datePickerRentalDate.setMinSize(120, 40);
+        datePickerRentalDate.setMaxSize(120, 40);
+        datePickerReturnDate.setMinSize(120, 40);
+        datePickerReturnDate.setMaxSize(120, 40);
+
+        btnRent.setMinSize(120, 40);
+        btnRent.setMaxSize(120, 40);
+        btnCardPay.setMinSize(120, 40);
+        btnCardPay.setMaxSize(120, 40);
+        btnCashPay.setMinSize(120, 40);
+        btnCashPay.setMaxSize(120, 40);
+
+        textFieldInventoryId.setMinSize(390, 40);
+        textFieldInventoryId.setMaxSize(390, 40);
+        textFieldStaffId.setMinSize(188, 40);
+        textFieldStaffId.setMaxSize(188, 40);
+        textFieldCustomerId.setMinSize(188, 40);
+        textFieldCustomerId.setMaxSize(188, 40);
+        textFieldAmount.setMinSize(120, 40);
+        textFieldAmount.setMaxSize(120, 40);
+
+        hBoxCheckOutDatePickers = new HBox();
+        hBoxCheckOutDatePickers.setAlignment(Pos.CENTER);
+        hBoxCheckOutDatePickers.setSpacing(15);
+        hBoxCheckOutDatePickers.getChildren().addAll(datePickerRentalDate, datePickerReturnDate, btnRent);
+
+        hBoxPayMethod = new HBox();
+        hBoxPayMethod.setAlignment(Pos.CENTER);
+        hBoxPayMethod.setSpacing(15);
+        hBoxPayMethod.setPadding(new Insets(40));
+        hBoxPayMethod.getChildren().addAll(textFieldAmount, btnCardPay, btnCashPay);
+
+        hBoxId = new HBox();
+        hBoxId.setAlignment(Pos.CENTER);
+        hBoxId.setSpacing(15);
+        hBoxId.setPadding(new Insets(40));
+        hBoxId.getChildren().addAll(textFieldCustomerId, textFieldStaffId);
+
+        vBoxCheckOut = new VBox();
+        vBoxCheckOut.setAlignment(Pos.CENTER);
+        vBoxCheckOut.setSpacing(10);
+        vBoxCheckOut.getChildren().addAll(hBoxId, textFieldInventoryId, hBoxCheckOutDatePickers, hBoxPayMethod);
+
+        borderPanecheckOut.setCenter(vBoxCheckOut);
+
+        btnRent.setOnAction(e -> {
+            System.out.println("Film tillagd\nHyresperiod: " + datePickerRentalDate.getValue() +
+                    " - " + datePickerReturnDate.getValue());
+        });
+
+        //Kort och kontant betalning ska ha samma funktion, finns en av varje för syns skull
+        btnCardPay.setOnAction(e -> {
+            System.out.println("Kortbetalning utförd\nTotalsumma: " + textFieldAmount.getText() + "kr");
+        });
+
+        btnCashPay.setOnAction(e -> {
+            System.out.println("Kontant betalning utförd\nTotalsumma: " + textFieldAmount.getText() + "kr");
+        });
 
 
     }

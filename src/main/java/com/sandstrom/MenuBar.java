@@ -31,13 +31,20 @@ public class MenuBar extends HBox {
 
         labelLogo = new Label("Wigell Video");
         labelLogo.setStyle("-fx-font-family: Broadway;" +
-                "-fx-font-size: 30");
+                "-fx-font-size: 40;" +
+                "-fx-padding: 10;" +
+                "-fx-text-fill: #0C191D;");
 
         menuBtnStaff = new Button("Personal");
-        menuBtnStaff.setStyle("-fx-max-width: 80; " +
-                "-fx-min-width: 80; " +
-                "-fx-max-height: 30; " +
-                "-fx-min-height: 30;");
+        menuBtnStaff.setStyle("-fx-max-width: 95; " +
+                "-fx-min-width: 95; " +
+                "-fx-max-height: 35; " +
+                "-fx-min-height: 35;" +
+                "-fx-background-color: #CE8DA7;" +
+                "-fx-border-color: #792A47;" +
+                "-fx-text-fill: #0C191D;" +
+                "-fx-font-size: 10pt;" +
+                "-fx-border-width: 2px");
 
 
 
@@ -50,40 +57,63 @@ public class MenuBar extends HBox {
         menuBtnCustomer.getItems().addAll(menuItemRegisterCustomer, menuItemUpdateCustomer);
 
 
-        menuBtnCustomer.setStyle("-fx-max-width: 80; " +
-                "-fx-min-width: 80; " +
-                "-fx-max-height: 30; " +
-                "-fx-min-height: 30;");
+        menuBtnCustomer.setStyle("-fx-max-width: 95; " +
+                "-fx-min-width: 95; " +
+                "-fx-max-height: 35; " +
+                "-fx-min-height: 35;" +
+                "-fx-background-color: #CE8DA7;" +
+                "-fx-border-color: #792A47;" +
+                "-fx-text-fill: #0C191D;" +
+                "-fx-font-size: 10pt;" +
+                "-fx-border-width: 2px");
        /* menuBtnCustomer.setOnAction(e -> {
             primaryStage.setScene(registerNewCustomerScene);
             System.out.println("Nu är vi på Kund-sidan");
         });*/
 
         menuBtnStore = new Button("Butik");
-        menuBtnStore.setStyle("-fx-max-width: 80; " +
-                "-fx-min-width: 80; " +
-                "-fx-max-height: 30; " +
-                "-fx-min-height: 30;");
+        menuBtnStore.setStyle("-fx-max-width: 95; " +
+                "-fx-min-width: 95; " +
+                "-fx-max-height: 35; " +
+                "-fx-min-height: 35;" +
+                "-fx-background-color: #CE8DA7;" +
+                "-fx-border-color: #792A47;" +
+                "-fx-text-fill: #0C191D;" +
+                "-fx-font-size: 10pt;" +
+                "-fx-border-width: 2px");
+
         menuBtnStore.setOnAction(e -> {
             primaryStage.setScene(storeScene);
             System.out.println("Nu är vi på Butik-sidan");
         });
 
         menuBtnCheckout = new Button("Kassa");
-        menuBtnCheckout.setStyle("-fx-max-width: 80; " +
-                "-fx-min-width: 80; " +
-                "-fx-max-height: 30; " +
-                "-fx-min-height: 30;");
+        menuBtnCheckout.setStyle("-fx-max-width: 95; " +
+                "-fx-min-width: 95; " +
+                "-fx-max-height: 35; " +
+                "-fx-min-height: 35;" +
+                "-fx-background-color: #CE8DA7;" +
+                "-fx-border-color: #792A47;" +
+                "-fx-text-fill: #0C191D;" +
+                "-fx-font-size: 10pt;" +
+                "-fx-border-width: 2px");
+
         menuBtnCheckout.setOnAction(e -> {
             primaryStage.setScene(checkOutScene);
             System.out.println("Nu är vi på Kassa-sidan");
         });
 
         menuBtnFilm = new Button("Film");
-        menuBtnFilm.setStyle("-fx-max-width: 80; " +
-                "-fx-min-width: 80; " +
-                "-fx-max-height: 30; " +
-                "-fx-min-height: 30;");
+        menuBtnFilm.setStyle("-fx-max-width: 95; " +
+                "-fx-min-width: 95; " +
+                "-fx-max-height: 35; " +
+                "-fx-min-height: 35;" +
+                "-fx-background-color: #CE8DA7;" +
+                "-fx-border-color: #792A47;" +
+                "-fx-text-fill: #0C191D;" +
+                "-fx-font-size: 10pt;" +
+                "-fx-border-width: 2px");
+
         menuBtnFilm.setOnAction(e -> {
             primaryStage.setScene(filmScene);
             System.out.println("Nu är vi på Film-sidan");
