@@ -446,6 +446,37 @@ public class Main extends Application {
         btnCashPay.setMinSize(120, 40);
         btnCashPay.setMaxSize(120, 40);
 
+        btnRent.setStyle    ( "-fx-background-color: #C57C07;"+
+        "-fx-text-fill: #F9F7DC;"+
+        "-fx-font-size: 12px;"+
+        "-fx-border-width: 2;"+
+        "-fx-border-radius: 3;"+
+        "-fx-max-height: 40;"+
+        "-fx-min-height: 40;"+
+        "-fx-min-width: 120;"+
+        "-fx-max-width: 120;"+
+        "-fx-background-color: linear-gradient(to bottom,#F69F13, #C57C07 );");
+        btnCardPay.setStyle ( "-fx-background-color: #C57C07;"+
+                "-fx-text-fill: #F9F7DC;"+
+                "-fx-font-size: 12px;"+
+                "-fx-border-width: 2;"+
+                "-fx-border-radius: 3;"+
+                "-fx-max-height: 40;"+
+                "-fx-min-height: 40;"+
+                "-fx-min-width: 120;"+
+                "-fx-max-width: 120;"+
+                "-fx-background-color: linear-gradient(to bottom,#F69F13, #C57C07 );");
+        btnCashPay.setStyle ( "-fx-background-color: #C57C07;"+
+                "-fx-text-fill: #F9F7DC;"+
+                "-fx-font-size: 12px;"+
+                "-fx-border-width: 2;"+
+                "-fx-border-radius: 3;"+
+                "-fx-max-height: 40;"+
+                "-fx-min-height: 40;"+
+                "-fx-min-width: 120;"+
+                "-fx-max-width: 120;"+
+                "-fx-background-color: linear-gradient(to bottom,#F69F13, #C57C07 );");
+
         textFieldInventoryId.setMinSize(390, 40);
         textFieldInventoryId.setMaxSize(390, 40);
         textFieldStaffId.setMinSize(188, 40);
