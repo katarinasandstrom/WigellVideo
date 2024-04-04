@@ -25,17 +25,18 @@ public class Main extends Application {
     MenuBar menuBarLogin, menuBarRegNewStaff,menuBarUpdateStaff, menuBarRegisterNewCustomer,menuBarUpdateCustomer, menuBarRegStore, menuBarCheckOut, menuBarFilm,  menuBarFirstPage,
             menuBarUpdateStore,menuBarSearchFilm, menuBarRegisterFilm;
 
-    Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer;
-    Button btnLogin,  btnRegisterNewStaff, btnUpdateStaff,  btnRent, btnCardPay, btnCashPay;
+    Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore;
+    Button btnLogin,  btnRegisterNewStaff, btnUpdateStaff,  btnRent, btnCardPay, btnCashPay, btnRegStore;
+
 
     DatePicker datePickerRentalDate, datePickerReturnDate;
 
     TextField textFieldUsername, textFieldPassword, textFieldRegCustomerFName, textFieldRegCustomerLName,textFieldRegCustomerEmail, textFieldUpdateCustomerFName,
-    textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail,textFieldInventoryId, textFieldStaffId, textFieldCustomerId, textFieldAmount;
+    textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail,textFieldInventoryId, textFieldStaffId, textFieldCustomerId, textFieldAmount, textFieldManagerId ;
 
-    VBox vBoxStaff, vBoxRegCustomer1, vBoxRegCustomer2, vBoxRegCustomer3, vBoxUpdateCustomer1, vBoxUpdateCustomer2,
-    vBoxUpdateCustomer3, vBoxCheckOut ;
-    HBox hBoxregCustomer, hBoxUpdateCustomer,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId;
+    VBox vBoxStaff, vBoxRegCustomer1, vBoxRegCustomer2, vBoxRegCustomer3, vBoxUpdateCustomer1, vBoxUpdateCustomer2, vBoxRegStore1, vBoxRegStore2,
+    vBoxUpdateCustomer3, vBoxCheckOut, vBoxRegStore3 ;
+    HBox hBoxregCustomer, hBoxUpdateCustomer,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore;
     StackPane stackPaneLogin;
 
     //Comment for push
@@ -44,7 +45,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         // Sökväg till bildfil
-        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\505224fd-bc14-4ca1-8aeb-6dc97abf065e (2).png";
+        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\rättstavad!.png";
 
 
         // Skapar en ImageView och laddar in bilden
@@ -74,15 +75,25 @@ public class Main extends Application {
 
         // scener
         loginScene = new Scene(stackPaneLogin, 1000, 700);
+        loginScene.getStylesheets().add("style.css");
         firstPageScene = new Scene (borderPaneFirstPage, 1000, 700);
+        firstPageScene.getStylesheets().add("style.css");
         registerNewStaffScene = new Scene(borderPaneRegNewStaff, 1000, 700);
+        registerNewStaffScene.getStylesheets().add("style.css");
         updateStaffScene = new Scene(borderPaneUpdateStaff, 1000, 700);
+        updateStaffScene.getStylesheets().add("style.css");
         registerNewCustomerScene = new Scene(borderPaneRegNewCustomer, 1000, 700);
+        registerNewCustomerScene.getStylesheets().add("style.css");
         updateCustomerScene = new Scene (borderPaneUpdateCustomer, 1000, 700);
+        updateCustomerScene.getStylesheets().add("style.css");
         registerNewStoreScene = new Scene(borderPaneRegisterStore, 1000, 700);
+        registerNewStoreScene.getStylesheets().add("style.css");
         updateStoreScene = new Scene( borderPaneUpdateStore, 1000, 700);
+        updateStoreScene.getStylesheets().add("style.css");
         checkOutScene = new Scene(borderPanecheckOut, 1000, 700);
+      //  checkOutScene.getStylesheets().add("style.css");
         searchFilmScene = new Scene(borderPaneSearchFilm, 1000, 700);
+        searchFilmScene.getStylesheets().add("style.css");
         registerFilmScene = new Scene(borderPaneRegisterFilm, 1000, 700);
 
 
@@ -178,7 +189,7 @@ public class Main extends Application {
             String userName = textFieldUsername.getText();
             String passWord = textFieldPassword.getText();
             if (login(userName, passWord)) {
-                primaryStage.setScene(firstPageScene);
+                primaryStage.setScene(checkOutScene);
             } else {
               //  primaryStage.setScene(firstPageScene);
                 labelErrorLogin.setText("Fel inloggningsuppgifter. Försök igen.");
@@ -238,6 +249,7 @@ public class Main extends Application {
 
         textFieldRegCustomerEmail = new TextField();
         textFieldRegCustomerEmail.setPromptText("Mailadress");
+
         RegistryAddress customerAddress = new RegistryAddress();
 
 
@@ -423,6 +435,40 @@ public class Main extends Application {
         btnCashPay.setOnAction(e -> {
             System.out.println("Kontant betalning utförd\nTotalsumma: " + textFieldAmount.getText() + "kr");
         });
+
+
+        //REGISTRERA NY BUTIK
+        labelRegNewStore = new Label("Registrera ny butik");
+
+        RegistryAddress addressStore = new RegistryAddress();
+        textFieldManagerId = new TextField();
+        textFieldManagerId.setMinSize(140,40);
+        textFieldManagerId.setMaxSize(140,40);
+
+        btnRegStore = new Button("Registrera butik");
+        btnRegStore.setMinSize(140,40);
+        btnRegStore.setMaxSize(140,40);
+
+       // btnRegStore.setOnAction(); Kod för att lägga till ny butik, popup med butiksnr et, lastUpdate
+
+        vBoxRegStore1 = new VBox();
+        vBoxRegStore1.getChildren().addAll(addressStore.getAddressView());
+        vBoxRegStore1.setSpacing(10);
+        vBoxRegStore1.setAlignment(Pos.CENTER);
+        vBoxRegStore2 = new VBox();
+        vBoxRegStore2.getChildren().addAll(textFieldManagerId, btnRegStore);
+        vBoxRegStore2.setSpacing(10);
+        vBoxRegStore2.setAlignment(Pos.CENTER);
+
+        hBoxRegStore = new HBox();
+        hBoxRegStore.getChildren().addAll(vBoxRegStore1, vBoxRegStore2);
+        hBoxRegStore.setAlignment(Pos.CENTER);
+        hBoxRegStore.setSpacing(10);
+        vBoxRegStore3 = new VBox();
+        vBoxRegStore3.getChildren().addAll(labelRegNewStore, hBoxRegStore);
+        vBoxRegStore3.setAlignment(Pos.CENTER);
+        borderPaneRegisterStore.setCenter(vBoxRegStore3);
+
     }
 
     public static void main(String[] args) {

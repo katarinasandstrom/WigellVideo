@@ -34,7 +34,8 @@ public class MenuBar extends HBox {
 
         labelLogo = new Label("Wigell Video");
         labelLogo.setStyle("-fx-font-family: Broadway;" +
-                "-fx-font-size: 30");
+                "-fx-font-size: 30;" +
+                "-fx-text-fill: #0C191D");
 
         menuBtnStaff = new MenuButton("Personal");
         MenuItem menuItemRegNewStaff = new MenuItem("Registrera ny personal");
@@ -45,7 +46,7 @@ public class MenuBar extends HBox {
                 "-fx-min-width: 80; " +
                 "-fx-max-height: 30; " +
                 "-fx-min-height: 30;" +
-                "-fx-background-color:#E3CAD3");
+                "-fx-background-color:#F3E2E9");
         menuBtnStaff.getItems().addAll(menuItemRegNewStaff, menuItemUpdateStaff);
 
 
@@ -108,5 +109,6 @@ public class MenuBar extends HBox {
         this.getChildren().addAll(labelLogo,menuBtnCheckout,menuBtnCustomer, menuBtnStaff,  menuBtnStore, menuBtnFilm);
         this.setStyle("-fx-alignment: center; " +
                 "-fx-spacing: 10px; ");
+        this.getStylesheets().add("style.css");
     }
 }

@@ -14,14 +14,19 @@ public class RegistryAddress extends VBox {
 
         textFieldRegAddress = new TextField();
         textFieldRegAddress.setPromptText("Gatuadress");
+
         textFieldRegDistrict = new TextField();
         textFieldRegDistrict.setPromptText("Distrikt");
+
         textFieldRegPostalCode = new TextField();
         textFieldRegPostalCode.setPromptText("Postnummer");
+
         textFieldRegPhone = new TextField();
         textFieldRegPhone.setPromptText("Telefonnummer");
+
         textFieldRegCity = new TextField();
         textFieldRegCity.setPromptText("Postadress");
+
         textFieldRegCountry = new TextField();
         textFieldRegCountry.setPromptText("Land");
 
@@ -38,6 +43,7 @@ public class RegistryAddress extends VBox {
         HBox hBoxRegAddress = new HBox();
         hBoxRegAddress.getChildren().addAll(vBoxRegAddress1, vboxRegAddress2);
         hBoxRegAddress.setAlignment(Pos.CENTER);
+        hBoxRegAddress.setSpacing(10);
 
 
         getChildren().add(hBoxRegAddress); // Lägg till hbox i vbox
