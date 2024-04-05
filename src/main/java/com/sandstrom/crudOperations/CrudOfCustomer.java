@@ -1,0 +1,94 @@
+package com.sandstrom.crudOperations;
+
+import com.sandstrom.entities.*;
+import javafx.scene.control.Label;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
+
+public class CrudOfCustomer {
+    public void registerNewCustomer(Label labelDuplicateCustomer, String firstName, String lastName, String email, String country, String city,
+                                    String address, String district, String postalCode, String phone){
+
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = null;
+        Transaction transaction = null;
+        try{
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            Customer exisitngCustomer = session.get(Customer.class, email);
+            Address getNewAddress = new Address();
+
+            if(exisitngCustomer == null){
+                String address2 = null;
+                short city_id = 0;
+                String location = null;
+                Timestamp lastUpdate = Timestamp.valueOf("1111-11-11");
+                Timestamp createDate = Timestamp.valueOf("1111-11-11");
+                byte active = 1;
+                Byte store_id = 0;
+
+                Country countries = new Country(country, lastUpdate); // get the country that matches
+
+                //Get country Id
+                City cities = new City(); // get the city that matches or add new city
+                cities.setCity(city); // set fk
+                cities.setCountry(countries);
+                cities.setLastUpdate(lastUpdate);
+
+
+                //get city Id
+                Address addresses = new Address(); // get the address that matches or add new address
+                addresses.setAddress(address);
+                addresses.setAddress2(null);
+                addresses.setDistrict(district);
+                addresses.setCity(cities);// set fk
+                addresses.setPostalCode(postalCode);
+                addresses.setPhone(phone);
+                addresses.setLocation(null);
+                addresses.setLastUpdate(lastUpdate);
+
+                //Get address id. Customer.setAddress(address).
+
+                Store store = session.get(Store.class, 1); // get the store which the customer is connected to.
+
+                Customer customers = new Customer();
+                customers.setStore(store); // Set fk
+                customers.setFirstName(firstName);
+                customers.setLastName(lastName);
+                customers.setEmail(email);
+                customers.setAddress(addresses); // Set fk
+                customers.setActive(active);
+                customers.setCreateDate(createDate);
+                customers.setLastUpdate(lastUpdate);
+
+
+
+                session.persist(city);
+                session.persist(addresses);
+                session.persist(customers);
+
+                transaction.commit();
+            }else{
+                labelDuplicateCustomer.setText("En användare med den angivna e-postadressen " +
+                        "finns redan i systemet.");
+            }
+
+        }catch(Exception e){
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }finally {
+            if (session != null) {
+                session.close();
+            }
+            sessionFactory.close();
+        }
+    }
+}

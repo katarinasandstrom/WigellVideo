@@ -6,7 +6,10 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
+
 @Entity
+@NamedNativeQuery(name = "Customer.table", query = "SELECT * FROM Customer", resultClass = Customer.class)
+//@NamedNativeQuery(name = "Customer.")
 @Table(name = "customer", schema = "sakila")
 public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,8 +66,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(short customerId, Byte storeId, String firstName, String lastName, String email, short addressId, byte active, Timestamp createDate, Timestamp lastUpdate) {
-        this.customerId = customerId;
+    public Customer( Byte storeId, String firstName, String lastName, String email, short addressId, byte active, Timestamp createDate, Timestamp lastUpdate) {
         this.storeId = storeId;
         this.firstName = firstName;
         this.lastName = lastName;

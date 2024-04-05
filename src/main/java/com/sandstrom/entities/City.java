@@ -16,11 +16,25 @@ public class City {
     @Column(name = "city")
     private String city;
     @Basic
-    @Column(name = "country_id")
+    @Column(name = "country_id", insertable=false, updatable=false)
     private short countryId;
     @Basic
     @Column(name = "last_update")
     private Timestamp lastUpdate;
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "country_id", referencedColumnName = "country_id")
+    private Country country;
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+
 
     public City() {
     }
