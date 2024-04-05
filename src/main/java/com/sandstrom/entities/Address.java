@@ -50,6 +50,7 @@ public class Address {
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "city_id", referencedColumnName = "city_id")
     private City city;
+
     public City getCity() {
         return city;
     }
@@ -71,14 +72,40 @@ public class Address {
     }
 
     @OneToMany(mappedBy = "address")
-    private Collection<Staff> customersByAddresId;
+    private Collection<Customer> customersByAddresId;
 
-    public Collection<Staff> getCustomersByAddresId() {
+    public Collection<Customer> getCustomersByAddresId() {
         return customersByAddresId;
     }
 
-    public void setCustomersByAddresId(Collection<Staff> customersByAddresId) {
+    public void setStoresByAddressId(Collection<Store> storesByAddressId) {
+        this.storesByAddressId = storesByAddressId;
+    }
+
+    public void setCustomersByAddresId(Collection<Customer> customersByAddresId) {
         this.customersByAddresId = customersByAddresId;
+    }
+
+    public Collection<Store> getStoresByAddressId() {
+        return storesByAddressId;
+    }
+
+    @OneToMany(mappedBy = "address")
+    private Collection<Store> storesByAddressId;
+
+    public Address(String address, String address2, String district, short cityId, String postalCode, String phone, String location, Timestamp lastUpdate) {
+        this.address = address;
+        this.address2 = address2;
+        this.district = district;
+        this.cityId = cityId;
+        this.postalCode = postalCode;
+        this.phone = phone;
+        this.location = location;
+        this.lastUpdate = lastUpdate;
+    }
+
+    public Address(){
+
     }
 
     public short getAddressId() {
