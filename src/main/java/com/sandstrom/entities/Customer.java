@@ -9,6 +9,9 @@ import java.util.Objects;
 
 @Entity
 @NamedNativeQuery(name = "Customer.table", query = "SELECT * FROM Customer", resultClass = Customer.class)
+@NamedNativeQuery(name = "Customer.byEmail", query = "SELECT c.* FROM customer c WHERE c.email = :email ", resultClass = Customer.class)
+@NamedNativeQuery(name = "Customer.pk", query = "SELECT c.customer_id from customer c WHERE c.email =: email", resultClass = Customer.class)
+@NamedNativeQuery(name = "Customer.address", query = "SELECT COUNT(c.address_id) FROM Customer c WHERE c.address_id = :address_id", resultClass = Long.class)
 //@NamedNativeQuery(name = "Customer.")
 @Table(name = "customer", schema = "sakila")
 public class Customer {
@@ -49,19 +52,19 @@ public class Customer {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<Payment> payments;
+    @OneToMany(mappedBy = "customer")
+    private List<Payment> paymentsByCustomerId;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
-    @ManyToOne
-    @JoinColumn(name = "store_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "store_id", referencedColumnName = "store_id")
     private Store store;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<Rental> rentals;
+    @OneToMany(mappedBy = "customer")
+    private List<Rental> rentalsByCustomerId;
 
     public Customer() {
     }
@@ -149,12 +152,12 @@ public class Customer {
         this.lastUpdate = lastUpdate;
     }
 
-    public List<Payment> getPayments() {
-        return payments;
+    public List<Payment> getPaymentsByCustomerId() {
+        return paymentsByCustomerId;
     }
 
-    public void setPayments(List<Payment> payments) {
-        this.payments = payments;
+    public void setPaymentsByCustomerId(List<Payment> payments) {
+        this.paymentsByCustomerId = payments;
     }
 
     public Address getAddress() {
@@ -173,12 +176,12 @@ public class Customer {
         this.store = store;
     }
 
-    public List<Rental> getRentals() {
-        return rentals;
+    public List<Rental> getRentalsByCustomerId() {
+        return rentalsByCustomerId;
     }
 
-    public void setRentals(List<Rental> rentals) {
-        this.rentals = rentals;
+    public void setRentalsByCustomerId(List<Rental> rentals) {
+        this.rentalsByCustomerId = rentals;
     }
 
     @Override

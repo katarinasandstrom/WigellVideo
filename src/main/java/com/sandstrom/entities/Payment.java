@@ -39,15 +39,15 @@ public class Payment {
     private Timestamp lastUpdate;
 
     @ManyToOne
-    @JoinColumn(name = "staff_id")
+    @JoinColumn(name = "staff_id", referencedColumnName = "staff_id")
     private Staff staff;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "rental_id")
+    @JoinColumn(name = "rental_id", referencedColumnName = "rental_id")
     private Rental rental;
 
     public Payment() {
