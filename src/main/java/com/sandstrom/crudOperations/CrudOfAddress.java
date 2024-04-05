@@ -13,6 +13,7 @@ public class CrudOfAddress{
     private Address address = new Address();
     private Scanner scanner = new Scanner(System.in);
 
+
     public void getAllAddresses() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();

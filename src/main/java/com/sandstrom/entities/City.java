@@ -94,7 +94,7 @@ public class City {
 
     @Override
     public String toString() {
-        return "CityEntity{" +
+        return "City{" +
                 "cityId=" + cityId +
                 ", city='" + city + '\'' +
                 ", countryId=" + countryId +

@@ -11,7 +11,7 @@
 
         <!--400Lingon!-->
         <property name="connection.username">root</property>
-        <property name="connection.password">400Lingon!</property>
+        <property name="connection.password">123456789Shqa</property>
         <property name="connection.pool_size">3</property>
         <!--property name="dialect">org.hibernate.dialect.MySQLDialect</property-->
         <property name="current_session_context_class">thread</property>

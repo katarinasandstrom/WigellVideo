@@ -21,8 +21,7 @@ public class CrudOfCities{
 
         List<City> cities = session.createQuery("FROM City ", City.class).list();
         for (City city : cities){
-            System.out.println("City-id är: " + city.getCityId() + " stan: " + city.getCity() + " landet: " + city.getCountryId() +
-                    "senaste uppdatering: " + city.getLastUpdate());
+
         }
 
         session.getTransaction().commit();
