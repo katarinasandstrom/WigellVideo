@@ -3,8 +3,6 @@
 }
 
 
-
-
 .label{
     -fx-min-height: 40;
     -fx-max-height: 40;
@@ -59,6 +57,16 @@
     -fx-background-color:#F9F7DC ;
     -fx-text-fill: #303538;
 
+}
+
+.menu-item {
+    -fx-background-color: #F9F7DC;
+    -fx-text-fill: #303538;
+    -fx-control-inner-background: #F9F7DC;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom,#F69F13, #C57C07 );
 }
 .toggle-button{
     -fx-background-color: #C57C07;

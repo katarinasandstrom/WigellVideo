@@ -111,6 +111,7 @@ public class MenuBar extends HBox {
         MenuItem menuItemRegisterNewFilm = new MenuItem("Registrera ny film");
         menuItemRegisterNewFilm.setOnAction(e-> primaryStage.setScene(registerFilmScene));
         menuBtnFilm.getItems().addAll(menuItemSearchFilm, menuItemRegisterNewFilm);
+        menuItemSearchFilm.getStyleClass().add("menu-item");
 
         menuBtnCustomer.getStyleClass().add("menu-button");
         menuBtnStore.getStyleClass().add("menu-button");

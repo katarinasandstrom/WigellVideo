@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -20,15 +21,17 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Objects;
 
 
 import static com.sandstrom.Methods.login;
 
 
 public class Main extends Application {
-    Scene loginScene,  registerNewStoreScene,updateStoreScene, checkOutScene, searchFilmScene,registerFilmScene,  registerNewStaffScene,
+    Scene loginScene, staffScene, customerScene, registerNewStoreScene,updateStoreScene, checkOutScene, searchFilmScene,registerFilmScene,  registerNewStaffScene,
            updateStaffScene, registerNewCustomerScene, updateCustomerScene,  firstPageScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene;
     BorderPane borderPaneLogin,borderPaneRegNewCustomer,borderPaneUpdateCustomer, borderPaneRegisterStore,
             borderPanecheckOut, borderPaneRegisterFilm,borderPaneSearchFilm, borderPaneUpdateStaff,borderPaneRegNewStaff, borderPaneFirstPage, borderPaneUpdateStore,
@@ -39,14 +42,14 @@ public class Main extends Application {
     Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore, labelShowCustomers, labelEmpty,
             labelUpdateStore, labelEmpty2, labelDuplicateCustomer, labelRegNewStaff, labelUpdateStaff,  labelShowStaff;
     Button btnLogin, btnUpdateStaff, btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer,  btnSearchCustomer, btnSearchCustomerNr,
-            btnFetchStoreInfo, btnUpdateStore,  btnRegisterNewStaff, btnSearchStaff, btnUpdateCustomer, btnDeleteCustomer  ;
+            btnFetchStoreInfo, btnUpdateStore,  btnRegisterNewStaff, btnSearchFilm, btnSearchStaff, btnUpdateCustomer, btnDeleteCustomer  ;
     MenuButton menuButtonStore, menuButtonStoreUpdate;
     MenuItem  menuItemStore1Update, menuItemStore2Update;
     TextArea textAreaAllCustomers;
 
     private ObservableList<Customer> customerList;
 
-    TableView tableViewCustomers, tableViewStaff;
+    TableView tableViewCustomers, tableViewStaff, tableViewFilms;
     TableColumn <Customer, Short> columnCustomerId;
     TableColumn<Customer, String>  columnFirstName, columnLastName, columnEmail;
     TableColumn <Customer, Byte> columnActive;
@@ -69,21 +72,44 @@ public class Main extends Application {
    TableColumn <Staff, Byte> columnStaffId,columnStaffActive;
    TableColumn <Staff, Timestamp> columnStaffLastUpdate;
 
+    TableColumn<Film, Short> columnFilmId;
+    TableColumn<Film, String> columnTitle, columnDescription,
+            columnRating, columnSpecialFeatures;
+    TableColumn<Film, Integer> columnReleaseYear, columnLength,
+            columnRentalDuration;
+    TableColumn<Film, BigDecimal> columnRentalRate, columnReplacementCost;
+    TableColumn<Film, Timestamp> columnLastUpdateFilm;
+
+    TableColumn<Language, String> columnNameLanguage;
+    TableColumn<Language, Timestamp> columnLastUpdateLanguage;
+
+    TableColumn<Inventory, Integer> columnInventoryId;
+    TableColumn<Inventory, Timestamp> columnLastUpdateInventory;
+
+    TableColumn<Store, Byte> columnStoreIdFilm;
+
+    TableColumn<Actor, String> columnFirstNameActor, columnLastNameActor;
+    TableColumn<Actor, Timestamp> columnLastUpdateActor;
+
+    TableColumn<Category, String> columnCategory;
+    TableColumn<Category, Timestamp> columnLastUpdateCategory;
+
+
     DatePicker datePickerRentalDate, datePickerReturnDate;
 
     TextField textFieldUsername, textFieldPassword, textFieldRegCustomerFName, textFieldRegCustomerLName,textFieldRegCustomerEmail, textFieldUpdateCustomerFName,
     textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail,textFieldInventoryId, textFieldStaffId, textFieldCustomerId, textFieldAmount, textFieldManagerId,
             textFieldSearchCustomer,textFieldUpdateManagerId,  textFieldSearchCustomerNr , textFieldStaffFName, textFieldStaffLName,
             textFieldStaffEmail, textFieldStaffUserName, textFieldStaffPassword,  textFieldUpdateStaffFName, textFieldUpdateStaffLName,
-            textFieldUpdateStaffEmail, textFieldUpdateStaffUserName, textFieldUpdateStaffPassword, textFieldSearchStaff ;
+            textFieldUpdateStaffEmail, textFieldUpdateStaffUserName, textFieldUpdateStaffPassword, textFieldSearchStaff, textFieldSearchFilm;
 
     VBox vBoxStaff, vBoxRegCustomer1, vBoxRegCustomer2, vBoxRegCustomer3, vBoxUpdateCustomer1, vBoxUpdateCustomer2, vBoxRegStore1, vBoxRegStore2,
     vBoxUpdateCustomer3, vBoxCheckOut, vBoxRegStore3, vBoxShowCustomers, vBoxUpdateStore1, vBoxUpdateStore2, vBoxUpdateStore3,  vBoxUpdateCustomer4,
             vBoxRegStaff1, vBoxRegStaff2, vBoxRegStaff3, vBoxRegStaff4,  vBoxUpdateStaff1, vBoxUpdateStaff2, vBoxUpdateStaff3,
-    vBoxUpdateStaff4,  vBoxUpdategStaff4, vBoxShowStaff;
+    vBoxUpdateStaff4, vBoxCheckout1, vBoxShowStaff, vBoxShowFilms;
 
     HBox hBoxregCustomer, hBoxUpdateCustomer2,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore, hBoxShowCustomers, hBoxUpdateCustomer1,
-            hBoxUpdateStore, hBoxRegStaff, hBoxUpdateStaff,hBoxShowStaff  ;
+            hBoxUpdateStore, hBoxRegStaff, hBoxUpdateStaff,hBoxShowStaff, hBoxSearchFilm, hBoxCheckOutPage;
     StackPane stackPaneLogin;
 
     TextArea textAreaCheckOut;
@@ -94,7 +120,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         // Sökväg till bildfil
-        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
+        String imagePath = "C:\\Users\\helga\\OneDrive\\Skrivbord\\Skola\\Software Development Process\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
 
 
         // Skapar en ImageView och laddar in bilden
@@ -160,7 +186,9 @@ public class Main extends Application {
         showRentalScene.getStylesheets().add("style.css");
 
 
-                // meny-objekt
+
+
+                // menyer
         menuBarLogin = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
                 checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
@@ -208,6 +236,7 @@ public class Main extends Application {
                 checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
 
         // Lägg till menyer till varje BorderPane
+      //  borderPaneLogin.setTop(menuBarLogin);
 
         borderPaneRegNewCustomer.setTop(menuBarRegisterNewCustomer);
         borderPaneUpdateCustomer.setTop(menuBarUpdateCustomer);
@@ -224,6 +253,8 @@ public class Main extends Application {
         borderPaneShowStores.setTop(menuBarShowStores);
         borderPaneShowRentals.setTop(menuBarShowAllRentals);
 
+
+
         // Ställ in startscenen
         primaryStage.setScene(loginScene);
         primaryStage.setTitle("Wigell Video");
@@ -232,11 +263,24 @@ public class Main extends Application {
 
         //LOGIN-SIDAN
 
+      /*  labelLogin = new Label("Wigell Video");
+        labelLogin.setMinSize(150,30);
+        labelLogin.setMaxSize(150,30);
+        labelLogin.setAlignment(Pos.CENTER);
+        labelLogin.setStyle("-fx-font-family: Broadway;"+
+                            "-fx-font-size: 21;" +
+                            "-fx-text-fill: #303538;"+
+                            "-fx-background-color: #f9f7dc;"+
+                            "-fx-border-color: #303538;" +
+                            "-fx-border-width: 3px");
+*/
+
+
         textFieldUsername = new TextField();
         textFieldUsername.setPromptText("Användarnamn");
         textFieldUsername.setMinSize(150, 30);
         textFieldUsername.setMaxSize(150, 30);
-
+     //
         textFieldPassword = new TextField();
         textFieldPassword.setPromptText("Lösenord");
         textFieldPassword.setMinSize(150, 30);
@@ -253,6 +297,8 @@ public class Main extends Application {
                 }
             }
         });
+        //String passWord = textFieldPassword.getText();
+
         labelErrorLogin = new Label(" ");
         btnLogin = new Button("Logga in");
         btnLogin.getStyleClass().add("btnLogin");
@@ -270,6 +316,7 @@ public class Main extends Application {
             }
         });
 
+
         VBox vBoxLogin1 = new VBox();
         vBoxLogin1.getChildren().add(imageViewVideoStore);
         vBoxLogin1.setAlignment(Pos.CENTER);
@@ -281,8 +328,9 @@ public class Main extends Application {
         vBoxLogin2.setAlignment(Pos.CENTER);
         vBoxLogin2.setSpacing(10);
 
-        stackPaneLogin.getChildren().addAll(borderPaneLogin, vBoxLogin2);
 
+
+        stackPaneLogin.getChildren().addAll(borderPaneLogin, vBoxLogin2);
 
 
         //REGISTRERA PERSONAL-SIDA
@@ -586,10 +634,7 @@ public class Main extends Application {
         toggleButtonCustomerIsActive.setOnAction(event -> {
             if (toggleButtonCustomerIsActive.isSelected()) {
                 toggleButtonCustomerIsActive.setText("Inaktiv");
-                toggleButtonCustomerIsActive.setStyle("-fx-background-color: #A5A5A5, #737373; " +
-                        "-fx-background-insets: 0, 1; " +
-                        "-fx-background-radius: 3, 2; " +
-                        "-fx-text-fill: black;");
+
                 // KOD FÖR ATT UPPDATERA OM KUNDEN HAR AVSLUTAT SITT MEDLEMSKAP
             } else {
                 toggleButtonCustomerIsActive.setText("Aktiv");
@@ -642,10 +687,17 @@ public class Main extends Application {
         customerList = FXCollections.observableArrayList();
         labelShowCustomers = new Label("Kundöversikt");
 
+        /* textAreaAllCustomers = new TextArea();
+        textAreaAllCustomers.setMinSize(500, 500);
+        textAreaAllCustomers.setMaxSize(500, 500);
+
+
+         */
         tableViewCustomers = new TableView<>();
         tableViewCustomers.setMinSize(800, 400);
         tableViewCustomers.setMaxSize(800, 400);
         tableViewCustomers.setStyle("-fx-background-color: #F9F7DC;");
+
 
         tableViewCustomers.getItems().clear();
 
@@ -723,6 +775,14 @@ public class Main extends Application {
 
 
 // KASSA
+        textAreaCheckOut = new TextArea();
+        textAreaCheckOut.setMaxSize(390, 270);
+        textAreaCheckOut.setMinSize(390, 270);
+        textAreaCheckOut.setStyle("-fx-background-color: #F9F7DC;" +
+                "-fx-text-fill: #303538;" +
+                "-fx-control-inner-background: #F9F7DC;" +
+                "-fx-font-size: 10pt");
+
         textFieldInventoryId = new TextField();
         textFieldStaffId = new TextField();
         textFieldCustomerId = new TextField();
@@ -754,6 +814,8 @@ public class Main extends Application {
                         "        -fx-text-fill: #303538;");
         datePickerReturnDate.setStyle(" -fx-background-color:#F9F7DC ;\n" +
                         "        -fx-text-fill: #303538;");
+
+
 
         datePickerRentalDate.setMinSize(120, 40);
         datePickerRentalDate.setMaxSize(120, 40);
@@ -798,8 +860,8 @@ public class Main extends Application {
                 "-fx-max-width: 120;"+
                 "-fx-background-color: linear-gradient(to bottom,#F69F13, #C57C07 );");
 
-        datePickerRentalDate.setStyle("-fx-control-inner-background: #F9F7DC;");
-        datePickerReturnDate.setStyle("-fx-control-inner-background: #F9F7DC;");
+        datePickerRentalDate.setStyle("-fx-control-inner-background: #F9F7DC;" + "-fx-text-fill: #303538;");
+        datePickerReturnDate.setStyle("-fx-control-inner-background: #F9F7DC;" + "-fx-text-fill: #303538;");
 
         textFieldInventoryId.setMinSize(390, 40);
         textFieldInventoryId.setMaxSize(390, 40);
@@ -832,7 +894,16 @@ public class Main extends Application {
         vBoxCheckOut.setSpacing(10);
         vBoxCheckOut.getChildren().addAll(hBoxId, textFieldInventoryId, hBoxCheckOutDatePickers, hBoxPayMethod);
 
-        borderPanecheckOut.setCenter(vBoxCheckOut);
+        vBoxCheckout1 = new VBox();
+        vBoxCheckout1.setAlignment(Pos.CENTER);
+        vBoxCheckout1.getChildren().addAll(textAreaCheckOut);
+
+        hBoxCheckOutPage = new HBox();
+        hBoxCheckOutPage.setAlignment(Pos.CENTER);
+        hBoxCheckOutPage.setSpacing(-25);
+        hBoxCheckOutPage.getChildren().addAll(vBoxCheckout1, vBoxCheckOut);
+
+        borderPanecheckOut.setCenter(hBoxCheckOutPage);
         borderPanecheckOut.setStyle("-fx-background-color: #94B1B3;");
 
         btnRent.setOnAction(e -> {
@@ -857,13 +928,11 @@ public class Main extends Application {
         textFieldManagerId = new TextField();
         textFieldManagerId.setMinSize(140,40);
         textFieldManagerId.setMaxSize(140,40);
-        textFieldManagerId.setPromptText("Butikschefens id");
 
         btnRegStore = new Button("Registrera butik");
         btnRegStore.setMinSize(140,40);
         btnRegStore.setMaxSize(140,40);
 
-        labelEmpty = new Label();
        // btnRegStore.setOnAction(); Kod för att lägga till ny butik, popup med butiksnr et, lastUpdate
 
         vBoxRegStore1 = new VBox();
@@ -871,7 +940,7 @@ public class Main extends Application {
         vBoxRegStore1.setSpacing(10);
         vBoxRegStore1.setAlignment(Pos.CENTER);
         vBoxRegStore2 = new VBox();
-        vBoxRegStore2.getChildren().addAll(textFieldManagerId, btnRegStore, labelEmpty);
+        vBoxRegStore2.getChildren().addAll(textFieldManagerId, btnRegStore);
         vBoxRegStore2.setSpacing(10);
         vBoxRegStore2.setAlignment(Pos.CENTER);
 
@@ -884,44 +953,103 @@ public class Main extends Application {
         vBoxRegStore3.setAlignment(Pos.CENTER);
         borderPaneRegisterStore.setCenter(vBoxRegStore3);
 
+        //FILMSIDAN
+        tableViewFilms = new TableView<>();
+        tableViewFilms.setMinSize(800, 500);
+        tableViewFilms.setMaxSize(800, 500);
+        tableViewFilms.setStyle("-fx-background-color: #F9F7DC;");
+
+        Label customPlaceholder = new Label(" ");
+        tableViewFilms.setPlaceholder(customPlaceholder);
+
+        textFieldSearchFilm = new TextField();
+        textFieldSearchFilm.setPromptText("Filmtitel");
+        btnSearchFilm = new Button("Sök film");
+
+        columnFilmId = new TableColumn<>("Film-id");
+        columnTitle = new TableColumn<>("Filmtitel");
+        columnDescription = new TableColumn<>("Handling");
+        columnRating = new TableColumn<>("Betyg");
+        columnSpecialFeatures = new TableColumn<>("Extra");
+        columnReleaseYear = new TableColumn<>("År");
+        columnLength = new TableColumn<>("Längd");
+        columnRentalDuration = new TableColumn<>("Hyrestid");
+        columnRentalRate = new TableColumn<>("Pris");
+        columnReplacementCost = new TableColumn<>("Ersättningskostnad");
+        columnLastUpdateFilm = new TableColumn<>("Filmer senast uppdaterat");
+        columnNameLanguage = new TableColumn<>("Språk");
+        columnLastUpdateLanguage = new TableColumn<>("Språk senast uppdaterat");
+        columnInventoryId = new TableColumn<>("Lager-id");
+        columnLastUpdateInventory = new TableColumn<>("Lager senast uppdaterat");
+        columnStoreId = new TableColumn<>("Butiks-id");
+        columnFirstNameActor = new TableColumn<>("Skådespelare förnamn");
+        columnLastNameActor = new TableColumn<>("Skådespelare efternamn");
+        columnLastUpdateActor = new TableColumn<>("Skådespelare senast uppdaterat");
+        columnCategory = new TableColumn<>("Kategori");
+        columnLastUpdateCategory = new TableColumn<>("Kategori senast uppdaterat");
+
+        columnFilmId.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getFilmId()));
+        columnTitle.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getTitle()));
+        columnDescription.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getDescription()));
+        columnRating.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getRating()));
+        columnSpecialFeatures.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getSpecialFeatures()));
+        columnReleaseYear.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getReleaseYear()));
+        columnLength.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getLength()));
+        columnRentalDuration.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getRentalDuration()));
+        columnRentalRate.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getRentalRate()));
+        columnReplacementCost.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getReplacementCost()));
+        columnLastUpdateFilm.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+        columnNameLanguage.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getName()));
+        columnLastUpdateLanguage.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+        columnInventoryId.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getInventoryId()));
+        columnLastUpdateInventory.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+        columnStoreIdFilm.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getStoreId()));
+        columnFirstNameActor.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getFirstName()));
+        columnLastNameActor.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getLastName()));
+        columnLastUpdateActor.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+        columnCategory.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getName()));
+        columnLastUpdateCategory.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+
+        tableViewFilms.getColumns().addAll(columnStoreIdFilm, columnInventoryId, columnFilmId, columnTitle, columnDescription,
+                columnRentalRate, columnReplacementCost, columnRentalDuration, columnFirstNameActor, columnLastNameActor,
+                columnCategory, columnNameLanguage, columnRating, columnReleaseYear, columnLength, columnSpecialFeatures,
+                columnLastUpdateFilm, columnLastUpdateInventory, columnLastUpdateCategory, columnLastUpdateActor,
+                columnLastUpdateLanguage);
+
+        hBoxSearchFilm = new HBox();
+        hBoxSearchFilm.getChildren().addAll(textFieldSearchFilm, btnSearchFilm);
+        hBoxSearchFilm.setAlignment(Pos.CENTER);
+        hBoxSearchFilm.setSpacing(10);
+
+        vBoxShowFilms = new VBox();
+        vBoxShowFilms.getChildren().addAll(tableViewFilms, hBoxSearchFilm);
+        vBoxShowFilms.setAlignment(Pos.CENTER);
+        vBoxShowFilms.setSpacing(10);
+
+        borderPaneSearchFilm.setCenter(vBoxShowFilms);
 
 
-        // UPPDATERA BUTIK
-
-        labelUpdateStore = new Label("Uppdatera butiksinformation");
-
-        RegistryAddress addressStoreUpdate = new RegistryAddress();
-        textFieldUpdateManagerId = new TextField();
-        textFieldUpdateManagerId.setMinSize(140,40);
-        textFieldUpdateManagerId.setMaxSize(140,40);
-        textFieldUpdateManagerId.setPromptText("Butikschefens id");
-
-        btnFetchStoreInfo = new Button("Se butiksinfo");
-        //Hämta butiksinfo från databasen baserat på managerId (unikt för butik)
-
-        btnUpdateStore = new Button("Uppdatera");
-        // btnUpdateStore.setOnAction(); Kod för att lägga till ny butik, popup med butiksnr et, lastUpdate
-
-
-
-
-        vBoxUpdateStore1 = new VBox();
-        vBoxUpdateStore1.getChildren().addAll(addressStoreUpdate.getAddressView());
-        vBoxUpdateStore1.setSpacing(10);
-        vBoxUpdateStore1.setAlignment(Pos.CENTER);
-        vBoxUpdateStore2 = new VBox();
-        vBoxUpdateStore2.getChildren().addAll(textFieldUpdateManagerId, btnFetchStoreInfo, btnUpdateStore);
-        vBoxUpdateStore2.setSpacing(10);
-        vBoxUpdateStore2.setAlignment(Pos.CENTER);
-
-        hBoxUpdateStore = new HBox();
-        hBoxUpdateStore.getChildren().addAll(vBoxUpdateStore1, vBoxUpdateStore2);
-        hBoxUpdateStore.setAlignment(Pos.CENTER);
-        hBoxUpdateStore.setSpacing(10);
-        vBoxUpdateStore3 = new VBox();
-        vBoxUpdateStore3.getChildren().addAll(labelUpdateStore, hBoxUpdateStore);
-        vBoxUpdateStore3.setAlignment(Pos.CENTER);
-        borderPaneUpdateStore.setCenter(vBoxUpdateStore3);
     }
 
     public static void main(String[] args) {
