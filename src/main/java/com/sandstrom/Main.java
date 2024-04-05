@@ -5,6 +5,8 @@ import com.sandstrom.entities.*;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -36,11 +38,14 @@ public class Main extends Application {
 
     Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore, labelShowCustomers, labelEmpty,
             labelUpdateStore, labelEmpty2, labelDuplicateCustomer, labelRegNewStaff, labelUpdateStaff,  labelShowStaff;
-    Button btnLogin, btnUpdateStaff, btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer,  btnSearchCustomer, btnUpdateCustomer,
-            btnFetchStoreInfo, btnUpdateStore,  btnRegisterNewStaff ;
+    Button btnLogin, btnUpdateStaff, btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer,  btnSearchCustomer, btnSearchCustomerNr,
+            btnFetchStoreInfo, btnUpdateStore,  btnRegisterNewStaff, btnSearchStaff, btnUpdateCustomer, btnDeleteCustomer  ;
     MenuButton menuButtonStore, menuButtonStoreUpdate;
     MenuItem  menuItemStore1Update, menuItemStore2Update;
     TextArea textAreaAllCustomers;
+
+    private ObservableList<Customer> customerList;
+
     TableView tableViewCustomers, tableViewStaff;
     TableColumn <Customer, Short> columnCustomerId;
     TableColumn<Customer, String>  columnFirstName, columnLastName, columnEmail;
@@ -64,24 +69,21 @@ public class Main extends Application {
    TableColumn <Staff, Byte> columnStaffId,columnStaffActive;
    TableColumn <Staff, Timestamp> columnStaffLastUpdate;
 
-
-
-
     DatePicker datePickerRentalDate, datePickerReturnDate;
 
     TextField textFieldUsername, textFieldPassword, textFieldRegCustomerFName, textFieldRegCustomerLName,textFieldRegCustomerEmail, textFieldUpdateCustomerFName,
     textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail,textFieldInventoryId, textFieldStaffId, textFieldCustomerId, textFieldAmount, textFieldManagerId,
             textFieldSearchCustomer,textFieldUpdateManagerId,  textFieldSearchCustomerNr , textFieldStaffFName, textFieldStaffLName,
             textFieldStaffEmail, textFieldStaffUserName, textFieldStaffPassword,  textFieldUpdateStaffFName, textFieldUpdateStaffLName,
-            textFieldUpdateStaffEmail, textFieldUpdateStaffUserName, textFieldUpdateStaffPassword;
+            textFieldUpdateStaffEmail, textFieldUpdateStaffUserName, textFieldUpdateStaffPassword, textFieldSearchStaff ;
 
     VBox vBoxStaff, vBoxRegCustomer1, vBoxRegCustomer2, vBoxRegCustomer3, vBoxUpdateCustomer1, vBoxUpdateCustomer2, vBoxRegStore1, vBoxRegStore2,
     vBoxUpdateCustomer3, vBoxCheckOut, vBoxRegStore3, vBoxShowCustomers, vBoxUpdateStore1, vBoxUpdateStore2, vBoxUpdateStore3,  vBoxUpdateCustomer4,
             vBoxRegStaff1, vBoxRegStaff2, vBoxRegStaff3, vBoxRegStaff4,  vBoxUpdateStaff1, vBoxUpdateStaff2, vBoxUpdateStaff3,
-    vBoxUpdateStaff4,  vBoxUpdategStaff4;
+    vBoxUpdateStaff4,  vBoxUpdategStaff4, vBoxShowStaff;
 
     HBox hBoxregCustomer, hBoxUpdateCustomer2,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore, hBoxShowCustomers, hBoxUpdateCustomer1,
-            hBoxUpdateStore, hBoxRegStaff, hBoxUpdateStaff;
+            hBoxUpdateStore, hBoxRegStaff, hBoxUpdateStaff,hBoxShowStaff  ;
     StackPane stackPaneLogin;
 
     TextArea textAreaCheckOut;
@@ -409,14 +411,14 @@ public class Main extends Application {
         labelShowStaff = new Label("Personallista");
 
         //Delen av tableView som hör till Staff
-        columnStaffId = new TableColumn<>();
-        columnStaffFirstName= new TableColumn<>();
-        columnStaffLastName= new TableColumn<>();
-        columnStaffEmail = new TableColumn<>();
-        columnStaffActive = new TableColumn<>();
-        columnStaffUserName = new TableColumn<>();
-        columnStaffPassword = new TableColumn<>();
-        columnStaffLastUpdate = new TableColumn<>();
+        columnStaffId = new TableColumn<>("Id");
+        columnStaffFirstName= new TableColumn<>("Förnamn");
+        columnStaffLastName= new TableColumn<>("Efternamn");
+        columnStaffEmail = new TableColumn<>("Email");
+        columnStaffActive = new TableColumn<>("Aktiv");
+        columnStaffUserName = new TableColumn<>("Användarnamn");
+        columnStaffPassword = new TableColumn<>("Lösenord");
+        columnStaffLastUpdate = new TableColumn<>("Uppdaterad");
 
         columnStaffId.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStaffId()));
         columnStaffFirstName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFirstName()));
@@ -428,12 +430,12 @@ public class Main extends Application {
         columnStaffLastUpdate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
 
         //Del av tableView som hör till Address
-        columnStaffAddressId = new TableColumn<>();
-        columnStaffAddress = new TableColumn<>();
-        columnStaffDistrict = new TableColumn<>();
-        columnStaffPostalCode= new TableColumn<>();
-        columnStaffPhone = new TableColumn<>();
-        columnStaffLastUpdateAddress= new TableColumn<>();
+        columnStaffAddressId = new TableColumn<>("Adressid");
+        columnStaffAddress = new TableColumn<>("Adress");
+        columnStaffDistrict = new TableColumn<>("Distrikt");
+        columnStaffPostalCode= new TableColumn<>("Postnr");
+        columnStaffPhone = new TableColumn<>("Telefon");
+        columnStaffLastUpdateAddress= new TableColumn<>("Uppdaterad");
 
         columnStaffAddressId.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddressId()));
         columnStaffAddress.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress()));
@@ -444,18 +446,18 @@ public class Main extends Application {
 
 
         //Del av tableView som hör till City
-        columnStaffCityId = new TableColumn<>();
-        columnStaffCity = new TableColumn<>();
-        columnStaffLastUpdateCity = new TableColumn<>();
+        columnStaffCityId = new TableColumn<>("Ortsid");
+        columnStaffCity = new TableColumn<>("Ort");
+        columnStaffLastUpdateCity = new TableColumn<>("Uppdaterad");
 
         columnStaffCityId.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getCityId()));
         columnStaffCity.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCity()));
         columnStaffLastUpdateCity.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
 
         //Del av TableView som hör till Country
-        columnStaffCountryId= new TableColumn<>();
-        columnStaffCountry = new TableColumn<>();
-        columnLastUpdateCountry= new TableColumn<>();
+        columnStaffCountryId= new TableColumn<>("Landsid");
+        columnStaffCountry = new TableColumn<>("Land");
+        columnLastUpdateCountry= new TableColumn<>("Uppdaterad");
 
         columnStaffCountryId.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getCountryId()));
         columnStaffCountry.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCountry()));
@@ -466,10 +468,38 @@ public class Main extends Application {
         columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone, columnStaffLastUpdateAddress, columnStaffCityId,
         columnStaffCity, columnStaffLastUpdateCity, columnStaffCountryId, columnStaffCountry, columnLastUpdateCountry);
 
+        //tableViewStaff.setItems(Staff);
+        tableViewStaff.refresh();
+
+        textFieldSearchStaff = new TextField();
+        textFieldSearchStaff.setPromptText("Anställningsnummer");
+        btnSearchStaff = new Button("Sök personal");
+
+        hBoxShowStaff = new HBox();
+        hBoxShowStaff.getChildren().addAll(textFieldSearchStaff, btnSearchStaff);
+        hBoxShowStaff.setSpacing(10);
+        hBoxShowStaff.setAlignment(Pos.CENTER);
+
+        vBoxShowStaff = new VBox();
+        vBoxShowStaff.setAlignment(Pos.CENTER);
+        vBoxShowStaff.setSpacing(10);
+        vBoxShowStaff.getChildren().addAll(labelShowStaff,tableViewStaff, hBoxShowStaff);
+
+        borderPaneShowStaff.setCenter(vBoxShowStaff);
 
 
+/*
 
 
+        vBoxShowCustomers = new VBox();
+        vBoxShowCustomers.setAlignment(Pos.CENTER);
+        vBoxShowCustomers.setSpacing(10);
+        vBoxShowCustomers.getChildren().addAll(labelShowCustomers,tableViewCustomers, hBoxShowCustomers);
+
+        borderPaneShowCustomers.setCenter(vBoxShowCustomers)
+
+
+ */
         //REGISTRERA KUND-SIDA
         labelDuplicateCustomer = new Label("");
         labelRegNewCustomer = new Label("Registrera ny kund");
@@ -541,15 +571,15 @@ public class Main extends Application {
         RegistryAddress updateCustomerAddress = new RegistryAddress();
 
         ToggleButton toggleButtonCustomerIsActive = new ToggleButton("Aktiv");
-       /* toggleButtonCustomerIsActive.setStyle("-fx-background-color: #A5A5A5, #737373; " +
-                "-fx-background-insets: 0, 1; " +
-                "-fx-background-radius: 3, 2; " +
-                "-fx-text-fill: black;");*/
 
         textFieldSearchCustomer = new TextField();
         textFieldSearchCustomer.setPromptText("Kundnummer");
-        btnUpdateCustomer = new Button("Uppdatera kundinfo"); //lägg två funktioner på denna, dels visa uppgifter, dels uppdatera
+        btnSearchCustomerNr = new Button("Sök kund");
 
+        btnUpdateCustomer = new Button ("Uppdatera info");
+       // btnUpdateCustomer.setOnAction(e-> KOD FÖR ATT UPPDATERA KUNDINFO);
+        btnDeleteCustomer = new Button ("Ta bort kund");
+     //   btnDeleteCustomer.setOnAction(e-> KOD FÖR ATT DELETA KUND);
 
 
         // Lyssnare för att hantera ändringar i knappens tillstånd
@@ -568,12 +598,10 @@ public class Main extends Application {
                         "    -fx-font-size: 12px;\n" +
                         "    -fx-border-width: 2;\n" +
                         "    -fx-border-radius: 3;\n" +
-                        "    -fx-max-height: 40;\n" +
-                        "    -fx-min-height: 40;\n" +
-                        "    -fx-min-width: 120;\n" +
-                        "    -fx-max-width: 120;\n" +
                         "    -fx-background-color: linear-gradient(to bottom, #F69F13, #C57C07);");
                 // KOD FÖR ATT UPPDATERA OM KUNDEN ÄR AKTIV
+
+
             }
         });
         vBoxUpdateCustomer1 = new VBox();
@@ -589,17 +617,14 @@ public class Main extends Application {
         vBoxUpdateCustomer2.setSpacing(10);
 
         vBoxUpdateCustomer4 = new VBox();
-        vBoxUpdateCustomer4.getChildren().addAll(textFieldSearchCustomer,btnUpdateCustomer, toggleButtonCustomerIsActive);
+        vBoxUpdateCustomer4.getChildren().addAll(textFieldSearchCustomer, btnSearchCustomerNr, toggleButtonCustomerIsActive);
         vBoxUpdateCustomer4.setSpacing(10);
         vBoxUpdateCustomer4.setAlignment(Pos.CENTER);
 
-        /*hBoxUpdateCustomer1 = new HBox();
+        hBoxUpdateCustomer1 = new HBox();
         hBoxUpdateCustomer1.setAlignment(Pos.CENTER);
-        hBoxUpdateCustomer1.setSpacing(30);
-        hBoxUpdateCustomer1.getChildren().addAll();
-
-         */
-
+        hBoxUpdateCustomer1.setSpacing(10);
+        hBoxUpdateCustomer1.getChildren().addAll(btnUpdateCustomer, btnDeleteCustomer);
 
         hBoxUpdateCustomer2 = new HBox();
         hBoxUpdateCustomer2.getChildren().addAll(vBoxUpdateCustomer1, vBoxUpdateCustomer2, vBoxUpdateCustomer4);
@@ -607,14 +632,14 @@ public class Main extends Application {
         hBoxUpdateCustomer2.setSpacing(10);
 
         vBoxUpdateCustomer3 = new VBox();
-        vBoxUpdateCustomer3.getChildren().addAll(labelUpdateCustomer, hBoxUpdateCustomer2);
+        vBoxUpdateCustomer3.getChildren().addAll(labelUpdateCustomer, hBoxUpdateCustomer2, hBoxUpdateCustomer1);
         vBoxUpdateCustomer3.setSpacing(10);
         vBoxUpdateCustomer3.setAlignment(Pos.CENTER);
         borderPaneUpdateCustomer.setCenter(vBoxUpdateCustomer3);
 
 
         // SIDA FÖR ATT SE ALLA KUNDER
-
+        customerList = FXCollections.observableArrayList();
         labelShowCustomers = new Label("Kundöversikt");
 
         tableViewCustomers = new TableView<>();
@@ -676,7 +701,7 @@ public class Main extends Application {
         columnLastUpdateCustomer, columnAddressId, columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
         columnLastUpdateAddress, columnCityId, columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry);
 
-      //  tableViewCustomers.setItems(customerList);
+      //tableViewCustomers.setItems(customerList);
       //  tableViewCustomers.refresh();
 
         textFieldSearchCustomer = new TextField();
