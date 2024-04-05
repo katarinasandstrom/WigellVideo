@@ -11,7 +11,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -28,7 +27,7 @@ import java.time.LocalDate;
 import static com.sandstrom.Methods.login;
 
 public class Main extends Application {
-    Scene loginScene, staffScene, customerScene, registerNewStoreScene,updateStoreScene, checkOutScene, searchFilmScene,registerFilmScene,  registerNewStaffScene,
+    Scene loginScene,  registerNewStoreScene,updateStoreScene, checkOutScene, searchFilmScene,registerFilmScene,  registerNewStaffScene,
            updateStaffScene, registerNewCustomerScene, updateCustomerScene,  firstPageScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene;
     BorderPane borderPaneLogin,borderPaneRegNewCustomer,borderPaneUpdateCustomer, borderPaneRegisterStore,
             borderPanecheckOut, borderPaneRegisterFilm,borderPaneSearchFilm, borderPaneUpdateStaff,borderPaneRegNewStaff, borderPaneFirstPage, borderPaneUpdateStore,
@@ -36,8 +35,10 @@ public class Main extends Application {
     MenuBar menuBarLogin, menuBarRegNewStaff,menuBarUpdateStaff, menuBarRegisterNewCustomer,menuBarUpdateCustomer, menuBarRegStore, menuBarCheckOut, menuBarFilm,  menuBarFirstPage,
             menuBarUpdateStore,menuBarSearchFilm, menuBarRegisterFilm,  menuBarShowCustomers, menuBarShowStaff, menuBarShowStores,  menuBarShowAllRentals;
 
-    Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore, labelShowCustomers;
-    Button btnLogin, btnUpdateStaff, btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer,  btnSearchCustomer;
+    Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore, labelShowCustomers, labelEmpty,
+            labelUpdateStore, labelEmpty2;
+    Button btnLogin, btnUpdateStaff, btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer,  btnSearchCustomer, btnUpdateCustomer,
+            btnFetchStoreInfo, btnUpdateStore;
 
     TextArea textAreaAllCustomers;
     TableView tableViewCustomers;
@@ -61,11 +62,12 @@ public class Main extends Application {
 
     TextField textFieldUsername, textFieldPassword, textFieldRegCustomerFName, textFieldRegCustomerLName,textFieldRegCustomerEmail, textFieldUpdateCustomerFName,
     textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail,textFieldInventoryId, textFieldStaffId, textFieldCustomerId, textFieldAmount, textFieldManagerId,
-            textFieldSearchCustomer ;
+            textFieldSearchCustomer,textFieldUpdateManagerId,  textFieldSearchCustomerNr ;
 
     VBox vBoxStaff, vBoxRegCustomer1, vBoxRegCustomer2, vBoxRegCustomer3, vBoxUpdateCustomer1, vBoxUpdateCustomer2, vBoxRegStore1, vBoxRegStore2,
-    vBoxUpdateCustomer3, vBoxCheckOut, vBoxRegStore3, vBoxShowCustomers ;
-    HBox hBoxregCustomer, hBoxUpdateCustomer,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore, hBoxShowCustomers;
+    vBoxUpdateCustomer3, vBoxCheckOut, vBoxRegStore3, vBoxShowCustomers, vBoxUpdateStore1, vBoxUpdateStore2, vBoxUpdateStore3,  vBoxUpdateCustomer4;
+    HBox hBoxregCustomer, hBoxUpdateCustomer2,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore, hBoxShowCustomers, hBoxUpdateCustomer1,
+            hBoxUpdateStore;
     StackPane stackPaneLogin;
 
     TextArea textAreaCheckOut;
@@ -76,7 +78,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         // Sökväg till bildfil
-        String imagePath = "C:\\Users\\helga\\OneDrive\\Skrivbord\\Skola\\Software Development Process\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
+        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
 
 
         // Skapar en ImageView och laddar in bilden
@@ -143,9 +145,7 @@ public class Main extends Application {
         showRentalScene.getStylesheets().add("style.css");
 
 
-
-
-                // menyer
+                // meny-objekt
         menuBarLogin = new MenuBar(primaryStage, registerNewStaffScene,updateStaffScene,
                 registerNewCustomerScene,updateCustomerScene, registerNewStoreScene, updateStoreScene,
                 checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
@@ -193,7 +193,6 @@ public class Main extends Application {
                 checkOutScene, searchFilmScene, registerFilmScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene);
 
         // Lägg till menyer till varje BorderPane
-      //  borderPaneLogin.setTop(menuBarLogin);
 
         borderPaneRegNewCustomer.setTop(menuBarRegisterNewCustomer);
         borderPaneUpdateCustomer.setTop(menuBarUpdateCustomer);
@@ -210,8 +209,6 @@ public class Main extends Application {
         borderPaneShowStores.setTop(menuBarShowStores);
         borderPaneShowRentals.setTop(menuBarShowAllRentals);
 
-
-
         // Ställ in startscenen
         primaryStage.setScene(loginScene);
         primaryStage.setTitle("Wigell Video");
@@ -220,24 +217,11 @@ public class Main extends Application {
 
         //LOGIN-SIDAN
 
-      /*  labelLogin = new Label("Wigell Video");
-        labelLogin.setMinSize(150,30);
-        labelLogin.setMaxSize(150,30);
-        labelLogin.setAlignment(Pos.CENTER);
-        labelLogin.setStyle("-fx-font-family: Broadway;"+
-                            "-fx-font-size: 21;" +
-                            "-fx-text-fill: #303538;"+
-                            "-fx-background-color: #f9f7dc;"+
-                            "-fx-border-color: #303538;" +
-                            "-fx-border-width: 3px");
-*/
-
-
         textFieldUsername = new TextField();
         textFieldUsername.setPromptText("Användarnamn");
         textFieldUsername.setMinSize(150, 30);
         textFieldUsername.setMaxSize(150, 30);
-     //
+
         textFieldPassword = new TextField();
         textFieldPassword.setPromptText("Lösenord");
         textFieldPassword.setMinSize(150, 30);
@@ -254,8 +238,6 @@ public class Main extends Application {
                 }
             }
         });
-        //String passWord = textFieldPassword.getText();
-
         labelErrorLogin = new Label(" ");
         btnLogin = new Button("Logga in");
         btnLogin.getStyleClass().add("btnLogin");
@@ -273,7 +255,6 @@ public class Main extends Application {
             }
         });
 
-
         VBox vBoxLogin1 = new VBox();
         vBoxLogin1.getChildren().add(imageViewVideoStore);
         vBoxLogin1.setAlignment(Pos.CENTER);
@@ -285,16 +266,11 @@ public class Main extends Application {
         vBoxLogin2.setAlignment(Pos.CENTER);
         vBoxLogin2.setSpacing(10);
 
-
-
         stackPaneLogin.getChildren().addAll(borderPaneLogin, vBoxLogin2);
 
 
+
         //REGISTRERA PERSONAL-SIDA
-
-
-
-
 
 
         btnUpdateStaff = new Button("Uppdatera befintlig personal");
@@ -359,12 +335,14 @@ public class Main extends Application {
         RegistryAddress updateCustomerAddress = new RegistryAddress();
 
         ToggleButton toggleButtonCustomerIsActive = new ToggleButton("Aktiv");
-        toggleButtonCustomerIsActive.setStyle("-fx-background-color: #A5A5A5, #737373; " +
+       /* toggleButtonCustomerIsActive.setStyle("-fx-background-color: #A5A5A5, #737373; " +
                 "-fx-background-insets: 0, 1; " +
                 "-fx-background-radius: 3, 2; " +
-                "-fx-text-fill: black;");
+                "-fx-text-fill: black;");*/
 
-        //
+        textFieldSearchCustomer = new TextField();
+        textFieldSearchCustomer.setPromptText("Kundnummer");
+        btnUpdateCustomer = new Button("Uppdatera kundinfo"); //lägg två funktioner på denna, dels visa uppgifter, dels uppdatera
 
 
 
@@ -372,11 +350,23 @@ public class Main extends Application {
         toggleButtonCustomerIsActive.setOnAction(event -> {
             if (toggleButtonCustomerIsActive.isSelected()) {
                 toggleButtonCustomerIsActive.setText("Inaktiv");
-
+                toggleButtonCustomerIsActive.setStyle("-fx-background-color: #A5A5A5, #737373; " +
+                        "-fx-background-insets: 0, 1; " +
+                        "-fx-background-radius: 3, 2; " +
+                        "-fx-text-fill: black;");
                 // KOD FÖR ATT UPPDATERA OM KUNDEN HAR AVSLUTAT SITT MEDLEMSKAP
             } else {
                 toggleButtonCustomerIsActive.setText("Aktiv");
-
+                toggleButtonCustomerIsActive.setStyle("    -fx-background-color: #C57C07;\n" +
+                        "    -fx-text-fill: #F9F7DC;\n" +
+                        "    -fx-font-size: 12px;\n" +
+                        "    -fx-border-width: 2;\n" +
+                        "    -fx-border-radius: 3;\n" +
+                        "    -fx-max-height: 40;\n" +
+                        "    -fx-min-height: 40;\n" +
+                        "    -fx-min-width: 120;\n" +
+                        "    -fx-max-width: 120;\n" +
+                        "    -fx-background-color: linear-gradient(to bottom, #F69F13, #C57C07);");
                 // KOD FÖR ATT UPPDATERA OM KUNDEN ÄR AKTIV
             }
         });
@@ -392,13 +382,26 @@ public class Main extends Application {
         vBoxUpdateCustomer2.setAlignment(Pos.CENTER);
         vBoxUpdateCustomer2.setSpacing(10);
 
-        hBoxUpdateCustomer = new HBox();
-        hBoxUpdateCustomer.getChildren().addAll(vBoxUpdateCustomer1, vBoxUpdateCustomer2);
-        hBoxUpdateCustomer.setAlignment(Pos.CENTER);
-        hBoxUpdateCustomer.setSpacing(10);
+        vBoxUpdateCustomer4 = new VBox();
+        vBoxUpdateCustomer4.getChildren().addAll(textFieldSearchCustomer,btnUpdateCustomer, toggleButtonCustomerIsActive);
+        vBoxUpdateCustomer4.setSpacing(10);
+        vBoxUpdateCustomer4.setAlignment(Pos.CENTER);
+
+        /*hBoxUpdateCustomer1 = new HBox();
+        hBoxUpdateCustomer1.setAlignment(Pos.CENTER);
+        hBoxUpdateCustomer1.setSpacing(30);
+        hBoxUpdateCustomer1.getChildren().addAll();
+
+         */
+
+
+        hBoxUpdateCustomer2 = new HBox();
+        hBoxUpdateCustomer2.getChildren().addAll(vBoxUpdateCustomer1, vBoxUpdateCustomer2, vBoxUpdateCustomer4);
+        hBoxUpdateCustomer2.setAlignment(Pos.CENTER);
+        hBoxUpdateCustomer2.setSpacing(10);
 
         vBoxUpdateCustomer3 = new VBox();
-        vBoxUpdateCustomer3.getChildren().addAll(labelUpdateCustomer, hBoxUpdateCustomer, toggleButtonCustomerIsActive);
+        vBoxUpdateCustomer3.getChildren().addAll(labelUpdateCustomer, hBoxUpdateCustomer2);
         vBoxUpdateCustomer3.setSpacing(10);
         vBoxUpdateCustomer3.setAlignment(Pos.CENTER);
         borderPaneUpdateCustomer.setCenter(vBoxUpdateCustomer3);
@@ -408,17 +411,10 @@ public class Main extends Application {
 
         labelShowCustomers = new Label("Kundöversikt");
 
-        /* textAreaAllCustomers = new TextArea();
-        textAreaAllCustomers.setMinSize(500, 500);
-        textAreaAllCustomers.setMaxSize(500, 500);
-
-
-         */
         tableViewCustomers = new TableView<>();
         tableViewCustomers.setMinSize(800, 500);
         tableViewCustomers.setMaxSize(800, 500);
         tableViewCustomers.setStyle("-fx-background-color: #F9F7DC;");
-
 
         tableViewCustomers.getItems().clear();
 
@@ -527,8 +523,6 @@ public class Main extends Application {
         datePickerReturnDate.setStyle(" -fx-background-color:#F9F7DC ;\n" +
                         "        -fx-text-fill: #303538;");
 
-
-
         datePickerRentalDate.setMinSize(120, 40);
         datePickerRentalDate.setMaxSize(120, 40);
         datePickerReturnDate.setMinSize(120, 40);
@@ -631,11 +625,13 @@ public class Main extends Application {
         textFieldManagerId = new TextField();
         textFieldManagerId.setMinSize(140,40);
         textFieldManagerId.setMaxSize(140,40);
+        textFieldManagerId.setPromptText("Butikschefens id");
 
         btnRegStore = new Button("Registrera butik");
         btnRegStore.setMinSize(140,40);
         btnRegStore.setMaxSize(140,40);
 
+        labelEmpty = new Label();
        // btnRegStore.setOnAction(); Kod för att lägga till ny butik, popup med butiksnr et, lastUpdate
 
         vBoxRegStore1 = new VBox();
@@ -643,7 +639,7 @@ public class Main extends Application {
         vBoxRegStore1.setSpacing(10);
         vBoxRegStore1.setAlignment(Pos.CENTER);
         vBoxRegStore2 = new VBox();
-        vBoxRegStore2.getChildren().addAll(textFieldManagerId, btnRegStore);
+        vBoxRegStore2.getChildren().addAll(textFieldManagerId, btnRegStore, labelEmpty);
         vBoxRegStore2.setSpacing(10);
         vBoxRegStore2.setAlignment(Pos.CENTER);
 
@@ -656,6 +652,44 @@ public class Main extends Application {
         vBoxRegStore3.setAlignment(Pos.CENTER);
         borderPaneRegisterStore.setCenter(vBoxRegStore3);
 
+
+
+        // UPPDATERA BUTIK
+
+        labelUpdateStore = new Label("Uppdatera butiksinformation");
+
+        RegistryAddress addressStoreUpdate = new RegistryAddress();
+        textFieldUpdateManagerId = new TextField();
+        textFieldUpdateManagerId.setMinSize(140,40);
+        textFieldUpdateManagerId.setMaxSize(140,40);
+        textFieldUpdateManagerId.setPromptText("Butikschefens id");
+
+        btnFetchStoreInfo = new Button("Se butiksinfo");
+        //Hämta butiksinfo från databasen baserat på managerId (unikt för butik)
+
+        btnUpdateStore = new Button("Uppdatera");
+        // btnUpdateStore.setOnAction(); Kod för att lägga till ny butik, popup med butiksnr et, lastUpdate
+
+
+
+
+        vBoxUpdateStore1 = new VBox();
+        vBoxUpdateStore1.getChildren().addAll(addressStoreUpdate.getAddressView());
+        vBoxUpdateStore1.setSpacing(10);
+        vBoxUpdateStore1.setAlignment(Pos.CENTER);
+        vBoxUpdateStore2 = new VBox();
+        vBoxUpdateStore2.getChildren().addAll(textFieldUpdateManagerId, btnFetchStoreInfo, btnUpdateStore);
+        vBoxUpdateStore2.setSpacing(10);
+        vBoxUpdateStore2.setAlignment(Pos.CENTER);
+
+        hBoxUpdateStore = new HBox();
+        hBoxUpdateStore.getChildren().addAll(vBoxUpdateStore1, vBoxUpdateStore2);
+        hBoxUpdateStore.setAlignment(Pos.CENTER);
+        hBoxUpdateStore.setSpacing(10);
+        vBoxUpdateStore3 = new VBox();
+        vBoxUpdateStore3.getChildren().addAll(labelUpdateStore, hBoxUpdateStore);
+        vBoxUpdateStore3.setAlignment(Pos.CENTER);
+        borderPaneUpdateStore.setCenter(vBoxUpdateStore3);
     }
 
     public static void main(String[] args) {
