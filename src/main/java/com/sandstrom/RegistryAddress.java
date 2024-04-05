@@ -25,7 +25,7 @@ public class RegistryAddress extends VBox {
         textFieldRegPhone.setPromptText("Telefonnummer");
 
         textFieldRegCity = new TextField();
-        textFieldRegCity.setPromptText("Postadress");
+        textFieldRegCity.setPromptText("Postort");
 
         textFieldRegCountry = new TextField();
         textFieldRegCountry.setPromptText("Land");

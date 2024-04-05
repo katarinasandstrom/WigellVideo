@@ -68,15 +68,13 @@ public class CrudOfCustomer {
                 customers.setCreateDate(createDate);
                 customers.setLastUpdate(lastUpdate);
 
-
-
                 session.persist(city);
                 session.persist(addresses);
                 session.persist(customers);
 
                 transaction.commit();
             }else{
-                labelDuplicateCustomer.setText("En användare med den angivna e-postadressen " +
+                labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
                         "finns redan i systemet.");
             }
 
