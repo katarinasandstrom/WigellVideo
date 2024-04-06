@@ -12,6 +12,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class CrudOfCustomer {
     public void registerNewCustomer(Label labelDuplicateCustomer, String firstName, String lastName, String email, String country, String city,
@@ -24,64 +25,65 @@ public class CrudOfCustomer {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
 
-            Customer exisitngCustomer = session.get(Customer.class, email);
+            TypedQuery<Customer> query = session.createNamedQuery("Customer.byEmail", Customer.class);
+            query.setParameter("email", email);
 
-            if(exisitngCustomer != null){
+            List<Customer> existingCustomers = query.getResultList();
+
+            Customer existingCustomer = null;
+
+            if(!existingCustomers.isEmpty()){
+                existingCustomer = existingCustomers.getFirst();
+            }
+
+            if(existingCustomer != null){
                 labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
                         "finns redan i systemet.");
             }else{
+                Short countryId = null;
 
-                String address2 = null;
-                short city_id = 0;
-                String location = null;
-                Timestamp lastUpdate = Timestamp.valueOf("1111-11-11");
-                Timestamp createDate = Timestamp.valueOf("1111-11-11");
-                byte active = 1;
-                Byte store_id = 0;
+                TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
+                countryQuery.setParameter("country", country);
+                try {
+                    countryId = countryQuery.getSingleResult();
+                } catch (Exception ex) {
+                    // Handle the case where the country doesn't exist
+                    // You might want to log this or handle it accordingly
+                }
 
-                Country countries = session.get(Country.class, country); // get the country that matches
+                if (countryId != null) {
+                    Country countryObj = session.get(Country.class, countryId);
 
-                //Get country Id
+                    City cityObj = new City();
+                    cityObj.setCity(city);
+                    cityObj.setCountry(countryObj);
+                    cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                    session.persist(cityObj);
 
-                City cities = new City(); // get the city that matches or add new city
-                cities.setCity(city);
-                cities.setCountry(countries);
-                cities.setLastUpdate(lastUpdate);
+                    Address addressObj = new Address();
+                    addressObj.setAddress(address);
+                    addressObj.setDistrict(district);
+                    addressObj.setCity(cityObj);
+                    addressObj.setPostalCode(postalCode);
+                    addressObj.setPhone(phone);
+                    addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                    session.persist(addressObj);
 
+                    Store store = session.get(Store.class, 1);
 
-                City addCity = session.get(City.class, city);
+                    Customer customer = new Customer();
+                    customer.setStore(store);
+                    customer.setFirstName(firstName);
+                    customer.setLastName(lastName);
+                    customer.setEmail(email);
+                    customer.setAddress(addressObj);
+                    customer.setActive((byte) 1);
+                    customer.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                    customer.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                    session.persist(customer);
 
-                //get city Id
-                Address addresses = new Address(); // get the address that matches or add new address
-                addresses.setAddress(address);
-                addresses.setAddress2(null);
-                addresses.setDistrict(district);
-                addresses.setCity(addCity);// set fk
-                addresses.setPostalCode(postalCode);
-                addresses.setPhone(phone);
-                //addresses.setLocation(null);
-                addresses.setLastUpdate(lastUpdate);
-
-                //Get address id. need corresponding fk
-                Address addAddress = session.get(Address.class, address);
-                Store stores = session.get(Store.class, 1); // get the store which the customer is connected to.
-
-                Customer customers = new Customer();
-                customers.setStore(stores); // Set fk
-                customers.setFirstName(firstName);
-                customers.setLastName(lastName);
-                customers.setEmail(email);
-                customers.setAddress(addresses); // Set fk
-                customers.setActive(active);
-                customers.setCreateDate(createDate);
-                customers.setLastUpdate(lastUpdate);
-
-                session.persist(city);
-                session.persist(addresses);
-                session.persist(customers);
-
-                transaction.commit();
-
+                    transaction.commit();
+                }
             }
 
         }catch(Exception e){
@@ -219,6 +221,58 @@ public class CrudOfCustomer {
                 session.close();
             }
             sessionFactory.close();
+        }
+    }
+
+  /*  public static void loadCustomersFromDatabase(List<Customer> customerList) {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaQuery<Customer> criteriaQuery = session.getCriteriaBuilder().createQuery(Customer.class);
+            criteriaQuery.from(Customer.class);
+            Root<Customer> root = criteriaQuery.from(Customer.class);
+            root.fetch("address", JoinType.LEFT); // Hämta även adressuppgifter för varje kund
+            criteriaQuery.select(root).distinct(true);
+            List<Customer> customers = session.createQuery(criteriaQuery).getResultList();
+            customerList.clear(); // Rensa befintliga kunder i listan
+            customerList.addAll(customers); // Lägg till kunder från databasen i listan
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            sessionFactory.close();
+        }
+    }*/
+    public static void readFromCustomer2(String email, List<Customer> customerList) {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = null;
+        Transaction transaction = null;
+
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            TypedQuery<Customer> query = session.createNamedQuery("Customer.byEmail", Customer.class);
+            query.setParameter("email", email);
+
+            List<Customer> resultList = query.getResultList();
+            if (!resultList.isEmpty()) {
+
+                Customer foundCustomer = resultList.get(0);
+                customerList.clear();
+                customerList.add(foundCustomer); // Lägg till den hittade kunden i customerList
+            } else {
+                // Kund med angiven e-postadress finns inte
+
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            // Visa felmeddelande
+
+
         }
     }
 }

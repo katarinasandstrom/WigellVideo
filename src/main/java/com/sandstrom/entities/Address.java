@@ -93,7 +93,7 @@ public class Address {
     @OneToMany(mappedBy = "address")
     private Collection<Store> storesByAddressId;
 
-    public Address(String address, String address2, String district, short cityId, String postalCode, String phone, String location, Timestamp lastUpdate) {
+    public Address(String address, String address2, String district, short cityId, String postalCode, String phone, Timestamp lastUpdate) {
         this.address = address;
         this.address2 = address2;
         this.district = district;
@@ -172,6 +172,7 @@ public class Address {
         this.location = location;
     }
 
+
     public Timestamp getLastUpdate() {
         return lastUpdate;
     }
@@ -211,7 +212,7 @@ public class Address {
                 ", cityId=" + cityId +
                 ", postalCode='" + postalCode + '\'' +
                 ", phone='" + phone + '\'' +
-                ", location='" + location + '\'' +
+                ", location='" + location+ '\'' +
                 ", lastUpdate=" + lastUpdate +
                 ", city=" + city +
                 '}';

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+@NamedNativeQuery(name = "Country.pk", query = "SELECT c.country_id from country c WHERE c.country =:country", resultClass = Short.class)
 @Entity
 @Table(name = "country", schema = "sakila")
 public class Country {

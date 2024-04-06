@@ -1,6 +1,7 @@
 package com.sandstrom.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Customer {
     private String lastName;
 
     @Basic
+    @NaturalId
     @Column(name = "email")
     private String email;
 
