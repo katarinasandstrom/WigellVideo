@@ -31,20 +31,26 @@ import static com.sandstrom.Methods.login;
 
 
 public class Main extends Application {
-    Scene loginScene, staffScene, customerScene, registerNewStoreScene,updateStoreScene, checkOutScene, searchFilmScene,registerFilmScene,  registerNewStaffScene,
-           updateStaffScene, registerNewCustomerScene, updateCustomerScene,  firstPageScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene;
+    Scene loginScene, staffScene, customerScene, registerNewStoreScene,updateStoreScene, checkOutScene,
+            searchFilmScene,registerFilmScene,  registerNewStaffScene, updateStaffScene, registerNewCustomerScene,
+            updateCustomerScene,  firstPageScene, showCustomersScene, showStaffScene, showStoresScene, showRentalScene;
     BorderPane borderPaneLogin,borderPaneRegNewCustomer,borderPaneUpdateCustomer, borderPaneRegisterStore,
-            borderPanecheckOut, borderPaneRegisterFilm,borderPaneSearchFilm, borderPaneUpdateStaff,borderPaneRegNewStaff, borderPaneFirstPage, borderPaneUpdateStore,
-    borderPaneShowCustomers, borderPaneShowStaff, borderPaneShowStores, borderPaneShowRentals;
-    MenuBar menuBarLogin, menuBarRegNewStaff,menuBarUpdateStaff, menuBarRegisterNewCustomer,menuBarUpdateCustomer, menuBarRegStore, menuBarCheckOut, menuBarFilm,  menuBarFirstPage,
-            menuBarUpdateStore,menuBarSearchFilm, menuBarRegisterFilm,  menuBarShowCustomers, menuBarShowStaff, menuBarShowStores,  menuBarShowAllRentals;
+            borderPanecheckOut, borderPaneRegisterFilm,borderPaneSearchFilm, borderPaneUpdateStaff,
+            borderPaneRegNewStaff, borderPaneFirstPage, borderPaneUpdateStore, borderPaneShowCustomers,
+            borderPaneShowStaff, borderPaneShowStores, borderPaneShowRentals;
+    MenuBar menuBarLogin, menuBarRegNewStaff,menuBarUpdateStaff, menuBarRegisterNewCustomer,menuBarUpdateCustomer,
+            menuBarRegStore, menuBarCheckOut, menuBarFilm,  menuBarFirstPage, menuBarUpdateStore,menuBarSearchFilm,
+            menuBarRegisterFilm,  menuBarShowCustomers, menuBarShowStaff, menuBarShowStores,  menuBarShowAllRentals;
 
-    Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore, labelShowCustomers, labelEmpty,
-            labelUpdateStore, labelEmpty2, labelDuplicateCustomer, labelRegNewStaff, labelUpdateStaff,  labelShowStaff;
-    Button btnLogin, btnUpdateStaff, btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer,  btnSearchCustomer, btnSearchCustomerNr,
-            btnFetchStoreInfo, btnUpdateStore,  btnRegisterNewStaff, btnSearchFilm, btnSearchStaff, btnUpdateCustomer, btnDeleteCustomer  ;
-    MenuButton menuButtonStore, menuButtonStoreUpdate;
-    MenuItem  menuItemStore1Update, menuItemStore2Update;
+    Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore,
+            labelShowCustomers, labelEmpty, labelUpdateStore, labelEmpty2, labelDuplicateCustomer, labelRegNewStaff,
+            labelUpdateStaff,  labelShowStaff, labelRegNewFilm;
+    Button btnLogin, btnUpdateStaff, btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer,
+            btnSearchCustomer, btnSearchCustomerNr, btnFetchStoreInfo, btnUpdateStore,  btnRegisterNewStaff,
+            btnSearchFilm, btnSearchStaff, btnUpdateCustomer, btnDeleteCustomer, BTN, btnRegisterNewFilm;
+    MenuButton menuButtonStore, menuButtonStoreUpdate, menuButtonStore1, menuButtonRating;
+    MenuItem  menuItemStore1Update, menuItemStore2Update, menuItemSt1, menuItemSt2, menuItemRating1, menuItemRating2,
+            menuItemRating3, menuItemRating4, menuItemRating5;
     TextArea textAreaAllCustomers;
 
     private ObservableList<Customer> customerList;
@@ -56,8 +62,8 @@ public class Main extends Application {
     TableColumn <Customer, Timestamp> columnCustomerCreateDate, columnLastUpdateCustomer;
 
     TableColumn <Address, Short> columnAddressId, columnStaffAddressId;
-    TableColumn <Address, String> columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
-    columnStaffAddress, columnStaffDistrict, columnStaffPostalCode,columnStaffPhone;
+    TableColumn <Address, String> columnAddress, columnDistrict, columnPostalCode, columnPhone,
+            columnLocation, columnStaffAddress, columnStaffDistrict, columnStaffPostalCode,columnStaffPhone;
     TableColumn <Address, Timestamp> columnLastUpdateAddress, columnStaffLastUpdateAddress;
 
     TableColumn <City, Short> columnCityId, columnStaffCityId;
@@ -68,7 +74,8 @@ public class Main extends Application {
     TableColumn<Country, Timestamp> columnLastUpdateCountry,  columnStaffLastUpdateCountry;
 
    TableColumn<Staff, Short>   columnStoreId;
-   TableColumn <Staff, String> columnStaffFirstName, columnStaffLastName,  columnStaffEmail, columnStaffUserName, columnStaffPassword;
+   TableColumn <Staff, String> columnStaffFirstName, columnStaffLastName,  columnStaffEmail,
+           columnStaffUserName, columnStaffPassword;
    TableColumn <Staff, Byte> columnStaffId,columnStaffActive;
    TableColumn <Staff, Timestamp> columnStaffLastUpdate;
 
@@ -86,7 +93,7 @@ public class Main extends Application {
     TableColumn<Inventory, Integer> columnInventoryId;
     TableColumn<Inventory, Timestamp> columnLastUpdateInventory;
 
-    TableColumn<Store, Byte> columnStoreIdFilm;
+    TableColumn<Store, Short> columnStoreIdFilm;
 
     TableColumn<Actor, String> columnFirstNameActor, columnLastNameActor;
     TableColumn<Actor, Timestamp> columnLastUpdateActor;
@@ -97,19 +104,26 @@ public class Main extends Application {
 
     DatePicker datePickerRentalDate, datePickerReturnDate;
 
-    TextField textFieldUsername, textFieldPassword, textFieldRegCustomerFName, textFieldRegCustomerLName,textFieldRegCustomerEmail, textFieldUpdateCustomerFName,
-    textFieldUpdateCustomerLName, textFieldUpdateCustomerEmail,textFieldInventoryId, textFieldStaffId, textFieldCustomerId, textFieldAmount, textFieldManagerId,
-            textFieldSearchCustomer,textFieldUpdateManagerId,  textFieldSearchCustomerNr , textFieldStaffFName, textFieldStaffLName,
-            textFieldStaffEmail, textFieldStaffUserName, textFieldStaffPassword,  textFieldUpdateStaffFName, textFieldUpdateStaffLName,
-            textFieldUpdateStaffEmail, textFieldUpdateStaffUserName, textFieldUpdateStaffPassword, textFieldSearchStaff, textFieldSearchFilm;
+    TextField textFieldUsername, textFieldPassword, textFieldRegCustomerFName, textFieldRegCustomerLName,
+            textFieldRegCustomerEmail, textFieldUpdateCustomerFName, textFieldUpdateCustomerLName,
+            textFieldUpdateCustomerEmail,textFieldInventoryId, textFieldStaffId, textFieldCustomerId,
+            textFieldAmount, textFieldManagerId, textFieldSearchCustomer,textFieldUpdateManagerId,
+            textFieldSearchCustomerNr , textFieldStaffFName, textFieldStaffLName, textFieldStaffEmail,
+            textFieldStaffUserName, textFieldStaffPassword,  textFieldUpdateStaffFName, textFieldUpdateStaffLName,
+            textFieldUpdateStaffEmail, textFieldUpdateStaffUserName, textFieldUpdateStaffPassword,
+            textFieldSearchStaff, textFieldSearchFilm, textFieldTitle, textFieldDescription, textFieldReleaseYear,
+            textFieldRentalDuration, textFieldRentalRate, textFieldLength, textFieldReplacementCost,
+            textFieldLanguage, textFieldActorFirstName, textFieldActorLastName;
 
-    VBox vBoxStaff, vBoxRegCustomer1, vBoxRegCustomer2, vBoxRegCustomer3, vBoxUpdateCustomer1, vBoxUpdateCustomer2, vBoxRegStore1, vBoxRegStore2,
-    vBoxUpdateCustomer3, vBoxCheckOut, vBoxRegStore3, vBoxShowCustomers, vBoxUpdateStore1, vBoxUpdateStore2, vBoxUpdateStore3,  vBoxUpdateCustomer4,
-            vBoxRegStaff1, vBoxRegStaff2, vBoxRegStaff3, vBoxRegStaff4,  vBoxUpdateStaff1, vBoxUpdateStaff2, vBoxUpdateStaff3,
-    vBoxUpdateStaff4, vBoxCheckout1, vBoxShowStaff, vBoxShowFilms;
+    VBox vBoxStaff, vBoxRegCustomer1, vBoxRegCustomer2, vBoxRegCustomer3, vBoxUpdateCustomer1, vBoxUpdateCustomer2,
+            vBoxRegStore1, vBoxRegStore2, vBoxUpdateCustomer3, vBoxCheckOut, vBoxRegStore3, vBoxShowCustomers,
+            vBoxUpdateStore1, vBoxUpdateStore2, vBoxUpdateStore3,  vBoxUpdateCustomer4, vBoxRegStaff1, vBoxRegStaff2,
+            vBoxRegStaff3, vBoxRegStaff4,  vBoxUpdateStaff1, vBoxUpdateStaff2, vBoxUpdateStaff3, vBoxUpdateStaff4,
+            vBoxCheckout1, vBoxShowStaff, vBoxShowFilms, vBoxRegFilm;
 
-    HBox hBoxregCustomer, hBoxUpdateCustomer2,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore, hBoxShowCustomers, hBoxUpdateCustomer1,
-            hBoxUpdateStore, hBoxRegStaff, hBoxUpdateStaff,hBoxShowStaff, hBoxSearchFilm, hBoxCheckOutPage;
+    HBox hBoxregCustomer, hBoxUpdateCustomer2,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore,
+            hBoxShowCustomers, hBoxUpdateCustomer1, hBoxUpdateStore, hBoxRegStaff, hBoxUpdateStaff,hBoxShowStaff,
+            hBoxSearchFilm, hBoxCheckOutPage, hBoxRegFilm1, hBoxRegFilm2, hBoxRegFilm3, hBoxRegFilm4;
     StackPane stackPaneLogin;
 
     TextArea textAreaCheckOut;
@@ -749,9 +763,10 @@ public class Main extends Application {
         columnCountry.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCountry()));
         columnLastUpdateCountry.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
 
-        tableViewCustomers.getColumns().addAll( columnCustomerId,columnFirstName,columnLastName, columnEmail, columnActive, columnCustomerCreateDate,
-        columnLastUpdateCustomer, columnAddressId, columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
-        columnLastUpdateAddress, columnCityId, columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry);
+        tableViewCustomers.getColumns().addAll( columnCustomerId,columnFirstName,columnLastName, columnEmail,
+                columnActive, columnCustomerCreateDate, columnLastUpdateCustomer, columnAddressId, columnAddress,
+                columnDistrict, columnPostalCode, columnPhone, columnLocation, columnLastUpdateAddress, columnCityId,
+                columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry);
 
       //tableViewCustomers.setItems(customerList);
       //  tableViewCustomers.refresh();
@@ -969,7 +984,7 @@ public class Main extends Application {
         columnFilmId = new TableColumn<>("Film-id");
         columnTitle = new TableColumn<>("Filmtitel");
         columnDescription = new TableColumn<>("Handling");
-        columnRating = new TableColumn<>("Betyg");
+        columnRating = new TableColumn<>("Åldersgräns");
         columnSpecialFeatures = new TableColumn<>("Extra");
         columnReleaseYear = new TableColumn<>("År");
         columnLength = new TableColumn<>("Längd");
@@ -1018,9 +1033,11 @@ public class Main extends Application {
                 new SimpleObjectProperty<>(cellData.getValue().getInventoryId()));
         columnLastUpdateInventory.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
-        columnStoreIdFilm = new TableColumn<>("Store ID");
-        columnStoreIdFilm.setCellValueFactory(cellData ->
+        columnStoreIdFilm = new TableColumn<>("Butiks-Id");
+      /*  columnStoreIdFilm.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getStoreId()));
+
+       */
         columnFirstNameActor.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getFirstName()));
         columnLastNameActor.setCellValueFactory(cellData ->
@@ -1032,11 +1049,12 @@ public class Main extends Application {
         columnLastUpdateCategory.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
 
-        tableViewFilms.getColumns().addAll(columnStoreIdFilm, columnInventoryId, columnFilmId, columnTitle, columnDescription,
-                columnRentalRate, columnReplacementCost, columnRentalDuration, columnFirstNameActor, columnLastNameActor,
-                columnCategory, columnNameLanguage, columnRating, columnReleaseYear, columnLength, columnSpecialFeatures,
-                columnLastUpdateFilm, columnLastUpdateInventory, columnLastUpdateCategory, columnLastUpdateActor,
-                columnLastUpdateLanguage);
+        tableViewFilms.getColumns().addAll(columnStoreIdFilm, columnInventoryId, columnFilmId, columnTitle,
+                columnDescription, columnRentalRate, columnReplacementCost, columnRentalDuration, columnFirstNameActor,
+                columnLastNameActor, columnCategory, columnNameLanguage, columnRating, columnReleaseYear,
+                columnLength, columnSpecialFeatures, columnLastUpdateFilm, columnLastUpdateInventory,
+                columnLastUpdateCategory, columnLastUpdateActor, columnLastUpdateLanguage);
+
 
         hBoxSearchFilm = new HBox();
         hBoxSearchFilm.getChildren().addAll(textFieldSearchFilm, btnSearchFilm);
@@ -1049,6 +1067,87 @@ public class Main extends Application {
         vBoxShowFilms.setSpacing(10);
 
         borderPaneSearchFilm.setCenter(vBoxShowFilms);
+
+
+        //REGISTRERA FILM
+        labelRegNewFilm = new Label("Registrera ny film");
+
+        textFieldTitle = new TextField();
+        textFieldDescription= new TextField();
+        textFieldReleaseYear= new TextField();
+        textFieldRentalDuration= new TextField();
+        textFieldRentalRate= new TextField();
+        textFieldLength= new TextField();
+        textFieldReplacementCost= new TextField();
+        textFieldLanguage= new TextField();
+        textFieldActorFirstName= new TextField();
+        textFieldActorLastName= new TextField();
+
+        textFieldTitle.setPromptText("Titel");
+        textFieldDescription.setPromptText("Beskrivning");
+        textFieldReleaseYear.setPromptText("År");
+        textFieldRentalDuration.setPromptText("Hyrestid");
+        textFieldRentalRate.setPromptText("Hyreskostnad");
+        textFieldLength.setPromptText("Längd");
+        textFieldReplacementCost.setPromptText("Ersättningskostnad");
+        textFieldLanguage.setPromptText("Språk");
+        textFieldActorFirstName.setPromptText("Skådespelare förnamn");
+        textFieldActorLastName.setPromptText("Skådespelare efternamn");
+
+        menuButtonStore1 = new MenuButton("Butik");
+        menuItemSt1 = new MenuItem("Butik 1");
+        menuItemSt2 = new MenuItem("Butik 2");
+
+        menuItemSt1.setOnAction(event -> menuButtonStore1.setText(menuItemSt1.getText()));
+        menuItemSt2.setOnAction(event -> menuButtonStore1.setText(menuItemSt2.getText()));
+
+        menuButtonStore1.getItems().addAll(menuItemSt1, menuItemSt2);
+
+        menuButtonRating = new MenuButton();
+        menuButtonRating.setText("Åldersgräns");
+        menuItemRating1 = new MenuItem("R - Restricted");
+        menuItemRating2 = new MenuItem("G - General audiences");
+        menuItemRating3 = new MenuItem("PG - Parental Guidance");
+        menuItemRating4 = new MenuItem("PG-13 - Parents Strongly Cautioned");
+        menuItemRating5 = new MenuItem("NC-17 - No One 17 and Under Admitted");
+
+        menuItemRating1.setOnAction(event -> menuButtonRating.setText(menuItemRating1.getText()));
+        menuItemRating2.setOnAction(event -> menuButtonRating.setText(menuItemRating2.getText()));
+        menuItemRating3.setOnAction(event -> menuButtonRating.setText(menuItemRating3.getText()));
+        menuItemRating4.setOnAction(event -> menuButtonRating.setText(menuItemRating4.getText()));
+        menuItemRating5.setOnAction(event -> menuButtonRating.setText(menuItemRating5.getText()));
+
+        menuButtonRating.getItems().addAll(menuItemRating1, menuItemRating2, menuItemRating3, menuItemRating4, menuItemRating5);
+
+        btnRegisterNewFilm = new Button("Registrera");
+
+        hBoxRegFilm1 = new HBox();
+        hBoxRegFilm2 = new HBox();
+        hBoxRegFilm3 = new HBox();
+        hBoxRegFilm4 = new HBox();
+
+        hBoxRegFilm1.setAlignment(Pos.CENTER);
+        hBoxRegFilm2.setAlignment(Pos.CENTER);
+        hBoxRegFilm3.setAlignment(Pos.CENTER);
+        hBoxRegFilm4.setAlignment(Pos.CENTER);
+
+        hBoxRegFilm1.setSpacing(10);
+        hBoxRegFilm2.setSpacing(10);
+        hBoxRegFilm3.setSpacing(10);
+        hBoxRegFilm4.setSpacing(10);
+
+        hBoxRegFilm1.getChildren().addAll(textFieldTitle, textFieldReleaseYear, textFieldDescription);
+        hBoxRegFilm2.getChildren().addAll(textFieldRentalDuration, textFieldRentalRate, textFieldReplacementCost);
+        hBoxRegFilm3.getChildren().addAll(textFieldLength, textFieldLanguage, menuButtonRating);
+        hBoxRegFilm4.getChildren().addAll(textFieldActorFirstName, textFieldActorLastName, menuButtonStore1);
+
+        vBoxRegFilm = new VBox();
+        vBoxRegFilm.setAlignment(Pos.CENTER);
+        vBoxRegFilm.setSpacing(10);
+        vBoxRegFilm.getChildren().addAll(labelRegNewFilm, hBoxRegFilm1, hBoxRegFilm2, hBoxRegFilm3, hBoxRegFilm4,
+                btnRegisterNewFilm);
+
+        borderPaneRegisterFilm.setCenter(vBoxRegFilm);
 
 
     }
