@@ -199,4 +199,24 @@ public class Customer {
     public int hashCode() {
         return Objects.hash(customerId, storeId, firstName, lastName, email, addressId, active, createDate, lastUpdate);
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", storeId=" + storeId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", addressId=" + addressId +
+                ", active=" + active +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
+
+        /*", paymentsByCustomerId=" + paymentsByCustomerId +
+                ", address=" + address +
+                ", store=" + store +
+                ", rentalsByCustomerId=" + rentalsByCustomerId +*/
 }

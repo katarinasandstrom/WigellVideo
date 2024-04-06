@@ -59,33 +59,43 @@ public class CrudOfCustomer {
 
                     City cityObj = new City();
                     cityObj.setCity(city);
-                    cityObj.setCountry(countryObj);
+                   // cityObj.setCountry(countryObj);
+                    cityObj.setCountryId(countryObj.getCountryId());
                     cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
                     session.persist(cityObj);
+
+                    Address getFirstAddress = session.get(Address.class, "1");
+                    byte[] location = getFirstAddress.getLocation();
 
                     Address addressObj = new Address();
                     addressObj.setAddress(address);
                     addressObj.setDistrict(district);
-                    addressObj.setCity(cityObj);
+                    //addressObj.setCity(cityObj);
+                    addressObj.setCityId(cityObj.getCityId());
                     addressObj.setPostalCode(postalCode);
                     addressObj.setPhone(phone);
+                    addressObj.setLocation(location);
                     addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+
                     session.persist(addressObj);
 
                     Store store = session.get(Store.class, 1);
 
                     Customer customer = new Customer();
-                    customer.setStore(store);
+                    //customer.setStore(store);
+                    customer.setStoreId(store.getStoreId());
                     customer.setFirstName(firstName);
                     customer.setLastName(lastName);
                     customer.setEmail(email);
-                    customer.setAddress(addressObj);
+                    //customer.setAddress(addressObj);
+                    customer.setAddressId(addressObj.getAddressId());
                     customer.setActive((byte) 1);
                     customer.setCreateDate(new Timestamp(System.currentTimeMillis()));
                     customer.setLastUpdate(new Timestamp(System.currentTimeMillis()));
                     session.persist(customer);
 
-                    transaction.commit();
+
+                   transaction.commit();
                 }
             }
 
@@ -101,7 +111,7 @@ public class CrudOfCustomer {
         }
     }
 
-    private void readFromCustomers(Label labelDuplicateCustomer, String email) {
+    private void readFromCustomers(Label labelDuplicateCustomer) {
         //Lägg till label för när kund finns
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = null;

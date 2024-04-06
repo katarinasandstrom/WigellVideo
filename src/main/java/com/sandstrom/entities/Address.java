@@ -1,6 +1,8 @@
 package com.sandstrom.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
+
 
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -40,8 +42,8 @@ public class Address {
     private String phone;
 
     @Basic
-    @Column(name = "location")
-    private String location;
+    @Column(name = "location", columnDefinition = "geometry")
+    private byte[] location;
 
     @Basic
     @Column(name = "last_update")
@@ -164,11 +166,11 @@ public class Address {
         this.phone = phone;
     }
 
-    public String getLocation() {
+    public byte[] getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(byte[] location) {
         this.location = location;
     }
 
