@@ -33,6 +33,7 @@ public class Customer {
     @Column(name = "last_name")
     private String lastName;
 
+
     @Basic
     @NaturalId
     @Column(name = "email")

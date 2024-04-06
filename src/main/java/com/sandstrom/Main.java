@@ -1,7 +1,9 @@
 package com.sandstrom;
 
 import com.sandstrom.crudOperations.CrudOfCustomer;
+import com.sandstrom.crudOperations.CrudOfStore;
 import com.sandstrom.entities.*;
+import jakarta.persistence.criteria.CriteriaQuery;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,11 +22,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.List;
 
 
 import static com.sandstrom.Methods.login;
@@ -50,12 +56,12 @@ public class Main extends Application {
     private ObservableList<Customer> customerList;
 
     TableView tableViewCustomers, tableViewStaff, tableViewFilms;
-    TableColumn <Customer, Short> columnCustomerId;
+    TableColumn <Customer, Short> columnCustomerId, columnAddressId;
     TableColumn<Customer, String>  columnFirstName, columnLastName, columnEmail;
     TableColumn <Customer, Byte> columnActive;
     TableColumn <Customer, Timestamp> columnCustomerCreateDate, columnLastUpdateCustomer;
 
-    TableColumn <Address, Short> columnAddressId, columnStaffAddressId;
+    TableColumn <Address, Short>  columnStaffAddressId;
     TableColumn <Address, String> columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
     columnStaffAddress, columnStaffDistrict, columnStaffPostalCode,columnStaffPhone;
     TableColumn <Address, Timestamp> columnLastUpdateAddress, columnStaffLastUpdateAddress;
@@ -116,11 +122,13 @@ public class Main extends Application {
 
     //Comment for push
 
+    CrudOfCustomer crudOfCustomers = new CrudOfCustomer();
+    CrudOfStore crudOfStore = new CrudOfStore();
     @Override
     public void start(Stage primaryStage) {
 
         // Sökväg till bildfil
-        String imagePath = "C:\\Users\\helga\\OneDrive\\Skrivbord\\Skola\\Software Development Process\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
+        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
 
 
         // Skapar en ImageView och laddar in bilden
@@ -683,23 +691,23 @@ public class Main extends Application {
         borderPaneUpdateCustomer.setCenter(vBoxUpdateCustomer3);
 
 
+
+
         // SIDA FÖR ATT SE ALLA KUNDER
         customerList = FXCollections.observableArrayList();
+        labelDuplicateCustomer= new Label();
+
+
         labelShowCustomers = new Label("Kundöversikt");
 
-        /* textAreaAllCustomers = new TextArea();
-        textAreaAllCustomers.setMinSize(500, 500);
-        textAreaAllCustomers.setMaxSize(500, 500);
-
-
-         */
         tableViewCustomers = new TableView<>();
         tableViewCustomers.setMinSize(800, 400);
         tableViewCustomers.setMaxSize(800, 400);
         tableViewCustomers.setStyle("-fx-background-color: #F9F7DC;");
 
+      //  List<Customer> customers = crudOfCustomers.loadCustomersFromDatabase(List<Customer>customerList);
 
-        tableViewCustomers.getItems().clear();
+
 
        columnCustomerId = new TableColumn<>("Kundid");
        columnFirstName = new TableColumn<>("Förnamn");
@@ -708,19 +716,23 @@ public class Main extends Application {
        columnActive = new TableColumn<>("Inaktiv");
        columnCustomerCreateDate = new TableColumn<>("Kund sedan");
        columnLastUpdateCustomer = new TableColumn<>("Senast uppdaterad");
-       columnAddressId = new TableColumn<>("Addressid");
-       columnAddress = new TableColumn<>("Adress");
+      columnAddressId = new TableColumn<>("Addressid");
+      columnAddress = new TableColumn<>("Adress");
        columnDistrict = new TableColumn<>("Distrikt");
        columnPostalCode = new TableColumn<>("Postnr");
        columnPhone = new TableColumn<>("Telefonnr");
        columnLocation = new TableColumn<>("Location");
-       columnLastUpdateAddress = new TableColumn<>("Uppdaterad");
+     /*  columnLastUpdateAddress = new TableColumn<>("Uppdaterad");
        columnCityId = new TableColumn<>("Postortsid");
        columnCity = new TableColumn<>("Postort");
        columnLastUpdateCity = new TableColumn<>("Uppdaterad");
        columnCountryId = new TableColumn<>("Landsid");
        columnCountry = new TableColumn<>("Land");
        columnLastUpdateCountry = new TableColumn<>("Uppdaterad");
+
+
+       */
+
 
         columnCustomerId.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getCustomerId()));
@@ -733,7 +745,9 @@ public class Main extends Application {
                 new SimpleObjectProperty<>(cellData.getValue().getCreateDate()));
         columnLastUpdateCustomer.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
-        columnAddressId.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddressId()));
+        /*columnAddressId.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddressId()));
+
+
         columnAddress.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress()));
         columnDistrict.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDistrict()));
         columnPostalCode.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPostalCode()));
@@ -749,16 +763,36 @@ public class Main extends Application {
         columnCountry.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCountry()));
         columnLastUpdateCountry.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
 
-        tableViewCustomers.getColumns().addAll( columnCustomerId,columnFirstName,columnLastName, columnEmail, columnActive, columnCustomerCreateDate,
+
+ */ tableViewCustomers.getItems().clear();
+        tableViewCustomers.getColumns().addAll(columnCustomerId, columnFirstName, columnLastName, columnEmail, columnActive, columnCustomerCreateDate,
+                columnLastUpdateCustomer);
+/*, columnAddressId, columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
+                columnLastUpdateAddress, columnCityId, columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry
+
+ */
+
+      /*  tableViewCustomers.getColumns().addAll( columnCustomerId,columnFirstName,columnLastName, columnEmail, columnActive, columnCustomerCreateDate,
         columnLastUpdateCustomer, columnAddressId, columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
         columnLastUpdateAddress, columnCityId, columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry);
 
-      //tableViewCustomers.setItems(customerList);
-      //  tableViewCustomers.refresh();
+
+       */
+
+        crudOfCustomers.loadCustomersFromDatabase(customerList);
+        tableViewCustomers.refresh();
+        tableViewCustomers.setItems(customerList);
 
         textFieldSearchCustomer = new TextField();
-        textFieldSearchCustomer.setPromptText("Kundnummer");
+        textFieldSearchCustomer.setPromptText("Email");
         btnSearchCustomer= new Button("Sök kund");
+
+        btnSearchCustomer.setOnAction(e -> {
+            String customerEmail = textFieldSearchCustomer.getText();
+            crudOfCustomers.readFromCustomer2(customerEmail, customerList);
+            tableViewCustomers.refresh();
+            tableViewCustomers.setItems(customerList);
+        });
 
         hBoxShowCustomers = new HBox();
         hBoxShowCustomers.getChildren().addAll(textFieldSearchCustomer, btnSearchCustomer);
@@ -933,7 +967,20 @@ public class Main extends Application {
         btnRegStore.setMinSize(140,40);
         btnRegStore.setMaxSize(140,40);
 
-       // btnRegStore.setOnAction(); Kod för att lägga till ny butik, popup med butiksnr et, lastUpdate
+       btnRegStore.setOnAction(e-> {
+           Byte managerStaffId = Byte.valueOf(textFieldManagerId.getText());
+           String address = addressStore.textFieldRegAddress.getText();
+           String postalCode = addressStore.textFieldRegPostalCode.getText();
+           String district = addressStore.textFieldRegDistrict.getText();
+           String city = addressStore.textFieldRegCity.getText();
+           String country =  addressStore.textFieldRegCountry.getText();
+           String  phone = addressStore.textFieldRegPhone.getText();
+           String location = "test";
+           Timestamp lastUpdate = new Timestamp(System.currentTimeMillis());
+           crudOfStore.registerNewStore(managerStaffId,  address,  district,  city,  postalCode,
+                   phone, location,  country,  lastUpdate);
+               }
+               );
 
         vBoxRegStore1 = new VBox();
         vBoxRegStore1.getChildren().addAll(addressStore.getAddressView());
@@ -953,7 +1000,55 @@ public class Main extends Application {
         vBoxRegStore3.setAlignment(Pos.CENTER);
         borderPaneRegisterStore.setCenter(vBoxRegStore3);
 
-        //FILMSIDAN
+        // UPPDATERA BUTIK
+
+
+        labelUpdateStore = new Label("Uppdatera butiksinformation");
+
+
+        RegistryAddress addressStoreUpdate = new RegistryAddress();
+        textFieldUpdateManagerId = new TextField();
+        textFieldUpdateManagerId.setMinSize(140,40);
+        textFieldUpdateManagerId.setMaxSize(140,40);
+        textFieldUpdateManagerId.setPromptText("Butikschefens id");
+
+
+        btnFetchStoreInfo = new Button("Se butiksinfo");
+        //Hämta butiksinfo från databasen baserat på managerId (unikt för butik)
+
+
+        btnUpdateStore = new Button("Uppdatera");
+        // btnUpdateStore.setOnAction(); Kod för att lägga till ny butik, popup med butiksnr et, lastUpdate
+
+
+
+
+
+
+
+
+        vBoxUpdateStore1 = new VBox();
+        vBoxUpdateStore1.getChildren().addAll(addressStoreUpdate.getAddressView());
+        vBoxUpdateStore1.setSpacing(10);
+        vBoxUpdateStore1.setAlignment(Pos.CENTER);
+        vBoxUpdateStore2 = new VBox();
+        vBoxUpdateStore2.getChildren().addAll(textFieldUpdateManagerId, btnFetchStoreInfo, btnUpdateStore);
+        vBoxUpdateStore2.setSpacing(10);
+        vBoxUpdateStore2.setAlignment(Pos.CENTER);
+
+
+        hBoxUpdateStore = new HBox();
+        hBoxUpdateStore.getChildren().addAll(vBoxUpdateStore1, vBoxUpdateStore2);
+        hBoxUpdateStore.setAlignment(Pos.CENTER);
+        hBoxUpdateStore.setSpacing(10);
+        vBoxUpdateStore3 = new VBox();
+        vBoxUpdateStore3.getChildren().addAll(labelUpdateStore, hBoxUpdateStore);
+        vBoxUpdateStore3.setAlignment(Pos.CENTER);
+        borderPaneUpdateStore.setCenter(vBoxUpdateStore3);
+
+
+
+    //FILMSIDAN
         tableViewFilms = new TableView<>();
         tableViewFilms.setMinSize(800, 500);
         tableViewFilms.setMaxSize(800, 500);
@@ -1050,8 +1145,28 @@ public class Main extends Application {
 
         borderPaneSearchFilm.setCenter(vBoxShowFilms);
 
+/*
+        vBoxUpdateStore1 = new VBox();
+        vBoxUpdateStore1.getChildren().addAll(addressStoreUpdate.getAddressView());
+        vBoxUpdateStore1.setSpacing(10);
+        vBoxUpdateStore1.setAlignment(Pos.CENTER);
+        vBoxUpdateStore2 = new VBox();
+        vBoxUpdateStore2.getChildren().addAll(textFieldUpdateManagerId, btnFetchStoreInfo, btnUpdateStore);
+        vBoxUpdateStore2.setSpacing(10);
+        vBoxUpdateStore2.setAlignment(Pos.CENTER);
 
+        hBoxUpdateStore = new HBox();
+        hBoxUpdateStore.getChildren().addAll(vBoxUpdateStore1, vBoxUpdateStore2);
+        hBoxUpdateStore.setAlignment(Pos.CENTER);
+        hBoxUpdateStore.setSpacing(10);
+        vBoxUpdateStore3 = new VBox();
+        vBoxUpdateStore3.getChildren().addAll(labelUpdateStore, hBoxUpdateStore);
+        vBoxUpdateStore3.setAlignment(Pos.CENTER);
+        borderPaneUpdateStore.setCenter(vBoxUpdateStore3);
+
+ */
     }
+
 
     public static void main(String[] args) {
         launch(args);
