@@ -25,9 +25,12 @@ public class CrudOfCustomer {
             transaction = session.beginTransaction();
 
             Customer exisitngCustomer = session.get(Customer.class, email);
-            Address getNewAddress = new Address();
 
-            if(exisitngCustomer == null){
+            if(exisitngCustomer != null){
+                labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
+                        "finns redan i systemet.");
+            }else{
+
                 String address2 = null;
                 short city_id = 0;
                 String location = null;
@@ -36,32 +39,35 @@ public class CrudOfCustomer {
                 byte active = 1;
                 Byte store_id = 0;
 
-                Country countries = new Country(country, lastUpdate); // get the country that matches
+                Country countries = session.get(Country.class, country); // get the country that matches
 
                 //Get country Id
+
                 City cities = new City(); // get the city that matches or add new city
-                cities.setCity(city); // set fk
+                cities.setCity(city);
                 cities.setCountry(countries);
                 cities.setLastUpdate(lastUpdate);
 
+
+                City addCity = session.get(City.class, city);
 
                 //get city Id
                 Address addresses = new Address(); // get the address that matches or add new address
                 addresses.setAddress(address);
                 addresses.setAddress2(null);
                 addresses.setDistrict(district);
-                addresses.setCity(cities);// set fk
+                addresses.setCity(addCity);// set fk
                 addresses.setPostalCode(postalCode);
                 addresses.setPhone(phone);
-                addresses.setLocation(null);
+                //addresses.setLocation(null);
                 addresses.setLastUpdate(lastUpdate);
 
-                //Get address id. Customer.setAddress(address).
-
-                Store store = session.get(Store.class, 1); // get the store which the customer is connected to.
+                //Get address id. need corresponding fk
+                Address addAddress = session.get(Address.class, address);
+                Store stores = session.get(Store.class, 1); // get the store which the customer is connected to.
 
                 Customer customers = new Customer();
-                customers.setStore(store); // Set fk
+                customers.setStore(stores); // Set fk
                 customers.setFirstName(firstName);
                 customers.setLastName(lastName);
                 customers.setEmail(email);
@@ -75,9 +81,7 @@ public class CrudOfCustomer {
                 session.persist(customers);
 
                 transaction.commit();
-            }else{
-                labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
-                        "finns redan i systemet.");
+
             }
 
         }catch(Exception e){
@@ -92,7 +96,7 @@ public class CrudOfCustomer {
         }
     }
 
-    private void readFromCustomer(Label labelDuplicateCustomer, String email) {
+    private void readFromCustomers(Label labelDuplicateCustomer, String email) {
         //Lägg till label för när kund finns
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = null;
@@ -102,17 +106,10 @@ public class CrudOfCustomer {
         try{
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-
-            Customer exisitngCustomer = session.get(Customer.class, email);
-            if(exisitngCustomer != null){
-                TypedQuery<Customer> query = session.createNamedQuery("Customer.table", Customer.class);
-                for(Customer customer : query.getResultList()){
+            TypedQuery<Customer> query = session.createNamedQuery("Customer.table", Customer.class);
+            for(Customer customer : query.getResultList()){
                     //måste ändras
-                    labelDuplicateCustomer.setText(String.valueOf(customer));
-                }
-            }else {
-                labelDuplicateCustomer.setText("En användare med den angivna e-postadressen " +
-                        "finns redan i systemet.");
+                labelDuplicateCustomer.setText(String.valueOf(customer));
             }
 
         }catch(Exception e){
@@ -126,7 +123,7 @@ public class CrudOfCustomer {
             sessionFactory.close();
         }
     }
-    private void readFromCustomers(Label labelDuplicateCustomer, String email) {
+    private void readFromCustomer(Label labelDuplicateCustomer, String email) {
         //Lägg till label för när kund finns
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = null;
