@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@NamedNativeQuery(name = "Staff.byEmail", query = "SELECT c.* FROM staff c WHERE c.email = :email ", resultClass = Staff.class)
 @Table(name = "staff", schema = "sakila")
 public class Staff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
