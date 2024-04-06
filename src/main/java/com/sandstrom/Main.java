@@ -1018,6 +1018,7 @@ public class Main extends Application {
                 new SimpleObjectProperty<>(cellData.getValue().getInventoryId()));
         columnLastUpdateInventory.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+        columnStoreIdFilm = new TableColumn<>("Store ID");
         columnStoreIdFilm.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getStoreId()));
         columnFirstNameActor.setCellValueFactory(cellData ->
