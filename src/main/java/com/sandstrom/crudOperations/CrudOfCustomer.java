@@ -2,6 +2,9 @@ package com.sandstrom.crudOperations;
 
 import com.sandstrom.entities.*;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Root;
 import javafx.scene.control.Label;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -224,7 +227,7 @@ public class CrudOfCustomer {
         }
     }
 
-  /*  public static void loadCustomersFromDatabase(List<Customer> customerList) {
+    public static void loadCustomersFromDatabase(List<Customer> customerList) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         try (Session session = sessionFactory.openSession()) {
             CriteriaQuery<Customer> criteriaQuery = session.getCriteriaBuilder().createQuery(Customer.class);
@@ -240,7 +243,7 @@ public class CrudOfCustomer {
         } finally {
             sessionFactory.close();
         }
-    }*/
+    }
     public static void readFromCustomer2(String email, List<Customer> customerList) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = null;
