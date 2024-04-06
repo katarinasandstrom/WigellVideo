@@ -11,7 +11,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -19,12 +18,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Objects;
 
 
 import static com.sandstrom.Methods.login;
@@ -44,13 +43,16 @@ public class Main extends Application {
 
     Label labelLogin, labelStaffChoice, labelErrorLogin, labelRegNewCustomer, labelUpdateCustomer, labelRegNewStore,
             labelShowCustomers, labelEmpty, labelUpdateStore, labelEmpty2, labelDuplicateCustomer, labelRegNewStaff,
-            labelUpdateStaff,  labelShowStaff, labelRegNewFilm;
+            labelUpdateStaff,  labelShowStaff, labelRegNewFilm, labelSpecialFeatures;
     Button btnLogin, btnUpdateStaff, btnRent, btnCardPay, btnCashPay, btnRegStore, btnRegisterNewCustomer,
             btnSearchCustomer, btnSearchCustomerNr, btnFetchStoreInfo, btnUpdateStore,  btnRegisterNewStaff,
             btnSearchFilm, btnSearchStaff, btnUpdateCustomer, btnDeleteCustomer, BTN, btnRegisterNewFilm;
     MenuButton menuButtonStore, menuButtonStoreUpdate, menuButtonStore1, menuButtonRating;
     MenuItem  menuItemStore1Update, menuItemStore2Update, menuItemSt1, menuItemSt2, menuItemRating1, menuItemRating2,
             menuItemRating3, menuItemRating4, menuItemRating5;
+
+    CheckBox checkBoxDeletedScenes, checkboxBehindTheScenes, checkBoxTrailers, checkBoxCommentaries;
+
     TextArea textAreaAllCustomers;
 
     private ObservableList<Customer> customerList;
@@ -111,7 +113,7 @@ public class Main extends Application {
             textFieldSearchCustomerNr , textFieldStaffFName, textFieldStaffLName, textFieldStaffEmail,
             textFieldStaffUserName, textFieldStaffPassword,  textFieldUpdateStaffFName, textFieldUpdateStaffLName,
             textFieldUpdateStaffEmail, textFieldUpdateStaffUserName, textFieldUpdateStaffPassword,
-            textFieldSearchStaff, textFieldSearchFilm, textFieldTitle, textFieldDescription, textFieldReleaseYear,
+            textFieldSearchStaff, textFieldSearchFilm, textFieldTitle, textFieldReleaseYear,
             textFieldRentalDuration, textFieldRentalRate, textFieldLength, textFieldReplacementCost,
             textFieldLanguage, textFieldActorFirstName, textFieldActorLastName;
 
@@ -119,11 +121,11 @@ public class Main extends Application {
             vBoxRegStore1, vBoxRegStore2, vBoxUpdateCustomer3, vBoxCheckOut, vBoxRegStore3, vBoxShowCustomers,
             vBoxUpdateStore1, vBoxUpdateStore2, vBoxUpdateStore3,  vBoxUpdateCustomer4, vBoxRegStaff1, vBoxRegStaff2,
             vBoxRegStaff3, vBoxRegStaff4,  vBoxUpdateStaff1, vBoxUpdateStaff2, vBoxUpdateStaff3, vBoxUpdateStaff4,
-            vBoxCheckout1, vBoxShowStaff, vBoxShowFilms, vBoxRegFilm;
+            vBoxCheckout1, vBoxShowStaff, vBoxShowFilms, vBoxRegFilm, vBoxCheckBoxes;
 
     HBox hBoxregCustomer, hBoxUpdateCustomer2,  hBoxCheckOutDatePickers, hBoxPayMethod,  hBoxId, hBoxRegStore,
             hBoxShowCustomers, hBoxUpdateCustomer1, hBoxUpdateStore, hBoxRegStaff, hBoxUpdateStaff,hBoxShowStaff,
-            hBoxSearchFilm, hBoxCheckOutPage, hBoxRegFilm1, hBoxRegFilm2, hBoxRegFilm3, hBoxRegFilm4;
+            hBoxSearchFilm, hBoxCheckOutPage, hBoxRegFilm1, hBoxRegFilm2, hBoxRegFilm3, hBoxRegFilm4, hBoxCheckBoxes;
     StackPane stackPaneLogin;
 
     TextArea textAreaCheckOut;
@@ -366,6 +368,7 @@ public class Main extends Application {
         RegistryAddress regStaffAddress = new RegistryAddress();
 
         menuButtonStore = new MenuButton("Butik");
+        menuButtonStore.setTextFill(Color.rgb(249, 247, 220));
         MenuItem menuItemStore1 = new MenuItem("Butik 1");
         MenuItem menuItemStore2 = new MenuItem("Butik 2");
         menuButtonStore.getItems().addAll(menuItemStore1, menuItemStore2);
@@ -424,6 +427,7 @@ public class Main extends Application {
         RegistryAddress updateStaffAddress = new RegistryAddress();
 
         menuButtonStoreUpdate = new MenuButton("Butik");
+        menuButtonStoreUpdate.setTextFill(Color.rgb(249, 247, 220));
         menuItemStore1Update = new MenuItem("Butik 1");
         menuItemStore2Update = new MenuItem("Butik 2");
         menuButtonStoreUpdate.getItems().addAll(menuItemStore1Update, menuItemStore2Update);
@@ -1071,9 +1075,11 @@ public class Main extends Application {
 
         //REGISTRERA FILM
         labelRegNewFilm = new Label("Registrera ny film");
+        labelSpecialFeatures = new Label("Extra innehåll");
+
+        TextArea textAreaDescription= new TextArea();
 
         textFieldTitle = new TextField();
-        textFieldDescription= new TextField();
         textFieldReleaseYear= new TextField();
         textFieldRentalDuration= new TextField();
         textFieldRentalRate= new TextField();
@@ -1084,7 +1090,7 @@ public class Main extends Application {
         textFieldActorLastName= new TextField();
 
         textFieldTitle.setPromptText("Titel");
-        textFieldDescription.setPromptText("Beskrivning");
+        textAreaDescription.setPromptText("Beskrivning");
         textFieldReleaseYear.setPromptText("År");
         textFieldRentalDuration.setPromptText("Hyrestid");
         textFieldRentalRate.setPromptText("Hyreskostnad");
@@ -1094,7 +1100,16 @@ public class Main extends Application {
         textFieldActorFirstName.setPromptText("Skådespelare förnamn");
         textFieldActorLastName.setPromptText("Skådespelare efternamn");
 
+        textAreaDescription.setStyle("-fx-max-height: 90;" +
+                "-fx-min-height: 90;" +
+                "-fx-max-width: 290;" +
+                "-fx-min-width: 290;" +
+                "-fx-background-color: #F9F7DC;" +
+                "-fx-control-inner-background: #F9F7DC"
+        );
+
         menuButtonStore1 = new MenuButton("Butik");
+        menuButtonStore1.setTextFill(Color.rgb(249, 247, 220));
         menuItemSt1 = new MenuItem("Butik 1");
         menuItemSt2 = new MenuItem("Butik 2");
 
@@ -1103,8 +1118,8 @@ public class Main extends Application {
 
         menuButtonStore1.getItems().addAll(menuItemSt1, menuItemSt2);
 
-        menuButtonRating = new MenuButton();
-        menuButtonRating.setText("Åldersgräns");
+        menuButtonRating = new MenuButton("Åldersgräns");
+        menuButtonRating.setTextFill(Color.rgb(249, 247, 220));
         menuItemRating1 = new MenuItem("R - Restricted");
         menuItemRating2 = new MenuItem("G - General audiences");
         menuItemRating3 = new MenuItem("PG - Parental Guidance");
@@ -1121,6 +1136,25 @@ public class Main extends Application {
 
         btnRegisterNewFilm = new Button("Registrera");
 
+        checkBoxDeletedScenes = new CheckBox("Bortklippta scener");
+        checkboxBehindTheScenes = new CheckBox("Bakom kulisserna");
+        checkBoxTrailers = new CheckBox("Trailers");
+        checkBoxCommentaries = new CheckBox("Skaparens kommentar");
+
+        VBox vBoxTest = new VBox();
+        vBoxTest.setAlignment(Pos.CENTER);
+        vBoxTest.setSpacing(10);
+        vBoxTest.getChildren().addAll(textFieldTitle, textFieldReleaseYear);
+
+        vBoxCheckBoxes = new VBox();
+        vBoxCheckBoxes.setSpacing(5);
+        vBoxCheckBoxes.getChildren().addAll(checkBoxDeletedScenes, checkboxBehindTheScenes,
+                checkBoxTrailers, checkBoxCommentaries);
+
+        hBoxCheckBoxes = new HBox();
+        hBoxCheckBoxes.setAlignment(Pos.CENTER);
+        hBoxCheckBoxes.getChildren().addAll(vBoxCheckBoxes);
+
         hBoxRegFilm1 = new HBox();
         hBoxRegFilm2 = new HBox();
         hBoxRegFilm3 = new HBox();
@@ -1136,7 +1170,7 @@ public class Main extends Application {
         hBoxRegFilm3.setSpacing(10);
         hBoxRegFilm4.setSpacing(10);
 
-        hBoxRegFilm1.getChildren().addAll(textFieldTitle, textFieldReleaseYear, textFieldDescription);
+        hBoxRegFilm1.getChildren().addAll(vBoxTest, textAreaDescription);
         hBoxRegFilm2.getChildren().addAll(textFieldRentalDuration, textFieldRentalRate, textFieldReplacementCost);
         hBoxRegFilm3.getChildren().addAll(textFieldLength, textFieldLanguage, menuButtonRating);
         hBoxRegFilm4.getChildren().addAll(textFieldActorFirstName, textFieldActorLastName, menuButtonStore1);
@@ -1144,8 +1178,8 @@ public class Main extends Application {
         vBoxRegFilm = new VBox();
         vBoxRegFilm.setAlignment(Pos.CENTER);
         vBoxRegFilm.setSpacing(10);
-        vBoxRegFilm.getChildren().addAll(labelRegNewFilm, hBoxRegFilm1, hBoxRegFilm2, hBoxRegFilm3, hBoxRegFilm4,
-                btnRegisterNewFilm);
+        vBoxRegFilm.getChildren().addAll(labelRegNewFilm, hBoxRegFilm1, hBoxRegFilm2, hBoxRegFilm4, hBoxRegFilm3,
+                hBoxCheckBoxes, btnRegisterNewFilm);
 
         borderPaneRegisterFilm.setCenter(vBoxRegFilm);
 

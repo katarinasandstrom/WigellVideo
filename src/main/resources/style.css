@@ -36,9 +36,9 @@
     -fx-max-height: 40;
 }
 
-.menu-button{
+.menu-button {
     -fx-background-color: #C57C07;
-    -fx-text-fill: #F9F7DC;
+    -fx-prompt-text-fill: #F9F7DC;
     -fx-font-size: 12px;
     -fx-border-width: 2;
     -fx-border-radius: 3;
@@ -80,4 +80,8 @@
     -fx-max-width: 140;
     -fx-background-color: linear-gradient(to bottom, #F69F13, #C57C07);
 
+}
+
+.check-box .box{
+    -fx-background-color: #F9F7DC;
 }
