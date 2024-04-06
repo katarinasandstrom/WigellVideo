@@ -121,7 +121,7 @@ public class Main extends Application {
     TextArea textAreaCheckOut;
 
     //Comment for push
-
+    boolean isSearchMode = true;
     CrudOfCustomer crudOfCustomers = new CrudOfCustomer();
     CrudOfStore crudOfStore = new CrudOfStore();
     @Override
@@ -787,12 +787,28 @@ public class Main extends Application {
         textFieldSearchCustomer.setPromptText("Email");
         btnSearchCustomer= new Button("Sök kund");
 
+
+
         btnSearchCustomer.setOnAction(e -> {
             String customerEmail = textFieldSearchCustomer.getText();
-            crudOfCustomers.readFromCustomer2(customerEmail, customerList);
+            if (isSearchMode) {
+                if (!customerEmail.isEmpty()) {
+                    crudOfCustomers.readFromCustomer2(customerEmail, customerList);
+                } else {
+                    reloadAllCustomers(customerList);
+                }
+            } else {
+                reloadAllCustomers(customerList);
+                textFieldSearchCustomer.clear(); // Tömmer sökfältet
+            }
             tableViewCustomers.refresh();
             tableViewCustomers.setItems(customerList);
+
+            // Toggle button state
+            isSearchMode = !isSearchMode;
+            updateSearchButton(); // Uppdaterar sökknappen
         });
+
 
         hBoxShowCustomers = new HBox();
         hBoxShowCustomers.getChildren().addAll(textFieldSearchCustomer, btnSearchCustomer);
@@ -804,7 +820,9 @@ public class Main extends Application {
         vBoxShowCustomers.setSpacing(10);
         vBoxShowCustomers.getChildren().addAll(labelShowCustomers,tableViewCustomers, hBoxShowCustomers);
 
+
         borderPaneShowCustomers.setCenter(vBoxShowCustomers);
+
 
 
 
@@ -1166,7 +1184,16 @@ public class Main extends Application {
 
  */
     }
-
+    public static void reloadAllCustomers(List<Customer> customerList) {
+        CrudOfCustomer.loadCustomersFromDatabase(customerList);
+    }
+    private void updateSearchButton() {
+        if (isSearchMode) {
+            btnSearchCustomer.setText("Sök kund");
+        } else {
+            btnSearchCustomer.setText("Visa hela listan");
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);

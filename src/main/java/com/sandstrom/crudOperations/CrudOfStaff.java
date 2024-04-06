@@ -10,7 +10,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class CrudOfStaff {
-    public void registerNewStaff(Byte staffId, String firstName, String lastName, byte[] picture, String email, byte active, String username, String password, Timestamp lastUpdate, String selectedStoreName, String selectedAddressLine) {
+    public void registerNewStaff(Byte staffId, String firstName, String lastName, byte[] picture, String email, byte active, String username,
+                                 String password, Timestamp lastUpdate, String selectedStoreName, String selectedAddressLine) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
