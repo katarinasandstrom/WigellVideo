@@ -209,6 +209,7 @@ public class Customer {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", addressId=" + addressId +
+                ", address=" + address +
                 ", active=" + active +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +

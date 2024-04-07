@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -41,7 +42,7 @@ public class MenuBar extends HBox {
         this.registerFilmScene = registerFilmScene;
 
         // Sökväg till bildfil till logga
-        String imagePathLogo = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\WigellVideoLogo.png";
+        String imagePathLogo = "C:\\Users\\helga\\OneDrive\\Skrivbord\\Skola\\Software Development Process\\WigellVideoLogo.png";
 
         Image image = new Image("file:" + imagePathLogo);
 
@@ -58,6 +59,7 @@ public class MenuBar extends HBox {
                 "-fx-text-fill: #0C191D");
 
         menuBtnStaff = new MenuButton("Personal");
+        menuBtnStaff.setTextFill(Color.rgb(249, 247, 220));
         MenuItem menuItemRegNewStaff = new MenuItem("Registrera ny personal");
         menuItemRegNewStaff.setOnAction(e->primaryStage.setScene(registerNewStaffScene));
         MenuItem menuItemUpdateStaff = new MenuItem("Uppdatera personal");
@@ -71,6 +73,7 @@ public class MenuBar extends HBox {
 
         // Dropdownmeny för kund
         menuBtnCustomer = new MenuButton("Kund");
+        menuBtnCustomer.setTextFill(Color.rgb(249, 247, 220));
         menuBtnCustomer.getStylesheets().add("style.css");
         menuItemRegisterCustomer = new MenuItem("Registrera ny kund");
         menuItemRegisterCustomer.setOnAction(e -> primaryStage.setScene(registerNewCustomerScene));
@@ -84,6 +87,7 @@ public class MenuBar extends HBox {
 
         //   Dropdownmeny för Store
         menuBtnStore = new MenuButton("Butik");
+        menuBtnStore.setTextFill(Color.rgb(249, 247, 220));
        menuItemRegisterStore = new MenuItem("Registrera ny butik");
         menuItemRegisterStore.setOnAction(e-> primaryStage.setScene(registerNewStoreScene));
         menuItemUpdateStore = new MenuItem("Uppdatera butik");
@@ -105,6 +109,7 @@ public class MenuBar extends HBox {
 
         //  Menyknapp för film
         menuBtnFilm = new MenuButton("Film");
+        menuBtnFilm.setTextFill(Color.rgb(249, 247, 220));
 
         MenuItem menuItemSearchFilm = new MenuItem("Sök film");
         menuItemSearchFilm.setOnAction(e-> primaryStage.setScene(searchFilmScene));
