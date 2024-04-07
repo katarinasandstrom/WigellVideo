@@ -63,6 +63,7 @@ public class Main extends Application {
     TextArea textAreaAllCustomers;
 
     private ObservableList<Customer> customerList;
+    private ObservableList<Film> filmList;
 
     TableView tableViewCustomers, tableViewStaff, tableViewFilms;
     TableColumn <Customer, Short> columnCustomerId, columnAddressId;
@@ -135,17 +136,18 @@ public class Main extends Application {
             hBoxSearchFilm, hBoxCheckOutPage, hBoxRegFilm1, hBoxRegFilm2, hBoxRegFilm3, hBoxRegFilm4, hBoxCheckBoxes;
     StackPane stackPaneLogin;
 
-    TextArea textAreaCheckOut;
+    TextArea textAreaCheckOut, textAreaDescription;
 
     //Comment for push
     boolean isSearchMode = true;
+    boolean isSearchMode1 = true;
     CrudOfCustomer crudOfCustomers = new CrudOfCustomer();
     CrudOfStore crudOfStore = new CrudOfStore();
     @Override
     public void start(Stage primaryStage) {
 
         // Sökväg till bildfil
-        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
+        String imagePath = "C:\\Users\\helga\\OneDrive\\Skrivbord\\Skola\\Software Development Process\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
 
 
         // Skapar en ImageView och laddar in bilden
@@ -154,9 +156,6 @@ public class Main extends Application {
         imageViewVideoStore.setFitHeight(primaryStage.getHeight());
 
         imageViewVideoStore.setPreserveRatio(true);
-
-
-
 
         // BorderPanes för varje scen
         borderPaneLogin = new BorderPane();
@@ -197,6 +196,7 @@ public class Main extends Application {
         updateStoreScene = new Scene( borderPaneUpdateStore, 1000, 700);
         updateStoreScene.getStylesheets().add("style.css");
         checkOutScene = new Scene(borderPanecheckOut, 1000, 700);
+        checkOutScene.getStylesheets().add("style.css");
         searchFilmScene = new Scene(borderPaneSearchFilm, 1000, 700);
         searchFilmScene.getStylesheets().add("style.css");
         registerFilmScene = new Scene(borderPaneRegisterFilm, 1000, 700);
@@ -720,8 +720,6 @@ public class Main extends Application {
         labelShowCustomers = new Label("Kundöversikt");
 
         tableViewCustomers = new TableView<>();
-        tableViewCustomers.setMinSize(800, 400);
-        tableViewCustomers.setMaxSize(800, 400);
         tableViewCustomers.setStyle("-fx-background-color: #F9F7DC;");
 
       //  List<Customer> customers = crudOfCustomers.loadCustomersFromDatabase(List<Customer>customerList);
@@ -866,7 +864,6 @@ public class Main extends Application {
         datePickerRentalDate = new DatePicker();
         datePickerReturnDate = new DatePicker();
 
-
         datePickerRentalDate.setValue(LocalDate.now());
 
         textFieldInventoryId.setPromptText("Streckkod");
@@ -876,15 +873,40 @@ public class Main extends Application {
         datePickerReturnDate.setPromptText("Återlämnas");
 
         textFieldInventoryId.setStyle(" -fx-background-color:#F9F7DC ;\n" +
-                "        -fx-text-fill: #303538;");
+                "        -fx-text-fill: #303538;" +
+                "-fx-min-width: 390;" +
+                "-fx-max-width: 390;" +
+                "-fx-min-height: 40;" +
+                "-fx-max-height: 40;");
         textFieldStaffId.setStyle(" -fx-background-color:#F9F7DC ;\n" +
-                        "        -fx-text-fill: #303538;");
+                        "        -fx-text-fill: #303538;" +
+                "-fx-min-width: 188;" +
+                "-fx-max-width: 188;" +
+                "-fx-min-height: 40;" +
+                "-fx-max-height: 40;");
         textFieldCustomerId.setStyle(" -fx-background-color:#F9F7DC ;\n" +
-                        "        -fx-text-fill: #303538;");
+                        "        -fx-text-fill: #303538;" +
+                "-fx-min-width: 188;" +
+                "-fx-max-width: 188;" +
+                "-fx-min-height: 40;" +
+                "-fx-max-height: 40;");
         textFieldAmount.setStyle(" -fx-background-color:#F9F7DC ;\n" +
-                        "        -fx-text-fill: #303538;");
-        datePickerReturnDate.setStyle(" -fx-background-color:#F9F7DC ;\n" +
-                        "        -fx-text-fill: #303538;");
+                        "        -fx-text-fill: #303538;" +
+                "-fx-min-width: 120;" +
+                "-fx-max-width: 120;" +
+                "-fx-min-height: 40;" +
+                "-fx-max-height: 40;");
+
+
+
+        textFieldInventoryId.setMinSize(390, 40);
+        textFieldInventoryId.setMaxSize(390, 40);
+        textFieldStaffId.setMinSize(188, 40);
+        textFieldStaffId.setMaxSize(188, 40);
+        textFieldCustomerId.setMinSize(188, 40);
+        textFieldCustomerId.setMaxSize(188, 40);
+        textFieldAmount.setMinSize(120, 40);
+        textFieldAmount.setMaxSize(120, 40);
 
 
 
@@ -931,17 +953,8 @@ public class Main extends Application {
                 "-fx-max-width: 120;"+
                 "-fx-background-color: linear-gradient(to bottom,#F69F13, #C57C07 );");
 
-        datePickerRentalDate.setStyle("-fx-control-inner-background: #F9F7DC;" + "-fx-text-fill: #303538;");
-        datePickerReturnDate.setStyle("-fx-control-inner-background: #F9F7DC;" + "-fx-text-fill: #303538;");
-
-        textFieldInventoryId.setMinSize(390, 40);
-        textFieldInventoryId.setMaxSize(390, 40);
-        textFieldStaffId.setMinSize(188, 40);
-        textFieldStaffId.setMaxSize(188, 40);
-        textFieldCustomerId.setMinSize(188, 40);
-        textFieldCustomerId.setMaxSize(188, 40);
-        textFieldAmount.setMinSize(120, 40);
-        textFieldAmount.setMaxSize(120, 40);
+     //   datePickerRentalDate.setStyle("-fx-control-inner-background: #F9F7DC;" + "-fx-text-fill: #303538;");
+      //  datePickerReturnDate.setStyle("-fx-control-inner-background: #F9F7DC;" + "-fx-text-fill: #303538;");
 
         hBoxCheckOutDatePickers = new HBox();
         hBoxCheckOutDatePickers.setAlignment(Pos.CENTER);
@@ -1085,7 +1098,10 @@ public class Main extends Application {
 
 
 
-    //FILMSIDAN
+    //FILMSIDAN SÖK OCH SE FILMER
+
+        filmList = FXCollections.observableArrayList();
+
         tableViewFilms = new TableView<>();
         tableViewFilms.setMinSize(800, 500);
         tableViewFilms.setMaxSize(800, 500);
@@ -1166,12 +1182,41 @@ public class Main extends Application {
         columnLastUpdateCategory.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
 
+
+        tableViewFilms.getItems().clear();
         tableViewFilms.getColumns().addAll(columnStoreIdFilm, columnInventoryId, columnFilmId, columnTitle,
                 columnDescription, columnRentalRate, columnReplacementCost, columnRentalDuration, columnFirstNameActor,
                 columnLastNameActor, columnCategory, columnNameLanguage, columnRating, columnReleaseYear,
                 columnLength, columnSpecialFeatures, columnLastUpdateFilm, columnLastUpdateInventory,
                 columnLastUpdateCategory, columnLastUpdateActor, columnLastUpdateLanguage);
 
+
+        /* //Början på att få upp alla filmer i tableviewn. Kopierat från customer sålänge därav kladdigt. /Helga
+
+        tableViewFilms.refresh();
+        tableViewFilms.setItems(filmList);
+
+        btnSearchFilm.setOnAction(e -> {
+            String filmTitle = textFieldSearchFilm.getText();
+            if (isSearchMode1) {
+                if (!filmTitle.isEmpty()) {
+                    crudOfCustomers.readFromCustomer2(filmTitle, filmList);
+                } else {
+                    reloadAllCustomers(filmList);
+                }
+            } else {
+                reloadAllCustomers(filmList);
+                textFieldSearchFilm.clear(); // Tömmer sökfältet
+            }
+            tableViewFilms.refresh();
+            tableViewFilms.setItems(filmList);
+
+            // Toggle button state
+            isSearchMode1 = !isSearchMode1;
+            updateSearchButtonFilms(); // Uppdaterar sökknappen
+        });
+
+         */
 
         hBoxSearchFilm = new HBox();
         hBoxSearchFilm.getChildren().addAll(textFieldSearchFilm, btnSearchFilm);
@@ -1185,11 +1230,21 @@ public class Main extends Application {
 
         borderPaneSearchFilm.setCenter(vBoxShowFilms);
 
+
+
         //REGISTRERA FILM
         labelRegNewFilm = new Label("Registrera ny film");
         labelSpecialFeatures = new Label("Extra innehåll");
 
-        TextArea textAreaDescription= new TextArea();
+        textAreaDescription = new TextArea();
+        textAreaDescription.setStyle("-fx-max-height: 90;" +
+                "-fx-min-height: 90;" +
+                "-fx-max-width: 290;" +
+                "-fx-min-width: 290;" +
+                "-fx-text-fill: #303538;" +
+                "-fx-background-color: #F9F7DC;" +
+                "-fx-control-inner-background: #F9F7DC"
+        );
 
         textFieldTitle = new TextField();
         textFieldReleaseYear= new TextField();
@@ -1211,14 +1266,6 @@ public class Main extends Application {
         textFieldLanguage.setPromptText("Språk");
         textFieldActorFirstName.setPromptText("Skådespelare förnamn");
         textFieldActorLastName.setPromptText("Skådespelare efternamn");
-
-        textAreaDescription.setStyle("-fx-max-height: 90;" +
-                "-fx-min-height: 90;" +
-                "-fx-max-width: 290;" +
-                "-fx-min-width: 290;" +
-                "-fx-background-color: #F9F7DC;" +
-                "-fx-control-inner-background: #F9F7DC"
-        );
 
         menuButtonStore1 = new MenuButton("Butik");
         menuButtonStore1.setTextFill(Color.rgb(249, 247, 220));
@@ -1329,6 +1376,14 @@ public class Main extends Application {
             btnSearchCustomer.setText("Sök kund");
         } else {
             btnSearchCustomer.setText("Visa hela listan");
+        }
+    }
+
+    private void updateSearchButtonFilms() { //Kopierat Katarinas och tänker att den kanske kan användas liknande för filmsidan
+        if (isSearchMode1) {
+            btnSearchFilm.setText("Sök film");
+        } else {
+            btnSearchFilm.setText("Visa hela listan");
         }
     }
 
