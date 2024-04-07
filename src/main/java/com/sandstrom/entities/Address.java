@@ -5,6 +5,7 @@ import org.hibernate.annotations.Type;
 
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;;
@@ -49,7 +50,7 @@ public class Address {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne()
     @JoinColumn(name = "city_id", referencedColumnName = "city_id")
     private City city;
 
@@ -61,9 +62,8 @@ public class Address {
         this.city = city;
     }
 
-
     @OneToMany(mappedBy = "address")
-    private Collection<Staff> staffByAddresId;
+    private Collection<Staff> staffByAddresId = new ArrayList<>();
 
     public Collection<Staff> getStaffByAddresId() {
         return staffByAddresId;
@@ -74,26 +74,24 @@ public class Address {
     }
 
     @OneToMany(mappedBy = "address")
-    private Collection<Customer> customersByAddresId;
+    private Collection<Customer> customersByAddresId = new ArrayList<>();
 
     public Collection<Customer> getCustomersByAddresId() {
         return customersByAddresId;
-    }
-
-    public void setStoresByAddressId(Collection<Store> storesByAddressId) {
-        this.storesByAddressId = storesByAddressId;
     }
 
     public void setCustomersByAddresId(Collection<Customer> customersByAddresId) {
         this.customersByAddresId = customersByAddresId;
     }
 
+    @OneToMany(mappedBy = "address")
+    private Collection<Store> storesByAddressId = new ArrayList<>();
     public Collection<Store> getStoresByAddressId() {
         return storesByAddressId;
     }
-
-    @OneToMany(mappedBy = "address")
-    private Collection<Store> storesByAddressId;
+    public void setStoresByAddressId(Collection<Store> storesByAddressId) {
+        this.storesByAddressId = storesByAddressId;
+    }
 
     public Address(String address, String address2, String district, short cityId, String postalCode, String phone, Timestamp lastUpdate) {
         this.address = address;

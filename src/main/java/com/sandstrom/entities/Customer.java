@@ -58,11 +58,11 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Payment> paymentsByCustomerId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "store_id", referencedColumnName = "store_id")
     private Store store;
 
