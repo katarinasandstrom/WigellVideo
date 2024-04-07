@@ -60,6 +60,7 @@ public class MenuBar extends HBox {
 
         menuBtnStaff = new MenuButton("Personal");
         menuBtnStaff.setTextFill(Color.rgb(249, 247, 220));
+        menuBtnStaff.setStyle("-fx-mark-color: #F9F7DC;");
         MenuItem menuItemRegNewStaff = new MenuItem("Registrera ny personal");
         menuItemRegNewStaff.setOnAction(e->primaryStage.setScene(registerNewStaffScene));
         MenuItem menuItemUpdateStaff = new MenuItem("Uppdatera personal");
@@ -74,6 +75,7 @@ public class MenuBar extends HBox {
         // Dropdownmeny för kund
         menuBtnCustomer = new MenuButton("Kund");
         menuBtnCustomer.setTextFill(Color.rgb(249, 247, 220));
+        menuBtnCustomer.setStyle("-fx-mark-color: #F9F7DC;");
         menuBtnCustomer.getStylesheets().add("style.css");
         menuItemRegisterCustomer = new MenuItem("Registrera ny kund");
         menuItemRegisterCustomer.setOnAction(e -> primaryStage.setScene(registerNewCustomerScene));
@@ -88,6 +90,7 @@ public class MenuBar extends HBox {
         //   Dropdownmeny för Store
         menuBtnStore = new MenuButton("Butik");
         menuBtnStore.setTextFill(Color.rgb(249, 247, 220));
+        menuBtnStore.setStyle("-fx-mark-color: #F9F7DC;");
        menuItemRegisterStore = new MenuItem("Registrera ny butik");
         menuItemRegisterStore.setOnAction(e-> primaryStage.setScene(registerNewStoreScene));
         menuItemUpdateStore = new MenuItem("Uppdatera butik");
@@ -103,13 +106,15 @@ public class MenuBar extends HBox {
         //Menyknapp för kassa
         menuBtnCheckout = new Button("Kassa");
         menuBtnCheckout.setStyle("-fx-alignment: center-left;"+
-                "-fx-text-fill: #F9F7DC;");
+                "-fx-text-fill: #F9F7DC;" +
+                "-fx-mark-color: #F9F7DC;");
         menuBtnCheckout.setOnAction(e->primaryStage.setScene(checkOutScene));
 
 
         //  Menyknapp för film
         menuBtnFilm = new MenuButton("Film");
         menuBtnFilm.setTextFill(Color.rgb(249, 247, 220));
+        menuBtnFilm.setStyle("-fx-mark-color: #F9F7DC;");
 
         MenuItem menuItemSearchFilm = new MenuItem("Sök film");
         menuItemSearchFilm.setOnAction(e-> primaryStage.setScene(searchFilmScene));

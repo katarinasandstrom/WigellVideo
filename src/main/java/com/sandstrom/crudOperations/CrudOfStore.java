@@ -12,9 +12,9 @@ import java.util.List;
 import java.sql.Timestamp;
 
 public class CrudOfStore {
-    private static SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
-    static {
+    public CrudOfStore() {
         try {
             sessionFactory = new Configuration().configure().buildSessionFactory();
         } catch (Throwable ex) {
@@ -41,19 +41,8 @@ public class CrudOfStore {
             if (cityId != null) {
                 cities = session.load(City.class, cityId);
             } else {
-                //Get city Id
-                Query query = session.createNamedQuery("City.pk");
-                query.setParameter("city", city);
-                List<Short> cityIds = query.getResultList();
-                if (!cityIds.isEmpty()) {
-                    cities = session.load(City.class, cityIds.get(0));
-                }
-            }
-
-            if (cities == null) {
-                // If city doesn't exist, create a new one
-                cities = new City(city, countries.getCountryId(), lastUpdate);
-                session.persist(cities);
+                // Get city Id
+                cities = getOrCreateCity(session, city, countries, lastUpdate);
             }
 
             // Skapa en ny Address och koppla den till butiken
@@ -82,6 +71,39 @@ public class CrudOfStore {
                 session.close();
             }
         }
+    }
+
+    private City getOrCreateCity(Session session, String city, Country countries, Timestamp lastUpdate) {
+        // Get city Id
+        Query query = session.createNamedQuery("City.pk");
+        query.setParameter("city", city);
+        List<Short> cityIds = query.getResultList();
+        if (!cityIds.isEmpty()) {
+            return session.load(City.class, cityIds.get(0));
+        } else {
+            // Generate a unique city_id if the city doesn't exist
+            Short uniqueCityId = generateUniqueCityId(session);
+            City newCity = new City(city, countries.getCountryId(), lastUpdate);
+            newCity.setCityId(uniqueCityId);
+            session.persist(newCity);
+            return newCity;
+        }
+    }
+
+    private Short generateUniqueCityId(Session session) {
+        Short uniqueCityId = 1; // Startvärdet för ID
+        boolean idExists = true;
+        while (idExists) {
+            Query query = session.createQuery("SELECT c.cityId FROM City c WHERE c.cityId = :cityId");
+            query.setParameter("cityId", uniqueCityId);
+            List<Short> existingIds = query.getResultList();
+            if (existingIds.isEmpty()) {
+                idExists = false;
+            } else {
+                uniqueCityId++; // Försök med nästa ID om det redan existerar
+            }
+        }
+        return uniqueCityId;
     }
 
     public void updateStoreInfo(int storeId, String address, String district, String city, String postalCode, String phone, String location, String country, Timestamp lastUpdate) {
@@ -200,6 +222,37 @@ public class CrudOfStore {
             }
 
             transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            ex.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    public void deleteStore(int storeId) {
+        Session session = null;
+        Transaction transaction = null;
+
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            // Hämta affären med det angivna ID:t från databasen
+            Store store = session.get(Store.class, storeId);
+
+            if (store != null) {
+                // Radera affären från databasen
+                session.delete(store);
+                transaction.commit();
+                System.out.println("Affären med ID " + storeId + " har raderats från databasen.");
+            } else {
+                System.out.println("Affären med ID " + storeId + " hittades inte.");
+            }
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
