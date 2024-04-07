@@ -2,7 +2,6 @@
     -fx-background-color:#94B1B3;
 }
 
-
 .label{
     -fx-min-height: 40;
     -fx-max-height: 40;
@@ -48,6 +47,7 @@
     -fx-max-width: 140;
     -fx-background-color: linear-gradient(to bottom,#F69F13, #C57C07 );
 }
+
 
 .text-field {
     -fx-min-height: 40;

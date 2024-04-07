@@ -1222,6 +1222,7 @@ public class Main extends Application {
 
         menuButtonStore1 = new MenuButton("Butik");
         menuButtonStore1.setTextFill(Color.rgb(249, 247, 220));
+        menuButtonStore1.setStyle("-fx-mark-color: #F9F7DC;");
         menuItemSt1 = new MenuItem("Butik 1");
         menuItemSt2 = new MenuItem("Butik 2");
 
@@ -1232,6 +1233,7 @@ public class Main extends Application {
 
         menuButtonRating = new MenuButton("Åldersgräns");
         menuButtonRating.setTextFill(Color.rgb(249, 247, 220));
+        menuButtonRating.setStyle("-fx-mark-color: #F9F7DC;");
         menuItemRating1 = new MenuItem("R - Restricted");
         menuItemRating2 = new MenuItem("G - General audiences");
         menuItemRating3 = new MenuItem("PG - Parental Guidance");
@@ -1251,7 +1253,7 @@ public class Main extends Application {
         checkBoxDeletedScenes = new CheckBox("Bortklippta scener");
         checkboxBehindTheScenes = new CheckBox("Bakom kulisserna");
         checkBoxTrailers = new CheckBox("Trailers");
-        checkBoxCommentaries = new CheckBox("Skaparens kommentar");
+        checkBoxCommentaries = new CheckBox("Skaparens kommentarer");
 
         VBox vBoxTest = new VBox();
         vBoxTest.setAlignment(Pos.CENTER);
@@ -1265,7 +1267,8 @@ public class Main extends Application {
 
         hBoxCheckBoxes = new HBox();
         hBoxCheckBoxes.setAlignment(Pos.CENTER);
-        hBoxCheckBoxes.getChildren().addAll(vBoxCheckBoxes);
+        hBoxCheckBoxes.setSpacing(150);
+        hBoxCheckBoxes.getChildren().addAll(vBoxCheckBoxes, btnRegisterNewFilm);
 
         hBoxRegFilm1 = new HBox();
         hBoxRegFilm2 = new HBox();
@@ -1291,7 +1294,7 @@ public class Main extends Application {
         vBoxRegFilm.setAlignment(Pos.CENTER);
         vBoxRegFilm.setSpacing(10);
         vBoxRegFilm.getChildren().addAll(labelRegNewFilm, hBoxRegFilm1, hBoxRegFilm2, hBoxRegFilm4, hBoxRegFilm3,
-                hBoxCheckBoxes, btnRegisterNewFilm);
+                hBoxCheckBoxes);
 
         borderPaneRegisterFilm.setCenter(vBoxRegFilm);
 
