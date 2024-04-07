@@ -1,8 +1,10 @@
 package com.sandstrom;
 
 import com.sandstrom.crudOperations.CrudOfCustomer;
+import com.sandstrom.crudOperations.CrudOfStaff;
 import com.sandstrom.crudOperations.CrudOfStore;
 import com.sandstrom.entities.*;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaQuery;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
@@ -13,6 +15,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -24,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import java.math.BigDecimal;
@@ -71,8 +75,9 @@ public class Main extends Application {
     TableColumn <Customer, Timestamp> columnCustomerCreateDate, columnLastUpdateCustomer;
 
     TableColumn <Address, Short>  columnStaffAddressId;
-    TableColumn <Address, String> columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
+    TableColumn <Address, String> columnAddress, columnDistrict, columnPostalCode, columnPhone,
     columnStaffAddress, columnStaffDistrict, columnStaffPostalCode,columnStaffPhone;
+    TableColumn <Address, Byte> columnLocation;
     TableColumn <Address, Timestamp> columnLastUpdateAddress, columnStaffLastUpdateAddress;
 
     TableColumn <City, Short> columnCityId, columnStaffCityId;
@@ -376,13 +381,46 @@ public class Main extends Application {
 
         RegistryAddress regStaffAddress = new RegistryAddress();
 
+        Label labelDuplicateStaff = new Label();
+
+
         menuButtonStore = new MenuButton("Butik");
         menuButtonStore.setTextFill(Color.rgb(249, 247, 220));
         MenuItem menuItemStore1 = new MenuItem("Butik 1");
         MenuItem menuItemStore2 = new MenuItem("Butik 2");
         menuButtonStore.getItems().addAll(menuItemStore1, menuItemStore2);
 
+
+
         btnRegisterNewStaff = new Button("Registrera");
+      /*  btnRegisterNewStaff.setOnAction(e-> {
+            CrudOfStaff crudOfStaff = new CrudOfStaff();
+            String firstName =textFieldStaffFName.getText();
+            String lastName = textFieldStaffLName.getText();
+            String email = textFieldStaffEmail.getText();
+            String username = textFieldStaffUserName.getText();
+            String password = textFieldStaffPassword.getText();
+
+            String address = regStaffAddress.textFieldRegAddress.getText();
+            String postalCode = regStaffAddress.textFieldRegPostalCode.getText();
+            String city = regStaffAddress.textFieldRegCity.getText();
+            String district = regStaffAddress.textFieldRegDistrict.getText();
+            String country = regStaffAddress.textFieldRegCountry.getText();
+            String phone = regStaffAddress.textFieldRegPhone.getText();
+
+
+            crudOfStaff.registerNewStaff(labelDuplicateStaff, firstName, lastName, email,
+                     username, password, address,  district,
+                     postalCode,phone, int storeId);
+        });
+
+        btnRegisterNewCustomer.setOnAction(e-> {
+
+
+
+            crudOfCustomer.registerNewCustomer  (labelDuplicateCustomer, firstName,  lastName, email, country,  city,
+                    address, district, postalCode,  phone);
+        });*/
 
         vBoxRegStaff1 = new VBox();
         vBoxRegStaff2 = new VBox();
@@ -650,39 +688,22 @@ public class Main extends Application {
         textFieldSearchCustomer = new TextField();
         textFieldSearchCustomer.setPromptText("Email");
         btnSearchCustomerNr = new Button("Sök kund");
+
         btnSearchCustomerNr.setOnAction(e-> {
-            if (!customerList.isEmpty()) {
-                Customer foundCustomer = customerList.get(0); // Hämta den första kunden från listan
-                // Fyll i textfälten med kundens information
-                textFieldUpdateCustomerFName.setText(foundCustomer.getFirstName());
-                textFieldUpdateCustomerLName.setText(foundCustomer.getLastName());
-                textFieldUpdateCustomerEmail.setText(foundCustomer.getEmail());
+                });
 
-                Address customerAddress1 = foundCustomer.getAddress();
 
-                if (customerAddress != null) {
-                    // Fyll i textfälten för adressen
-                    updateCustomerAddress.textFieldRegAddress.setText(customerAddress1.getAddress());
-                    updateCustomerAddress.textFieldRegDistrict.setText(customerAddress1.getDistrict());
-                    updateCustomerAddress.textFieldRegPostalCode.setText(customerAddress1.getPostalCode());
-                    updateCustomerAddress.textFieldRegPhone.setText(customerAddress1.getPhone());
-                    // Antag att city är en del av Address-objektet
-                    if (customerAddress1.getCity() != null) {
-                        updateCustomerAddress.textFieldRegCity.setText(customerAddress1.getCity().getCity());
-                       // registryAddress.textFieldRegCountry.setText(customerAddress1.getCity().getCountry());
-                    }
-            } else {
-                // Kund med angiven e-postadress finns inte, åtgärda här om det behövs
-            }
 
-            }
 
-        });
+        btnUpdateCustomer = new Button("Uppdatera info");
 
-        btnUpdateCustomer = new Button ("Uppdatera info");
+
        // btnUpdateCustomer.setOnAction(e-> KOD FÖR ATT UPPDATERA KUNDINFO);
         btnDeleteCustomer = new Button ("Ta bort kund");
-     //   btnDeleteCustomer.setOnAction(e-> KOD FÖR ATT DELETA KUND);
+        btnDeleteCustomer.setOnAction(e-> {
+            String email = textFieldUpdateCustomerEmail.getText();
+            crudOfCustomers.removeCustomer(email);
+        });
 
 
         // Lyssnare för att hantera ändringar i knappens tillstånd
@@ -768,8 +789,8 @@ public class Main extends Application {
        columnDistrict = new TableColumn<>("Distrikt");
        columnPostalCode = new TableColumn<>("Postnr");
        columnPhone = new TableColumn<>("Telefonnr");
-       columnLocation = new TableColumn<>("Location");
-     /*  columnLastUpdateAddress = new TableColumn<>("Uppdaterad");
+     columnLocation = new TableColumn<>("Location");
+       columnLastUpdateAddress = new TableColumn<>("Uppdaterad");
        columnCityId = new TableColumn<>("Postortsid");
        columnCity = new TableColumn<>("Postort");
        columnLastUpdateCity = new TableColumn<>("Uppdaterad");
@@ -778,7 +799,7 @@ public class Main extends Application {
        columnLastUpdateCountry = new TableColumn<>("Uppdaterad");
 
 
-       */
+
 
 
         columnCustomerId.setCellValueFactory(cellData ->
@@ -792,14 +813,17 @@ public class Main extends Application {
                 new SimpleObjectProperty<>(cellData.getValue().getCreateDate()));
         columnLastUpdateCustomer.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
-        /*columnAddressId.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddressId()));
+        columnAddressId.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddressId()));
 
 
-        columnAddress.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress()));
+        /*columnAddress.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress()));
         columnDistrict.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDistrict()));
         columnPostalCode.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPostalCode()));
         columnPhone.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhone()));
-        columnLocation.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLocation()));
+        columnLocation.setCellValueFactory(cellData -> {
+            Byte[] byteArray = convertToByteArray(cellData.getValue().getLocation());
+            return new SimpleObjectProperty<>(byteArray);
+        });
         columnLastUpdateAddress.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
         columnCityId.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getCityId()));
@@ -811,13 +835,15 @@ public class Main extends Application {
         columnLastUpdateCountry.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
 
 
- */ tableViewCustomers.getItems().clear();
-        tableViewCustomers.getColumns().addAll(columnCustomerId, columnFirstName, columnLastName, columnEmail, columnActive, columnCustomerCreateDate,
-                columnLastUpdateCustomer);
-/*, columnAddressId, columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
-                columnLastUpdateAddress, columnCityId, columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry
+         */
 
- */
+  tableViewCustomers.getItems().clear();
+        tableViewCustomers.getColumns().addAll(columnCustomerId, columnFirstName, columnLastName, columnEmail, columnActive, columnCustomerCreateDate,
+                columnLastUpdateCustomer, columnAddressId, columnAddressId);
+
+//columnAddress, columnDistrict, columnPostalCode, columnPhone,
+//                columnLastUpdateAddress, columnCityId, columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry
+ //columnLocation,
 
       /*  tableViewCustomers.getColumns().addAll( columnCustomerId,columnFirstName,columnLastName, columnEmail, columnActive, columnCustomerCreateDate,
         columnLastUpdateCustomer, columnAddressId, columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
@@ -826,7 +852,7 @@ public class Main extends Application {
 
        */
 
-        crudOfCustomers.loadCustomersFromDatabase(customerList);
+        crudOfCustomers.readFromCustomers(customerList);
         tableViewCustomers.refresh();
         tableViewCustomers.setItems(customerList);
 
@@ -842,18 +868,17 @@ public class Main extends Application {
                 if (!customerEmail.isEmpty()) {
                     crudOfCustomers.readFromCustomer2(customerEmail, customerList);
                 } else {
-                    reloadAllCustomers(customerList);
+
                 }
             } else {
-                reloadAllCustomers(customerList);
-                textFieldSearchCustomer.clear(); // Tömmer sökfältet
+
             }
             tableViewCustomers.refresh();
             tableViewCustomers.setItems(customerList);
 
             // Toggle button state
             isSearchMode = !isSearchMode;
-            updateSearchButton(); // Uppdaterar sökknappen
+          //  updateSearchButton(); // Uppdaterar sökknappen
         });
 
 
@@ -1032,7 +1057,7 @@ public class Main extends Application {
         btnRegStore = new Button("Registrera butik");
         btnRegStore.setMinSize(140,40);
         btnRegStore.setMaxSize(140,40);
-
+/*
        btnRegStore.setOnAction(e-> {
            Byte managerStaffId = Byte.valueOf(textFieldManagerId.getText());
            String address = addressStore.textFieldRegAddress.getText();
@@ -1047,7 +1072,7 @@ public class Main extends Application {
                    phone, location,  country,  lastUpdate);
                }
                );
-
+*/
         vBoxRegStore1 = new VBox();
         vBoxRegStore1.getChildren().addAll(addressStore.getAddressView());
         vBoxRegStore1.setSpacing(10);
@@ -1350,16 +1375,7 @@ public class Main extends Application {
 
  */
     }
-    public static void reloadAllCustomers(List<Customer> customerList) {
-        CrudOfCustomer.loadCustomersFromDatabase(customerList);
-    }
-    private void updateSearchButton() {
-        if (isSearchMode) {
-            btnSearchCustomer.setText("Sök kund");
-        } else {
-            btnSearchCustomer.setText("Visa hela listan");
-        }
-    }
+
 
     public static void main(String[] args) {
         launch(args);
