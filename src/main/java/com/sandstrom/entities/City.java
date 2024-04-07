@@ -3,8 +3,11 @@ package com.sandstrom.entities;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@NamedNativeQuery(name = "City.pk", query = "SELECT c.city_id from city c WHERE c.city =:city", resultClass = Short.class)
 @Entity
 @Table(name = "city", schema = "sakila")
 public class City {
@@ -22,7 +25,17 @@ public class City {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "city")
+    private List<Address> addressesByUserId = new ArrayList<>();
+
+    public List<Address> getAddressesByUserId() {
+        return addressesByUserId;
+    }
+
+    public void setAddressesByUserId(List<Address> addressesByUserId) {
+        this.addressesByUserId = addressesByUserId;
+    }
+    @ManyToOne()
     @JoinColumn(name = "country_id", referencedColumnName = "country_id")
     private Country country;
 
@@ -33,8 +46,6 @@ public class City {
     public void setCountry(Country country) {
         this.country = country;
     }
-
-
 
     public City() {
     }

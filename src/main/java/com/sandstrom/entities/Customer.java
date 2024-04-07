@@ -1,6 +1,7 @@
 package com.sandstrom.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -32,7 +33,9 @@ public class Customer {
     @Column(name = "last_name")
     private String lastName;
 
+
     @Basic
+    @NaturalId
     @Column(name = "email")
     private String email;
 
@@ -55,11 +58,11 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Payment> paymentsByCustomerId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "store_id", referencedColumnName = "store_id")
     private Store store;
 
@@ -196,4 +199,24 @@ public class Customer {
     public int hashCode() {
         return Objects.hash(customerId, storeId, firstName, lastName, email, addressId, active, createDate, lastUpdate);
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", storeId=" + storeId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", addressId=" + addressId +
+                ", active=" + active +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
+
+        /*", paymentsByCustomerId=" + paymentsByCustomerId +
+                ", address=" + address +
+                ", store=" + store +
+                ", rentalsByCustomerId=" + rentalsByCustomerId +*/
 }

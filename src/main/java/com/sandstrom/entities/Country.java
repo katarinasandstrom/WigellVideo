@@ -2,8 +2,11 @@ package com.sandstrom.entities;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@NamedNativeQuery(name = "Country.pk", query = "SELECT c.country_id from country c WHERE c.country =:country", resultClass = Short.class)
 @Entity
 @Table(name = "country", schema = "sakila")
 public class Country {
@@ -17,6 +20,17 @@ public class Country {
     @Basic
     @Column(name = "last_update")
     private Timestamp lastUpdate;
+
+    @OneToMany(mappedBy = "country")
+    private List<City> citiesByCountryId = new ArrayList<>();
+
+    public List<City> getCitiesByCountryId() {
+        return citiesByCountryId;
+    }
+
+    public void setCitiesByCountryId(List<City> citiesByCountryId) {
+        this.citiesByCountryId = citiesByCountryId;
+    }
 
     public Country() {
     }

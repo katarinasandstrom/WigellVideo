@@ -1,8 +1,11 @@
 package com.sandstrom.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
+
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;;
@@ -40,14 +43,14 @@ public class Address {
     private String phone;
 
     @Basic
-    @Column(name = "location")
-    private String location;
+    @Column(name = "location", columnDefinition = "geometry")
+    private byte[] location;
 
     @Basic
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne()
     @JoinColumn(name = "city_id", referencedColumnName = "city_id")
     private City city;
 
@@ -59,9 +62,8 @@ public class Address {
         this.city = city;
     }
 
-
     @OneToMany(mappedBy = "address")
-    private Collection<Staff> staffByAddresId;
+    private Collection<Staff> staffByAddresId = new ArrayList<>();
 
     public Collection<Staff> getStaffByAddresId() {
         return staffByAddresId;
@@ -72,28 +74,26 @@ public class Address {
     }
 
     @OneToMany(mappedBy = "address")
-    private Collection<Customer> customersByAddresId;
+    private Collection<Customer> customersByAddresId = new ArrayList<>();
 
     public Collection<Customer> getCustomersByAddresId() {
         return customersByAddresId;
-    }
-
-    public void setStoresByAddressId(Collection<Store> storesByAddressId) {
-        this.storesByAddressId = storesByAddressId;
     }
 
     public void setCustomersByAddresId(Collection<Customer> customersByAddresId) {
         this.customersByAddresId = customersByAddresId;
     }
 
+    @OneToMany(mappedBy = "address")
+    private Collection<Store> storesByAddressId = new ArrayList<>();
     public Collection<Store> getStoresByAddressId() {
         return storesByAddressId;
     }
+    public void setStoresByAddressId(Collection<Store> storesByAddressId) {
+        this.storesByAddressId = storesByAddressId;
+    }
 
-    @OneToMany(mappedBy = "address")
-    private Collection<Store> storesByAddressId;
-
-    public Address(String address, String address2, String district, short cityId, String postalCode, String phone, String location, Timestamp lastUpdate) {
+    public Address(String address, String address2, String district, short cityId, String postalCode, String phone, Timestamp lastUpdate) {
         this.address = address;
         this.address2 = address2;
         this.district = district;
@@ -164,13 +164,14 @@ public class Address {
         this.phone = phone;
     }
 
-    public String getLocation() {
+    public byte[] getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(byte[] location) {
         this.location = location;
     }
+
 
     public Timestamp getLastUpdate() {
         return lastUpdate;
@@ -211,7 +212,7 @@ public class Address {
                 ", cityId=" + cityId +
                 ", postalCode='" + postalCode + '\'' +
                 ", phone='" + phone + '\'' +
-                ", location='" + location + '\'' +
+                ", location='" + location+ '\'' +
                 ", lastUpdate=" + lastUpdate +
                 ", city=" + city +
                 '}';

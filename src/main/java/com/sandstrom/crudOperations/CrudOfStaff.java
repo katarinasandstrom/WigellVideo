@@ -1,115 +1,121 @@
 package com.sandstrom.crudOperations;
 
 import com.sandstrom.entities.*;
+import jakarta.persistence.TypedQuery;
+import javafx.scene.control.Label;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+
 import java.sql.Timestamp;
 import java.util.List;
 
 public class CrudOfStaff {
-    public void registerNewStaff(Byte staffId, String firstName, String lastName, byte[] picture, String email, byte active, String username, String password, Timestamp lastUpdate, String selectedStoreName, String selectedAddressLine) {
+    public void registerNewStaff(Label labelDuplicateStaff, String firstName, String lastName, String email, String username, String password, String address, String district, String postalCode, String phone, int storeId) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-        Session session = sessionFactory.openSession();
+        Session session = null;
         Transaction transaction = null;
 
         try {
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            /*
-            jag vet inte om jag tänkt rätt men i och med att store har sin egen entity så tänkte jag att man här skulle visa
-            upp en lista med butikernas namn så att man kunde välja därifrån. likadant när det gäller address som hanteras i customer-
-            entity. ni får gärna skriva om jag tänkt rätt här. ett annat problem är storeName som inte finns i tabellen så vet ine
-            hur jag ska göra.
-             */
 
+            TypedQuery<Staff> query = session.createQuery("SELECT s FROM Staff s WHERE s.email = :email", Staff.class);
+            query.setParameter("email", email);
 
-            Store selectedStore = (Store) session.createQuery("FROM Store WHERE storeName = :name")
-                    .setParameter("name", selectedStoreName)
-                    .uniqueResult();
+            List<Staff> existingStaff = query.getResultList();
 
-            Address selectedAddress = (Address) session.createQuery("FROM Address WHERE address = :line")
-                    .setParameter("line", selectedAddressLine)
-                    .uniqueResult();
+            if (!existingStaff.isEmpty()) {
+                labelDuplicateStaff.setText("En personal med den angivna e-postadressen finns redan i systemet.");
+            } else {
+                Store store = session.get(Store.class, storeId);
 
+                Address staffAddress = new Address();
+                staffAddress.setAddress(address);
+                staffAddress.setDistrict(district);
+                staffAddress.setPostalCode(postalCode);
+                staffAddress.setPhone(phone);
+                staffAddress.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                session.persist(staffAddress);
 
-            Staff newStaff = new Staff();
-            newStaff.setStaffId(staffId);
-            newStaff.setFirstName(firstName); //finns
-            newStaff.setLastName(lastName); //finns
-            newStaff.setPicture(picture);
-            newStaff.setEmail(email); //finns
-           // newStaff.setActive(active);
-            newStaff.setUsername(username); //finns
-            newStaff.setPassword(password); //finns
-            newStaff.setLastUpdate(lastUpdate);
+                Staff newStaffMember = new Staff();
+                newStaffMember.setFirstName(firstName);
+                newStaffMember.setLastName(lastName);
+                newStaffMember.setEmail(email);
+                newStaffMember.setUsername(username);
+                newStaffMember.setPassword(password);
+                newStaffMember.setAddress(staffAddress);
+                newStaffMember.setStore(store);
+                newStaffMember.setActive((byte) 1);
+                newStaffMember.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                session.persist(newStaffMember);
 
-
-            newStaff.setStore(selectedStore);
-            newStaff.setAddress(selectedAddress);
-
-            session.save(newStaff);
-            transaction.commit();
+                transaction.commit();
+            }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
         } finally {
-            session.close();
+            if (session != null) {
+                session.close();
+            }
             sessionFactory.close();
         }
     }
 
-    private void updatePersonalInfo(Byte staffId, String firstName, String lastName, byte[] picture, String email, byte active, String username, String password, Timestamp lastUpdate, String selectedStoreName, String selectedAddressLine){
+    public void updateStaff(Label labelUpdateResult, int staffId, String firstName, String lastName, String email, String username, String password, String address, String district, String postalCode, String phone, int storeId) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-        Session session = sessionFactory.openSession();
+        Session session = null;
         Transaction transaction = null;
 
         try {
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
 
-            // Hämta personalen som ska uppdateras från databasen
-            Staff staffToUpdate = session.get(Staff.class, staffId);
+            Staff staff = session.get(Staff.class, staffId);
 
-            // Uppdatera personalens attribut med de nya värdena
-            staffToUpdate.setFirstName(firstName);
-            staffToUpdate.setLastName(lastName);
-            staffToUpdate.setPicture(picture);
-            staffToUpdate.setEmail(email);
-            // staffToUpdate.setActive(active); // Aktivera om active attributet ska uppdateras
-            staffToUpdate.setUsername(username);
-            staffToUpdate.setPassword(password);
-            staffToUpdate.setLastUpdate(lastUpdate);
+            if (staff != null) {
+                staff.setFirstName(firstName);
+                staff.setLastName(lastName);
+                staff.setEmail(email);
+                staff.setUsername(username);
+                staff.setPassword(password);
 
-            // Hämta den valda butiken
-            Store selectedStore = (Store) session.createQuery("FROM Store WHERE storeName = :name")
-                    .setParameter("name", selectedStoreName)
-                    .uniqueResult();
-            staffToUpdate.setStore(selectedStore);
+                Address staffAddress = staff.getAddress();
+                staffAddress.setAddress(address);
+                staffAddress.setDistrict(district);
+                staffAddress.setPostalCode(postalCode);
+                staffAddress.setPhone(phone);
+                staffAddress.setLastUpdate(new Timestamp(System.currentTimeMillis()));
 
-            // Hämta den valda adressen
-            Address selectedAddress = (Address) session.createQuery("FROM Address WHERE address = :line")
-                    .setParameter("line", selectedAddressLine)
-                    .uniqueResult();
-            staffToUpdate.setAddress(selectedAddress);
+                Store store = session.get(Store.class, storeId);
+                staff.setStore(store);
 
-            // Spara uppdateringen till databasen
-            session.update(staffToUpdate);
-            transaction.commit();
+                session.update(staff);
 
-
+                transaction.commit();
+                labelUpdateResult.setText("Personalinformation uppdaterad");
+            } else {
+                labelUpdateResult.setText("Personal med id " + staffId + " hittades inte");
+            }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
+            labelUpdateResult.setText("Fel vid uppdatering av personalinformation");
             e.printStackTrace();
         } finally {
-            session.close();
+            if (session != null) {
+                session.close();
+            }
             sessionFactory.close();
         }
     }
+
 
     private void deleteStaff(Byte staffId) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
