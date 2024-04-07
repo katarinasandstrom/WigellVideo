@@ -50,8 +50,7 @@ public class CrudOfCustomer {
                 try {
                     countryId = countryQuery.getSingleResult();
                 } catch (Exception ex) {
-                    // Handle the case where the country doesn't exist
-                    // You might want to log this or handle it accordingly
+                    //
                 }
 
                 if (countryId != null) {
@@ -59,43 +58,55 @@ public class CrudOfCustomer {
 
                     City cityObj = new City();
                     cityObj.setCity(city);
-                   // cityObj.setCountry(countryObj);
-                    cityObj.setCountryId(countryObj.getCountryId());
+                    cityObj.setCountry(countryObj);
                     cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
                     session.persist(cityObj);
 
-                    Address getFirstAddress = session.get(Address.class, "1");
-                    byte[] location = getFirstAddress.getLocation();
+                    Short cityId = null;
 
-                    Address addressObj = new Address();
-                    addressObj.setAddress(address);
-                    addressObj.setDistrict(district);
-                    //addressObj.setCity(cityObj);
-                    addressObj.setCityId(cityObj.getCityId());
-                    addressObj.setPostalCode(postalCode);
-                    addressObj.setPhone(phone);
-                    addressObj.setLocation(location);
-                    addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                    TypedQuery<Short> cityQuery = session.createNamedQuery("City.pk", Short.class);
+                    cityQuery.setParameter("city", city);
+                    try {
+                        cityId = countryQuery.getSingleResult();
+                    } catch (Exception ex) {
+                       //
+                    }
 
-                    session.persist(addressObj);
+                    if(cityId != null){
 
-                    Store store = session.get(Store.class, 1);
+                        Address getFirstAddress = session.get(Address.class, "1");
+                        byte[] location = getFirstAddress.getLocation();
+                        City addressId = session.get(City.class, cityId);
 
-                    Customer customer = new Customer();
-                    //customer.setStore(store);
-                    customer.setStoreId(store.getStoreId());
-                    customer.setFirstName(firstName);
-                    customer.setLastName(lastName);
-                    customer.setEmail(email);
-                    //customer.setAddress(addressObj);
-                    customer.setAddressId(addressObj.getAddressId());
-                    customer.setActive((byte) 1);
-                    customer.setCreateDate(new Timestamp(System.currentTimeMillis()));
-                    customer.setLastUpdate(new Timestamp(System.currentTimeMillis()));
-                    session.persist(customer);
+                        Address addressObj = new Address();
+                        addressObj.setAddress(address);
+                        addressObj.setDistrict(district);
+                        addressObj.setCity(addressId);
+                        addressObj.setPostalCode(postalCode);
+                        addressObj.setPhone(phone);
+                        addressObj.setLocation(location);
+                        addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                        session.persist(addressObj);
+
+                        Store store = session.get(Store.class, 1);
+
+                        Customer customer = new Customer();
+                        customer.setStore(store);
+                        customer.setFirstName(firstName);
+                        customer.setLastName(lastName);
+                        customer.setEmail(email);
+                        customer.setAddress(addressObj);
+                        customer.setActive((byte) 1);
+                        customer.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                        customer.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                        session.persist(customer);
 
 
-                   transaction.commit();
+                        transaction.commit();
+                    }
+
+                }else{
+                    System.out.println("No such country exists, please check your spelling");
                 }
             }
 
