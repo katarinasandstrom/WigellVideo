@@ -122,7 +122,7 @@ public class CrudOfCustomer {
         }
     }
 
-    private void readFromCustomers(Label labelDuplicateCustomer) {
+    public static void readFromCustomers(List<Customer> customerList) {
         //Lägg till label för när kund finns
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = null;
@@ -133,10 +133,9 @@ public class CrudOfCustomer {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             TypedQuery<Customer> query = session.createNamedQuery("Customer.table", Customer.class);
-            for(Customer customer : query.getResultList()){
-                    //måste ändras
-                labelDuplicateCustomer.setText(String.valueOf(customer));
-            }
+
+            List<Customer> foundCustomer = query.getResultList();
+            customerList.addAll(foundCustomer);
 
         }catch(Exception e){
             if (transaction != null) {
@@ -280,7 +279,7 @@ public class CrudOfCustomer {
             List<Customer> resultList = query.getResultList();
             if (!resultList.isEmpty()) {
 
-                Customer foundCustomer = resultList.get(0);
+                Customer foundCustomer = resultList.getFirst();
                 customerList.clear();
                 customerList.add(foundCustomer); // Lägg till den hittade kunden i customerList
             } else {
