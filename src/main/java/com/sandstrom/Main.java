@@ -1070,7 +1070,7 @@ public class Main extends Application {
         btnRegStore = new Button("Registrera butik");
         btnRegStore.setMinSize(140,40);
         btnRegStore.setMaxSize(140,40);
-/*
+
        btnRegStore.setOnAction(e-> {
            Byte managerStaffId = Byte.valueOf(textFieldManagerId.getText());
            String address = addressStore.textFieldRegAddress.getText();
@@ -1079,13 +1079,15 @@ public class Main extends Application {
            String city = addressStore.textFieldRegCity.getText();
            String country =  addressStore.textFieldRegCountry.getText();
            String  phone = addressStore.textFieldRegPhone.getText();
-           String location = "test";
+           byte[] location = {1, 2};
+           Short cityId = 1;
            Timestamp lastUpdate = new Timestamp(System.currentTimeMillis());
            crudOfStore.registerNewStore(managerStaffId,  address,  district,  city,  postalCode,
-                   phone, location,  country,  lastUpdate);
+                   phone, location,  country,  lastUpdate, cityId);
+
                }
                );
-*/
+
         vBoxRegStore1 = new VBox();
         vBoxRegStore1.getChildren().addAll(addressStore.getAddressView());
         vBoxRegStore1.setSpacing(10);
