@@ -125,7 +125,7 @@ public class CrudOfStore {
                 storeAddress.getCity().setCity(city);
                 storeAddress.setPostalCode(postalCode);
                 storeAddress.setPhone(phone);
-                storeAddress.setLocation(location);
+               // storeAddress.setLocation(location);
                 storeAddress.setLastUpdate(lastUpdate);
 
                 // Uppdatera landet om det finns

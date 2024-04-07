@@ -36,7 +36,7 @@ public class CrudOfFilm {
             film.setLanguage(language);
 
             for (Actor actor : actors) {
-                film.addActor(actor);
+              //  film.addActor(actor);
             }
 
             session.save(film);

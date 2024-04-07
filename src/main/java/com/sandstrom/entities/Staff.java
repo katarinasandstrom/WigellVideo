@@ -235,4 +235,26 @@ public class Staff {
         result = 31 * result + Arrays.hashCode(picture);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Staff{" +
+                "staffId=" + staffId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", addressId=" + addressId +
+                ", picture=" + Arrays.toString(picture) +
+                ", email='" + email + '\'' +
+                ", storeId=" + storeId +
+                ", active=" + active +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", lastUpdate=" + lastUpdate +
+                ", address=" + address +
+                ", store=" + store +
+                ", managedStores=" + managedStores +
+                ", payments=" + payments +
+                ", rentals=" + rentals +
+                '}';
+    }
 }

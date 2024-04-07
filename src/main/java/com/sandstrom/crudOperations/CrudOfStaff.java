@@ -2,6 +2,7 @@ package com.sandstrom.crudOperations;
 
 import com.sandstrom.entities.*;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import javafx.scene.control.Label;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -199,5 +200,20 @@ public class CrudOfStaff {
         }
     }
 
+    public List<Integer> getStoreIds(){
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+
+        try {
+            List<Integer> storeIds = session.createQuery("SELECT s.storeId FROM Store s", Integer.class).list();
+            return storeIds;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            session.close();
+            sessionFactory.close();
+        }
+    }
 
 }

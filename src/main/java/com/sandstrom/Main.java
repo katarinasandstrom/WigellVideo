@@ -393,34 +393,6 @@ public class Main extends Application {
 
 
         btnRegisterNewStaff = new Button("Registrera");
-      /*  btnRegisterNewStaff.setOnAction(e-> {
-            CrudOfStaff crudOfStaff = new CrudOfStaff();
-            String firstName =textFieldStaffFName.getText();
-            String lastName = textFieldStaffLName.getText();
-            String email = textFieldStaffEmail.getText();
-            String username = textFieldStaffUserName.getText();
-            String password = textFieldStaffPassword.getText();
-
-            String address = regStaffAddress.textFieldRegAddress.getText();
-            String postalCode = regStaffAddress.textFieldRegPostalCode.getText();
-            String city = regStaffAddress.textFieldRegCity.getText();
-            String district = regStaffAddress.textFieldRegDistrict.getText();
-            String country = regStaffAddress.textFieldRegCountry.getText();
-            String phone = regStaffAddress.textFieldRegPhone.getText();
-
-
-            crudOfStaff.registerNewStaff(labelDuplicateStaff, firstName, lastName, email,
-                     username, password, address,  district,
-                     postalCode,phone, int storeId);
-        });
-
-        btnRegisterNewCustomer.setOnAction(e-> {
-
-
-
-            crudOfCustomer.registerNewCustomer  (labelDuplicateCustomer, firstName,  lastName, email, country,  city,
-                    address, district, postalCode,  phone);
-        });*/
 
         vBoxRegStaff1 = new VBox();
         vBoxRegStaff2 = new VBox();
@@ -702,7 +674,7 @@ public class Main extends Application {
         btnDeleteCustomer = new Button ("Ta bort kund");
         btnDeleteCustomer.setOnAction(e-> {
             String email = textFieldUpdateCustomerEmail.getText();
-            crudOfCustomers.removeCustomer(email);
+           // crudOfCustomers.removeCustomer(email);
         });
 
 
