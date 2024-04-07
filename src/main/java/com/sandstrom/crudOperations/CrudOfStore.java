@@ -233,6 +233,7 @@ public class CrudOfStore {
             }
         }
     }
+
     public void deleteStore(int storeId) {
         Session session = null;
         Transaction transaction = null;
@@ -262,8 +263,5 @@ public class CrudOfStore {
                 session.close();
             }
         }
-    }
-
-    public void registerNewStore(Byte managerStaffId, String address, String district, String city, String postalCode, String phone, String location, String country, Timestamp lastUpdate) {
     }
 }
