@@ -254,7 +254,7 @@ public class CrudOfCustomer {
             sessionFactory.close();
         }
     }
-    public static void readFromCustomer2(String email, List<Customer> customerList) {
+    public void readFromCustomer2(String email, List<Customer> customerList) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = null;
         Transaction transaction = null;

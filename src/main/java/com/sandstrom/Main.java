@@ -32,7 +32,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.List;
 
-
+import com.sandstrom.RegistryAddress;
 import static com.sandstrom.Methods.login;
 
 
@@ -629,8 +629,36 @@ public class Main extends Application {
         ToggleButton toggleButtonCustomerIsActive = new ToggleButton("Aktiv");
 
         textFieldSearchCustomer = new TextField();
-        textFieldSearchCustomer.setPromptText("Kundnummer");
+        textFieldSearchCustomer.setPromptText("Email");
         btnSearchCustomerNr = new Button("Sök kund");
+        btnSearchCustomerNr.setOnAction(e-> {
+            if (!customerList.isEmpty()) {
+                Customer foundCustomer = customerList.get(0); // Hämta den första kunden från listan
+                // Fyll i textfälten med kundens information
+                textFieldUpdateCustomerFName.setText(foundCustomer.getFirstName());
+                textFieldUpdateCustomerLName.setText(foundCustomer.getLastName());
+                textFieldUpdateCustomerEmail.setText(foundCustomer.getEmail());
+
+                Address customerAddress1 = foundCustomer.getAddress();
+
+                if (customerAddress != null) {
+                    // Fyll i textfälten för adressen
+                    updateCustomerAddress.textFieldRegAddress.setText(customerAddress1.getAddress());
+                    updateCustomerAddress.textFieldRegDistrict.setText(customerAddress1.getDistrict());
+                    updateCustomerAddress.textFieldRegPostalCode.setText(customerAddress1.getPostalCode());
+                    updateCustomerAddress.textFieldRegPhone.setText(customerAddress1.getPhone());
+                    // Antag att city är en del av Address-objektet
+                    if (customerAddress1.getCity() != null) {
+                        updateCustomerAddress.textFieldRegCity.setText(customerAddress1.getCity().getCity());
+                       // registryAddress.textFieldRegCountry.setText(customerAddress1.getCity().getCountry());
+                    }
+            } else {
+                // Kund med angiven e-postadress finns inte, åtgärda här om det behövs
+            }
+
+            }
+
+        });
 
         btnUpdateCustomer = new Button ("Uppdatera info");
        // btnUpdateCustomer.setOnAction(e-> KOD FÖR ATT UPPDATERA KUNDINFO);
@@ -978,6 +1006,7 @@ public class Main extends Application {
 
         RegistryAddress addressStore = new RegistryAddress();
         textFieldManagerId = new TextField();
+        textFieldManagerId.setPromptText("Manager-id");
         textFieldManagerId.setMinSize(140,40);
         textFieldManagerId.setMaxSize(140,40);
 
