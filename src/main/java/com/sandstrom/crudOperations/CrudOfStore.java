@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class CrudOfStore {
         }
     }
 
-    public void registerNewStore(Byte managerStaffId, String address, String district, String city, String postalCode, String phone, String location, String country, Timestamp lastUpdate) {
+    public void registerNewStore(Byte managerStaffId, String address, String district, String city, String postalCode, String phone, byte[] location, String country, Timestamp lastUpdate, Short cityId) {
         Session session = null;
         Transaction transaction = null;
 
@@ -36,11 +37,24 @@ public class CrudOfStore {
 
             Country countries = new Country(country, lastUpdate); // get the country that matches
 
-            //Get country Id
-            City cities = new City(); // get the city that matches or add new city
-            cities.setCity(city); // set fk
-            cities.setCountry(countries);
-            cities.setLastUpdate(lastUpdate);
+            City cities = null;
+            if (cityId != null) {
+                cities = session.load(City.class, cityId);
+            } else {
+                //Get city Id
+                Query query = session.createNamedQuery("City.pk");
+                query.setParameter("city", city);
+                List<Short> cityIds = query.getResultList();
+                if (!cityIds.isEmpty()) {
+                    cities = session.load(City.class, cityIds.get(0));
+                }
+            }
+
+            if (cities == null) {
+                // If city doesn't exist, create a new one
+                cities = new City(city, countries.getCountryId(), lastUpdate);
+                session.persist(cities);
+            }
 
             // Skapa en ny Address och koppla den till butiken
             Address storeAddress = new Address();
@@ -89,7 +103,7 @@ public class CrudOfStore {
                 storeAddress.getCity().setCity(city);
                 storeAddress.setPostalCode(postalCode);
                 storeAddress.setPhone(phone);
-                storeAddress.setLocation(location);
+                storeAddress.setLocation(location.getBytes());
                 storeAddress.setLastUpdate(lastUpdate);
 
                 // Uppdatera landet om det finns
@@ -147,6 +161,54 @@ public class CrudOfStore {
 
         return stores;
     }
+
+    public void getCustomerRentalInfo(int customerId) {
+        Session session = null;
+        Transaction transaction = null;
+
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+
+            String hql = "SELECT c.firstName, c.lastName, r.rentalDate, r.returnDate, s.storeId, f.title " +
+                    "FROM Customer c " +
+                    "INNER JOIN c.rentalsByCustomerId r " +
+                    "INNER JOIN r.inventory inv " +
+                    "INNER JOIN inv.store s " +
+                    "INNER JOIN Film f ON inv.filmId = f.filmId " +
+                    "WHERE c.customerId = :customerId";
+
+            List<Object[]> results = session.createQuery(hql)
+                    .setParameter("customerId", customerId)
+                    .list();
+
+            // Visa resultaten
+            for (Object[] result : results) {
+                String firstName = (String) result[0];
+                String lastName = (String) result[1];
+                Timestamp rentalDate = (Timestamp) result[2];
+                Timestamp returnDate = (Timestamp) result[3];
+                Byte storeId = (Byte) result[4];
+                String filmTitle = (String) result[5];
+
+                System.out.println("Kund: " + firstName + " " + lastName);
+                System.out.println("Uthyrningsdatum: " + rentalDate);
+                System.out.println("Returdatum: " + returnDate);
+                System.out.println("Butiks-ID: " + storeId);
+                System.out.println("Film: " + filmTitle);
+            }
+
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            ex.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
 }
-
-
