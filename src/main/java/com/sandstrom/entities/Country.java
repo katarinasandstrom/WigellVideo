@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-//forpush
+
 @NamedNativeQuery(name = "Country.pk", query = "SELECT c.country_id from country c WHERE c.country =:country", resultClass = Short.class)
 @Entity
 @Table(name = "country", schema = "sakila")
