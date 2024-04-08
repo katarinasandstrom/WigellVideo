@@ -3,6 +3,7 @@ package com.sandstrom;
 
 
 import com.sandstrom.crudOperations.CrudOfCustomer;
+import com.sandstrom.crudOperations.CrudOfFilm;
 import com.sandstrom.crudOperations.CrudOfStaff;
 import com.sandstrom.crudOperations.CrudOfStore;
 import com.sandstrom.entities.*;
@@ -32,6 +33,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.List;
 
@@ -124,23 +126,23 @@ public class Main extends Application {
     TableColumn<Film, Timestamp> columnLastUpdateFilm;
 
 
-    TableColumn<Language, String> columnNameLanguage;
-    TableColumn<Language, Timestamp> columnLastUpdateLanguage;
+    TableColumn<Film, String> columnNameLanguage;
+    TableColumn<Film, Timestamp> columnLastUpdateLanguage;
 
 
-    TableColumn<Inventory, Integer> columnInventoryId;
-    TableColumn<Inventory, Timestamp> columnLastUpdateInventory;
+    TableColumn<Film, Integer> columnInventoryId;
+    TableColumn<Film, Timestamp> columnLastUpdateInventory;
 
 
-    TableColumn<Store, Short> columnStoreIdFilm;
+    TableColumn<Film, Short> columnStoreIdFilm;
 
 
-    TableColumn<Actor, String> columnFirstNameActor, columnLastNameActor;
-    TableColumn<Actor, Timestamp> columnLastUpdateActor;
+    TableColumn<FilmActor, String> columnFirstNameActor, columnLastNameActor;
+    TableColumn<Film, Timestamp> columnLastUpdateActor;
 
 
-    TableColumn<Category, String> columnCategory;
-    TableColumn<Category, Timestamp> columnLastUpdateCategory;
+    TableColumn<FilmCategory, Collection<FilmCategory>> columnCategory;
+    TableColumn<FilmCategory, Timestamp> columnLastUpdateCategory;
 
 
 
@@ -175,12 +177,14 @@ public class Main extends Application {
 
     TextArea textAreaCheckOut, textAreaDescription;
 
+    String rating, specialFeatures;
 
     //Comment for push
     boolean isSearchMode = true;
     boolean isSearchMode1 = true;
     CrudOfCustomer crudOfCustomers = new CrudOfCustomer();
     CrudOfStore crudOfStore = new CrudOfStore();
+    CrudOfFilm crudOfFilm = new CrudOfFilm();
     @Override
     public void start(Stage primaryStage) {
 
@@ -409,7 +413,7 @@ public class Main extends Application {
         vBoxLogin1.getChildren().add(imageViewVideoStore);
         vBoxLogin1.setAlignment(Pos.CENTER);
         borderPaneLogin.setCenter(vBoxLogin1);
-        borderPaneLogin.setStyle("-fx-background-color: #BDF1FE");
+        borderPaneLogin.setStyle("-fx-background-color: #94B1B3");
 
 
         VBox vBoxLogin2 = new VBox();
@@ -1305,24 +1309,8 @@ public class Main extends Application {
         //Hämta butiksinfo från databasen baserat på managerId (unikt för butik)
 
 
-
-
         btnUpdateStore = new Button("Uppdatera");
         // btnUpdateStore.setOnAction(); Kod för att lägga till ny butik, popup med butiksnr et, lastUpdate
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         vBoxUpdateStore1 = new VBox();
@@ -1367,6 +1355,11 @@ public class Main extends Application {
         tableViewFilms.setPlaceholder(customPlaceholder);
 
 
+        tableViewFilms.getItems().clear();
+        crudOfFilm.readFromFilms(filmList);
+
+
+
         textFieldSearchFilm = new TextField();
         textFieldSearchFilm.setPromptText("Filmtitel");
         btnSearchFilm = new Button("Sök film");
@@ -1387,7 +1380,7 @@ public class Main extends Application {
         columnLastUpdateLanguage = new TableColumn<>("Språk senast uppdaterat");
         columnInventoryId = new TableColumn<>("Lager-id");
         columnLastUpdateInventory = new TableColumn<>("Lager senast uppdaterat");
-        columnStoreId = new TableColumn<>("Butiks-id");
+        columnStoreIdFilm = new TableColumn<>("Butiks-Id");
         columnFirstNameActor = new TableColumn<>("Skådespelare förnamn");
         columnLastNameActor = new TableColumn<>("Skådespelare efternamn");
         columnLastUpdateActor = new TableColumn<>("Skådespelare senast uppdaterat");
@@ -1418,64 +1411,65 @@ public class Main extends Application {
         columnLastUpdateFilm.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
         columnNameLanguage.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getName()));
+                new SimpleObjectProperty<>(cellData.getValue().getLanguage().getName()));
         columnLastUpdateLanguage.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getLanguage().getLastUpdate()));
+      /* columnStoreIdFilm.setCellValueFactory(cellData ->
+               new SimpleObjectProperty<>(cellData.getValue().getStoreId()));
+
+       */
+        columnFirstNameActor.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getActor().getFirstName()));
+        columnLastNameActor.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getActor().getLastName()));
+        columnLastUpdateActor.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
-        columnInventoryId.setCellValueFactory(cellData ->
+
+        columnCategory.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getFilm().getFilmCategoriesByFilmId()));
+        columnLastUpdateCategory.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getFilm().getLastUpdate()));
+        /*
+                 columnInventoryId.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getInventoryId()));
         columnLastUpdateInventory.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
-        columnStoreIdFilm = new TableColumn<>("Butiks-Id");
-     /*  columnStoreIdFilm.setCellValueFactory(cellData ->
-               new SimpleObjectProperty<>(cellData.getValue().getStoreId()));
 
 
-      */
-        columnFirstNameActor.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getFirstName()));
-        columnLastNameActor.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getLastName()));
-        columnLastUpdateActor.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
-        columnCategory.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getName()));
-        columnLastUpdateCategory.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
-
+       */
 
 
 
         tableViewFilms.getItems().clear();
-        tableViewFilms.getColumns().addAll(columnStoreIdFilm, columnInventoryId, columnFilmId, columnTitle,
-                columnDescription, columnRentalRate, columnReplacementCost, columnRentalDuration, columnFirstNameActor,
-                columnLastNameActor, columnCategory, columnNameLanguage, columnRating, columnReleaseYear,
-                columnLength, columnSpecialFeatures, columnLastUpdateFilm, columnLastUpdateInventory,
-                columnLastUpdateCategory, columnLastUpdateActor, columnLastUpdateLanguage);
+        tableViewFilms.getColumns().addAll(/*columnStoreIdFilm,*/ columnFilmId, columnTitle,
+                columnDescription, columnRentalRate, columnReplacementCost, columnRentalDuration,/*columnFirstNameActor,
+                columnLastNameActor, columnCategory,columnLastUpdateCategory, */columnNameLanguage, columnRating, columnReleaseYear,
+                columnLength, columnSpecialFeatures, columnLastUpdateFilm, /* columnLastUpdateActor,columnLastUpdateInventory,
+                 columnInventoryId,*/ columnLastUpdateLanguage);
 
 
+        //Början på att få upp alla filmer i tableviewn. Kopierat från customer sålänge därav kladdigt. /Helga
 
 
-       /* //Början på att få upp alla filmer i tableviewn. Kopierat från customer sålänge därav kladdigt. /Helga
+        tableViewFilms.refresh();
+        tableViewFilms.setItems(filmList);
 
+        btnSearchFilm.setOnAction(e -> {
+            String filmTitle = textFieldSearchFilm.getText();
+            if (isSearchMode1) {
+                if (!filmTitle.isEmpty()) {
+                    crudOfFilm.readFromFilms2(filmTitle, filmList);
+                } else {
+                    crudOfFilm.loadFilmsFromDatabase(filmList);
+                }
+            } else {
+                crudOfFilm.loadFilmsFromDatabase(filmList);
+                textFieldSearchCustomer.clear();
+            }
 
-       tableViewFilms.refresh();
-       tableViewFilms.setItems(filmList);
+            tableViewFilms.refresh();
+            tableViewFilms.setItems(filmList);
 
-
-       btnSearchFilm.setOnAction(e -> {
-           String filmTitle = textFieldSearchFilm.getText();
-           if (isSearchMode1) {
-               if (!filmTitle.isEmpty()) {
-                   crudOfCustomers.readFromCustomer2(filmTitle, filmList);
-               } else {
-                   reloadAllCustomers(filmList);
-               }
-           } else {
-               reloadAllCustomers(filmList);
-               textFieldSearchFilm.clear(); // Tömmer sökfältet
-           }
-           tableViewFilms.refresh();
-           tableViewFilms.setItems(filmList);
 
 
            // Toggle button state
@@ -1483,8 +1477,6 @@ public class Main extends Application {
            updateSearchButtonFilms(); // Uppdaterar sökknappen
        });
 
-
-        */
 
 
         hBoxSearchFilm = new HBox();
@@ -1507,6 +1499,7 @@ public class Main extends Application {
 
 
         //REGISTRERA FILM
+
         labelRegNewFilm = new Label("Registrera ny film");
         labelSpecialFeatures = new Label("Extra innehåll");
 
@@ -1586,6 +1579,55 @@ public class Main extends Application {
         checkboxBehindTheScenes = new CheckBox("Bakom kulisserna");
         checkBoxTrailers = new CheckBox("Trailers");
         checkBoxCommentaries = new CheckBox("Skaparens kommentarer");
+/*
+        btnRegisterNewFilm.setOnAction(e-> {
+
+                    String title = textFieldTitle.getText();
+                    String description = textAreaDescription.getText();
+                    String languageText = textFieldLanguage.getText();
+                    String rentalRateText = textFieldRentalRate.getText();
+                    String replacementCostText = textFieldReplacementCost.getText();
+                    int length = Integer.parseInt(textFieldLength.getText());
+                    int releaseYear = Integer.parseInt(textFieldReleaseYear.getText());
+                    int rentalDuration =  Integer.parseInt(textFieldRentalDuration.getText());
+                 //   String actorFirstName = textFieldActorFirstName.getText();
+                 //   String actorLastName = textFieldActorLastName.getText();
+                    Timestamp lastUpdate = new Timestamp(System.currentTimeMillis());
+                    BigDecimal rentalRate = new BigDecimal(rentalRateText);
+                    BigDecimal replacementCost = new BigDecimal(replacementCostText);
+                    Language language = new Language();
+                    language.setName(languageText);
+                 menuItemRating1.setOnAction(ev -> handleMenuSelection(menuItemRating1.getText()));
+                    menuItemRating2.setOnAction(ev -> handleMenuSelection(menuItemRating2.getText()));
+                    menuItemRating3.setOnAction(ev -> handleMenuSelection(menuItemRating3.getText()));
+                    menuItemRating4.setOnAction(ev -> handleMenuSelection(menuItemRating4.getText()));
+                    menuItemRating5.setOnAction(ev -> handleMenuSelection(menuItemRating5.getText()));
+                    checkBoxDeletedScenes.setOnAction(eve -> handleCheckBoxSelection());
+                    checkBoxTrailers.setOnAction(eve -> handleCheckBoxSelection());
+                    checkBoxCommentaries.setOnAction(eve -> handleCheckBoxSelection());
+                    checkboxBehindTheScenes.setOnAction(eve -> handleCheckBoxSelection());
+
+
+
+
+
+                   String rating = handleMenuSelection(menuButtonRating.getText());
+                   String specialFeatures = handleCheckBoxSelection();
+
+                    crudOfFilm.createFilm(title,  releaseYear, description,  rentalDuration,  rentalRate,  replacementCost,
+                            length, rating,  specialFeatures,  lastUpdate, language/*, actorFirstName, actorLastName);
+
+                }
+
+
+        );
+
+ */
+
+
+
+
+
 
 
         VBox vBoxTest = new VBox();
@@ -1675,7 +1717,6 @@ public class Main extends Application {
         }
     }
 
-
     private void updateSearchButtonFilms() { //Kopierat Katarinas och tänker att den kanske kan användas liknande för filmsidan
         if (isSearchMode1) {
             btnSearchFilm.setText("Sök film");
@@ -1684,10 +1725,45 @@ public class Main extends Application {
         }
     }
 
+    private String handleMenuSelection(String selectedOption) {
+        return selectedOption;
+    }
+    private String handleCheckBoxSelection() {
+       /*
+        if(checkBoxDeletedScenes.isSelected()){
+            specialFeatures = checkBoxDeletedScenes.getText();
+        }
+        if (checkBoxCommentaries.isSelected()) {
+            specialFeatures = checkBoxCommentaries.getText();
+        }
+        if (checkBoxTrailers.isSelected()) {
+            specialFeatures = checkBoxTrailers.getText();
+        }
+        if (checkboxBehindTheScenes.isSelected()) {
+            specialFeatures = checkboxBehindTheScenes.getText();
+        }
+        return specialFeatures;
 
-
-
-
+        */
+        StringBuilder specialFeatures = new StringBuilder();
+        if (checkBoxDeletedScenes.isSelected()) {
+            specialFeatures.append(checkBoxDeletedScenes.getText()).append(",");
+        }
+        if (checkBoxCommentaries.isSelected()) {
+            specialFeatures.append(checkBoxCommentaries.getText()).append(",");
+        }
+        if (checkBoxTrailers.isSelected()) {
+            specialFeatures.append(checkBoxTrailers.getText()).append(",");
+        }
+        if (checkboxBehindTheScenes.isSelected()) {
+            specialFeatures.append(checkboxBehindTheScenes.getText()).append(",");
+        }
+        // Ta bort sista kommat om det finns några specialfunktioner
+        if (specialFeatures.length() > 0) {
+            specialFeatures.deleteCharAt(specialFeatures.length() - 1);
+        }
+        return specialFeatures.toString();
+    }
 
     public static void main(String[] args) {
         launch(args);

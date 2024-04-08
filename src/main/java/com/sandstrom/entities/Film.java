@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @NamedNativeQuery(name = "Film.table", query = "SELECT * FROM film", resultClass = Film.class)
+@NamedNativeQuery(name = "Film.byTitle", query = "SELECT f.* FROM film f WHERE f.title = :title ", resultClass = Film.class)
 @Entity
 public class Film {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
