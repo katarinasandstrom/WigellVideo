@@ -42,10 +42,72 @@ public class CrudOfCustomer {
             if(existingCustomer != null){
                 labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
                         "finns redan i systemet.");
-            }else {
-                addOrUpdateCustomer(firstName, lastName, email, country,  city,
-                        address, district, postalCode, phone, session, transaction);
+            }else{
+                Short countryId = null;
 
+                TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
+                countryQuery.setParameter("country", country);
+                try {
+                    countryId = countryQuery.getSingleResult();
+                } catch (Exception ex) {
+                    //
+                }
+
+                if (countryId != null) {
+                    Country countryObj = session.get(Country.class, countryId);
+
+                    City cityObj = new City();
+                    cityObj.setCity(city);
+                    cityObj.setCountry(countryObj);
+                    cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                    session.persist(cityObj);
+
+                    Short cityId = null;
+
+                    TypedQuery<Short> cityQuery = session.createNamedQuery("City.pk", Short.class);
+                    cityQuery.setParameter("city", city);
+                    try {
+                        cityId = countryQuery.getSingleResult();
+                    } catch (Exception ex) {
+                       //
+                    }
+
+                    if(cityId != null){
+
+                        Address getFirstAddress = session.get(Address.class, "1");
+                        byte[] location = getFirstAddress.getLocation();
+                        City addressId = session.get(City.class, cityId);
+
+                        Address addressObj = new Address();
+                        addressObj.setAddress(address);
+                        addressObj.setDistrict(district);
+                        addressObj.setCity(addressId);
+                        addressObj.setPostalCode(postalCode);
+                        addressObj.setPhone(phone);
+                        addressObj.setLocation(location);
+                        addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                        session.persist(addressObj);
+
+                        Store store = session.get(Store.class, 1);
+
+                        Customer customer = new Customer();
+                        customer.setStore(store);
+                        customer.setFirstName(firstName);
+                        customer.setLastName(lastName);
+                        customer.setEmail(email);
+                        customer.setAddress(addressObj);
+                        customer.setActive((byte) 1);
+                        customer.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                        customer.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                        session.persist(customer);
+
+
+                        transaction.commit();
+                    }
+
+                }else{
+                    System.out.println("No such country exists, please check your spelling");
+                }
             }
 
         }catch(Exception e){
@@ -85,8 +147,86 @@ public class CrudOfCustomer {
                         "finns inte i systemet.");
             } else {
 
-                addOrUpdateCustomer( firstName, lastName, email, country,  city,
-                        address, district, postalCode, phone, session, transaction);
+                Short countryId = null;
+
+                TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
+                countryQuery.setParameter("country", country);
+
+                Short cityId = null;
+
+                TypedQuery<Short> cityQuery = session.createNamedQuery("City.pk", Short.class);
+                cityQuery.setParameter("city", city);
+
+                Short customerId = null;
+
+                TypedQuery<Short> customerQuery = session.createNamedQuery("Customer.pk", Short.class);
+                customerQuery.setParameter("email", email);
+
+                Short addressId = null;
+
+                TypedQuery<Short> addressQuery = session.createNamedQuery("Customer.addressFk", Short.class);
+                addressQuery.setParameter("email", email);
+
+
+                try {
+                    countryId = countryQuery.getSingleResult();
+                    cityId = countryQuery.getSingleResult();
+                    customerId =  customerQuery.getSingleResult();
+                    addressId = addressQuery.getSingleResult();
+                } catch (Exception ex) {
+                    //Something
+                }
+
+                if (countryId != null) {
+                    Country countryObj = session.get(Country.class, countryId);
+
+                    City cityObj = session.get(City.class, cityId);
+                    cityObj.setCity(city);
+                    cityObj.setCountry(countryObj);
+                    cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                    session.persist(cityObj);
+
+                    try {
+                        cityId = countryQuery.getSingleResult();
+                    } catch (Exception ex) {
+                        //
+                    }
+
+                    if(cityId != null){
+
+                        Address getFirstAddress = session.get(Address.class, "1");
+                        byte[] location = getFirstAddress.getLocation();
+
+
+                        Address addressObj = session.get(Address.class, addressId);
+                        addressObj.setAddress(address);
+                        addressObj.setDistrict(district);
+                        addressObj.setCity(cityObj);
+                        addressObj.setPostalCode(postalCode);
+                        addressObj.setPhone(phone);
+                        addressObj.setLocation(location);
+                        addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                        session.persist(addressObj);
+
+                        Store store = session.get(Store.class, 1);
+                        Customer customerObj = session.get(Customer.class, customerId);
+                        customerObj.setStore(store);
+                        customerObj.setFirstName(firstName);
+                        customerObj.setLastName(lastName);
+                        customerObj.setEmail(email);
+                        customerObj.setAddress(addressObj);
+                        customerObj.setActive((byte) 1);
+                        customerObj.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                        customerObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                        session.persist(customerObj);
+
+
+                        transaction.commit();
+                    }
+
+                }else{
+                    System.out.println("No such country exists, please check your spelling");
+                }
 
             }
         }catch(Exception e){
@@ -100,74 +240,6 @@ public class CrudOfCustomer {
             sessionFactory.close();
         }
     }
-
-    private void addOrUpdateCustomer(String firstName, String lastName, String email, String country, String city,
-                                     String address, String district, String postalCode, String phone, Session session, Transaction transaction) {
-
-        Short countryId = null;
-
-        TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
-        countryQuery.setParameter("country", country);
-
-        Short cityId = null;
-
-        TypedQuery<Short> cityQuery = session.createNamedQuery("City.pk", Short.class);
-        cityQuery.setParameter("city", city);
-
-        try {
-            countryId = countryQuery.getSingleResult();
-            cityId = countryQuery.getSingleResult();
-        } catch (Exception ex) {
-            //
-        }
-
-        if (countryId != null) {
-            Country countryObj = session.get(Country.class, countryId);
-
-            City cityObj = new City();
-            cityObj.setCity(city);
-            cityObj.setCountry(countryObj);
-            cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
-            session.persist(cityObj);
-
-            if(cityId != null){
-
-                Address getFirstAddress = session.get(Address.class, "1");
-                byte[] location = getFirstAddress.getLocation();
-                City addressId = session.get(City.class, cityId);
-
-                Address addressObj = new Address();
-                addressObj.setAddress(address);
-                addressObj.setDistrict(district);
-                addressObj.setCity(addressId);
-                addressObj.setPostalCode(postalCode);
-                addressObj.setPhone(phone);
-                addressObj.setLocation(location);
-                addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
-                session.persist(addressObj);
-
-                Store store = session.get(Store.class, 1);
-
-                Customer customer = new Customer();
-                customer.setStore(store);
-                customer.setFirstName(firstName);
-                customer.setLastName(lastName);
-                customer.setEmail(email);
-                customer.setAddress(addressObj);
-                customer.setActive((byte) 1);
-                customer.setCreateDate(new Timestamp(System.currentTimeMillis()));
-                customer.setLastUpdate(new Timestamp(System.currentTimeMillis()));
-                session.persist(customer);
-
-
-                transaction.commit();
-            }
-
-        }else{
-            System.out.println("No such country exists, please check your spelling");
-        }
-    }
-
 
     public static void readFromCustomers(List<Customer> customerList) {
         //Lägg till label för när kund finns
