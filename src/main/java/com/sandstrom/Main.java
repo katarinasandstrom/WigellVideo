@@ -393,6 +393,21 @@ public class Main extends Application {
 
 
         btnRegisterNewStaff = new Button("Registrera");
+        btnRegisterNewStaff.setOnAction(e-> {
+
+        });
+
+
+        /*btnRegisterNewCustomer.setOnAction(e-> {
+
+
+
+            crudOfStaff.registerNewCustomer  (labelDuplicateCustomer, firstName,  lastName, email, country,  city,
+                    address, district, postalCode,  phone);
+        });
+
+         */
+
 
         vBoxRegStaff1 = new VBox();
         vBoxRegStaff2 = new VBox();

@@ -10,11 +10,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.Date;
+
 import java.util.List;
 
 public class CrudOfCustomer {
