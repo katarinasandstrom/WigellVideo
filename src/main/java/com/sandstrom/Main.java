@@ -30,12 +30,18 @@ import javafx.stage.Stage;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.List;
 
 
 import com.sandstrom.RegistryAddress;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+
 import static com.sandstrom.Methods.login;
 
 
@@ -83,9 +89,7 @@ public class Main extends Application {
     TableColumn <Customer, Timestamp> columnCustomerCreateDate, columnLastUpdateCustomer;
 
 
-    TableColumn <Customer, Short>  columnStaffAddressId;
     TableColumn <Customer, String> columnAddress, columnDistrict, columnPostalCode, columnPhone;
-
 
     TableColumn <Customer, Byte> columnLocation;
     TableColumn <Customer, Timestamp> columnLastUpdateAddress;
@@ -96,36 +100,19 @@ public class Main extends Application {
     TableColumn<Customer, Timestamp> columnLastUpdateCity;
     TableColumn<Customer, Timestamp> columnLastUpdateCountry;
 
-
-    TableColumn<Staff, Short> columnStaffCityId;
-    TableColumn <Staff, String> columnStaffCity;
-    TableColumn <Staff, Timestamp> columnStaffLastUpdateAddress;
-
-
-    TableColumn <Staff, String> columnStaffAddress, columnStaffDistrict, columnStaffPostalCode,columnStaffPhone;
-
-
-
-
-    TableColumn <Staff, Timestamp>columnStaffLastUpdateCity ;
-
-
-
-
-    TableColumn <Staff, Short> columnStaffCountryId;
-
-
-    TableColumn<Staff, String>columnStaffCountry ;
-
-
-    TableColumn <Staff, Timestamp>columnStaffLastUpdateCountry;
-
-
-    TableColumn<Staff, Short>   columnStoreId;
+    TableColumn <Staff, Short>  columnStaffAddressId;
     TableColumn <Staff, String> columnStaffFirstName, columnStaffLastName,  columnStaffEmail,
             columnStaffUserName, columnStaffPassword;
     TableColumn <Staff, Byte> columnStaffId,columnStaffActive;
-    TableColumn <Staff, Timestamp> columnStaffLastUpdate;
+    TableColumn <Staff, String> columnStaffAddress, columnStaffDistrict, columnStaffPostalCode,columnStaffPhone,
+            columnStaffCity, columnStaffCountry ;
+    TableColumn<Staff, Short> columnStaffCityId, columnStaffCountryId;
+
+    TableColumn <Staff, Timestamp> columnStaffLastUpdateAddress, columnStaffLastUpdateCity, columnStaffLastUpdateCountry,
+            columnStaffLastUpdate;
+    TableColumn<Staff, Short>  columnStoreId;
+
+
 
 
     TableColumn<Film, Short> columnFilmId;
@@ -199,7 +186,7 @@ public class Main extends Application {
 
 
         // Sökväg till bildfil
-        String imagePath = "C:\\Users\\helga\\OneDrive\\Skrivbord\\Skola\\Software Development Process\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
+        String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
 
 
 
@@ -477,7 +464,7 @@ public class Main extends Application {
 
 //Registrera ny Staff
 
-
+        Label labelDuplicatePersonal= new Label();
         btnRegisterNewStaff = new Button("Registrera");
         btnRegisterNewStaff.setOnAction(e-> {
             CrudOfStaff crudOfStaff = new CrudOfStaff();
@@ -497,9 +484,8 @@ public class Main extends Application {
             int storeId = 1;
 
 
-            crudOfStaff.registerNewStaff(labelDuplicateStaff, firstName, lastName, email,
-                    username, password, address,  district,
-                    postalCode,phone,  storeId);
+            crudOfStaff.registerNewPersonal( labelDuplicatePersonal, firstName,lastName, email, country,  city,
+                   address, district, postalCode,  phone,username, password, storeId);
         });
 
 
@@ -542,10 +528,6 @@ public class Main extends Application {
 
 
         borderPaneRegNewStaff.setCenter(vBoxRegStaff4);
-
-
-
-
 
 
 
@@ -624,17 +606,24 @@ public class Main extends Application {
 
         // SIDA FÖR ATT SE ALL PERSONAL
 
+        ObservableList<Staff> staffList = FXCollections.observableArrayList();
 
         labelShowStaff = new Label("Personallista");
         tableViewStaff = new TableView<>();
         tableViewStaff.setMinSize(800,400);
         tableViewStaff.setMaxSize(800,400);
         tableViewStaff.setStyle("-fx-background-color: #F9F7DC;");
+
         tableViewStaff.getItems().clear();
+        CrudOfStaff crudOfStaff = new CrudOfStaff();
+       crudOfStaff.readFromStaff(staffList);
 
 
-        labelShowStaff = new Label("Personallista");
+        // Lägg till alla poster från retrievedStaffList i ObservableList
+      //  staffList.addAll(staffList);
 
+        // Uppdatera tableViewStaff med den nya ObservableList
+        //tableViewStaff.setItems(staffList);
 
         //Delen av tableView som hör till Staff
         columnStaffId = new TableColumn<>("Id");
@@ -657,7 +646,6 @@ public class Main extends Application {
         columnStaffLastUpdate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
 
 
-        //Del av tableView som hör till Address
         columnStaffAddressId = new TableColumn<>("Adressid");
         columnStaffAddress = new TableColumn<>("Adress");
         columnStaffDistrict = new TableColumn<>("Distrikt");
@@ -666,15 +654,12 @@ public class Main extends Application {
         /* columnStaffLastUpdateAddress= new TableColumn<>("Uppdaterad");
          */
 
-
         columnStaffAddressId.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddressId()));
         columnStaffAddress.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress().getAddress()));
         columnStaffDistrict.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress().getDistrict()));
         columnStaffPostalCode.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress().getPostalCode()));
         columnStaffPhone.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress().getPhone()));
-      /* columnStaffLastUpdateAddress.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
-
-
+     //   columnStaffLastUpdateAddress.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddress().getLastUpdate()));
 
 
        //Del av tableView som hör till City
@@ -683,9 +668,9 @@ public class Main extends Application {
        columnStaffLastUpdateCity = new TableColumn<>("Uppdaterad");
 
 
-       columnStaffCityId.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getCityId()));
-       columnStaffCity.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCity()));
-       columnStaffLastUpdateCity.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+       columnStaffCityId.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getAddress().getCityId()));
+       columnStaffCity.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress().getCity().getCity()));
+       columnStaffLastUpdateCity.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddress().getCity().getLastUpdate()));
 
 
        //Del av TableView som hör till Country
@@ -694,44 +679,25 @@ public class Main extends Application {
        columnLastUpdateCountry= new TableColumn<>("Uppdaterad");
 
 
-       columnStaffCountryId.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getCountryId()));
-       columnStaffCountry.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCountry()));
-       columnLastUpdateCountry.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
+       columnStaffCountryId.setCellValueFactory(cellData-> new SimpleObjectProperty<>(cellData.getValue().getAddress().getCity().getCountryId()));
+       columnStaffCountry.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress().getCity().getCountry().getCountry()));
+       columnLastUpdateCountry.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddress().getCity().getCountry().getLastUpdate()));
 
 
-columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone, columnStaffLastUpdateAddress, columnStaffCityId,
-       columnStaffCity, columnStaffLastUpdateCity, columnStaffCountryId, columnStaffCountry, columnLastUpdateCountry
 
-
-       */
         tableViewStaff.getColumns().addAll(  columnStaffId, columnStaffFirstName, columnStaffLastName,columnStaffEmail,
-                columnStaffActive, columnStaffUserName, columnStaffPassword, columnStaffLastUpdate, columnStaffAddressId,columnStaffAddress,
-                columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
-        );
+                columnStaffActive, columnStaffUserName, columnStaffPassword, columnStaffLastUpdate, columnStaffAddressId, columnStaffAddress,
+                 columnStaffDistrict, columnStaffPostalCode, columnStaffPhone, columnStaffCityId,
+                columnStaffCity, columnStaffLastUpdateCity, columnStaffCountryId, columnStaffCountry);
 
+        /* columnLastUpdateCountry);
+*/
 
-        CrudOfStaff crudOfStaff = new CrudOfStaff();
-        ObservableList<Staff> staffList = FXCollections.observableArrayList(); // Skapa en ObservableList
+        // Anropa getAllStaff-metoden för att hämta alla poster från Staff-tabellen  columnStaffLastUpdateAddress
+      //  crudOfStaff.getAllStaff(staffList);
 
-
-// Anropa getAllStaff-metoden för att hämta alla poster från Staff-tabellen
-        List<Staff> fetchedStaffList = crudOfStaff.getAllStaff();
-
-
-        if (fetchedStaffList != null) {
-            // Lägg till alla element från den hämtade listan i den ObservableList som du ska använda i tableView
-            staffList.addAll(fetchedStaffList);
-        } else {
-            // Hantera om det inte gick att hämta data från databasen
-            // (t.ex. visa ett felmeddelande)
-        }
-
-
-
-
-        tableViewStaff.setItems(staffList);
         tableViewStaff.refresh();
-
+        tableViewStaff.setItems(staffList);
 
         textFieldSearchStaff = new TextField();
         textFieldSearchStaff.setPromptText("Anställningsnummer");
@@ -749,31 +715,11 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
         vBoxShowStaff.setSpacing(10);
         vBoxShowStaff.getChildren().addAll(labelShowStaff,tableViewStaff, hBoxShowStaff);
 
-
         borderPaneShowStaff.setCenter(vBoxShowStaff);
 
 
-
-
-/*
-
-
-
-
-       vBoxShowCustomers = new VBox();
-       vBoxShowCustomers.setAlignment(Pos.CENTER);
-       vBoxShowCustomers.setSpacing(10);
-       vBoxShowCustomers.getChildren().addAll(labelShowCustomers,tableViewCustomers, hBoxShowCustomers);
-
-
-       borderPaneShowCustomers.setCenter(vBoxShowCustomers)
-
-
-
-
-*/
         //REGISTRERA KUND-SIDA
-        labelDuplicateCustomer = new Label("");
+        labelDuplicateCustomer = new Label();
         labelRegNewCustomer = new Label("Registrera ny kund");
         textFieldRegCustomerFName = new TextField();
         textFieldRegCustomerFName.setPromptText("Förnamn");
@@ -837,50 +783,56 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
 
 
 
-
         //UPPDATERA BEFINTLIG KUND
-
-
 
 
         labelUpdateCustomer = new Label ("Uppdatera befintlig kund");
         textFieldUpdateCustomerFName = new TextField();
         textFieldUpdateCustomerFName.setPromptText("Förnamn");
 
-
         textFieldUpdateCustomerLName = new TextField();
         textFieldUpdateCustomerLName.setPromptText("Efternamn");
-
 
         textFieldUpdateCustomerEmail = new TextField();
         textFieldUpdateCustomerEmail.setPromptText("Mailadress");
 
-
         RegistryAddress updateCustomerAddress = new RegistryAddress();
-
 
         ToggleButton toggleButtonCustomerIsActive = new ToggleButton("Aktiv");
 
-
-        textFieldSearchCustomer = new TextField();
-        textFieldSearchCustomer.setPromptText("Email");
+        TextField textFieldSearchCustomer1 = new TextField();
+        textFieldSearchCustomer1.setPromptText("Email");
         btnSearchCustomerNr = new Button("Sök kund");
 
+        btnSearchCustomerNr.setOnAction(e -> {
+            String customerEmail = textFieldSearchCustomer1.getText();
+            System.out.println(customerEmail);
+            if (!customerEmail.isEmpty()) {
+                crudOfCustomers.readFromCustomer2(customerEmail, customerList);
+                if (!customerList.isEmpty()) {
+                    Customer customer = customerList.get(0);
+                    textFieldUpdateCustomerFName.setText(customer.getFirstName());
+                    textFieldUpdateCustomerLName.setText(customer.getLastName());
+                    textFieldUpdateCustomerEmail.setText(customer.getEmail());
+                    updateCustomerAddress.textFieldRegAddress.setText(customer.getAddress().getAddress());
+                    updateCustomerAddress.textFieldRegPostalCode.setText(customer.getAddress().getPostalCode());
+                    updateCustomerAddress.textFieldRegCity.setText(customer.getAddress().getCity().getCity());
+                    updateCustomerAddress.textFieldRegDistrict.setText(customer.getAddress().getDistrict());
+                     updateCustomerAddress.textFieldRegPhone.setText(customer.getAddress().getPhone());
+                     updateCustomerAddress.textFieldRegCountry.setText(customer.getAddress().getCity().getCountry().getCountry());
 
-        btnSearchCustomerNr.setOnAction(e-> {
+                } else {
+                    // Kund med angiven e-postadress finns inte
+                }
+            } else {
+                // Meddelande om att e-postadressen är tom
+            }
         });
 
 
 
 
-
-
-
-
         btnUpdateCustomer = new Button("Uppdatera info");
-
-
-
 
         // btnUpdateCustomer.setOnAction(e-> KOD FÖR ATT UPPDATERA KUNDINFO);
         btnDeleteCustomer = new Button ("Ta bort kund");
@@ -888,8 +840,6 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
             String email = textFieldUpdateCustomerEmail.getText();
             // crudOfCustomers.removeCustomer(email);
         });
-
-
 
 
         // Lyssnare för att hantera ändringar i knappens tillstånd
@@ -910,8 +860,6 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
                 // KOD FÖR ATT UPPDATERA OM KUNDEN ÄR AKTIV
 
 
-
-
             }
         });
         vBoxUpdateCustomer1 = new VBox();
@@ -930,7 +878,7 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
 
 
         vBoxUpdateCustomer4 = new VBox();
-        vBoxUpdateCustomer4.getChildren().addAll(textFieldSearchCustomer, btnSearchCustomerNr, toggleButtonCustomerIsActive);
+        vBoxUpdateCustomer4.getChildren().addAll(textFieldSearchCustomer1, btnSearchCustomerNr, toggleButtonCustomerIsActive);
         vBoxUpdateCustomer4.setSpacing(10);
         vBoxUpdateCustomer4.setAlignment(Pos.CENTER);
 
@@ -964,19 +912,14 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
         customerList = FXCollections.observableArrayList();
         labelDuplicateCustomer= new Label();
 
-
         labelShowCustomers = new Label("Kundöversikt");
-
 
         tableViewCustomers = new TableView<>();
         tableViewCustomers.setStyle("-fx-background-color: #F9F7DC;");
 
-
         //  List<Customer> customers = crudOfCustomers.loadCustomersFromDatabase(List<Customer>customerList);
         tableViewCustomers.getItems().clear();
         crudOfCustomers.readFromCustomers(customerList);
-
-
 
         columnCustomerId = new TableColumn<>("Kundid");
         columnFirstName = new TableColumn<>("Förnamn");
@@ -998,8 +941,6 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
         columnCountry = new TableColumn<>("Land");
         columnLastUpdateCountry = new TableColumn<>("Uppdaterad");
         //columnLocation = new TableColumn<>("Location");
-
-
 
 
         columnCustomerId.setCellValueFactory(cellData ->
@@ -1051,18 +992,6 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
                 columnLastUpdateCustomer, columnAddressId,  columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLastUpdateAddress, columnCityId,
                 columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry );
 
-
-//  columnLocation,
-//  columnLastUpdateAddress, columnCityId, columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry
-//  columnLocation,, columnAddress, columnDistrict, columnPostalCode, columnPhone
-
-
-     /*  tableViewCustomers.getColumns().addAll( columnCustomerId,columnFirstName,columnLastName, columnEmail, columnActive, columnCustomerCreateDate,
-       columnLastUpdateCustomer, columnAddressId, columnAddress, columnDistrict, columnPostalCode, columnPhone, columnLocation,
-       columnLastUpdateAddress, columnCityId, columnCity, columnLastUpdateCity, columnCountryId, columnCountry, columnLastUpdateCountry);
-      */
-
-
         tableViewCustomers.refresh();
         tableViewCustomers.setItems(customerList);
 
@@ -1071,9 +1000,7 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
         textFieldSearchCustomer.setPromptText("Email");
         btnSearchCustomer= new Button("Sök kund");
 
-
         btnSearchCustomer.setOnAction(e -> {
-
 
             String customerEmail = textFieldSearchCustomer.getText();
             if (isSearchMode) {
@@ -1088,11 +1015,6 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
                 crudOfCustomers.loadCustomersFromDatabase(customerList);
                 textFieldSearchCustomer.clear();
 
-
-
-
-
-
             }
             tableViewCustomers.refresh();
             tableViewCustomers.setItems(customerList);
@@ -1102,27 +1024,17 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
         });
 
 
-
-
         hBoxShowCustomers = new HBox();
         hBoxShowCustomers.getChildren().addAll(textFieldSearchCustomer, btnSearchCustomer);
         hBoxShowCustomers.setSpacing(10);
         hBoxShowCustomers.setAlignment(Pos.CENTER);
-
 
         vBoxShowCustomers = new VBox();
         vBoxShowCustomers.setAlignment(Pos.CENTER);
         vBoxShowCustomers.setSpacing(10);
         vBoxShowCustomers.getChildren().addAll(labelShowCustomers,tableViewCustomers, hBoxShowCustomers);
 
-
-
-
         borderPaneShowCustomers.setCenter(vBoxShowCustomers);
-
-
-
-
 
 
 
@@ -1345,7 +1257,6 @@ columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone
                     Timestamp lastUpdate = new Timestamp(System.currentTimeMillis());
                     crudOfStore.registerNewStore(managerStaffId,  address,  district,  city,  postalCode,
                             phone, location,  country,  lastUpdate, cityId);
-
 
                 }
         );

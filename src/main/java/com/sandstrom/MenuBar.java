@@ -42,7 +42,7 @@ public class MenuBar extends HBox {
         this.registerFilmScene = registerFilmScene;
 
         // Sökväg till bildfil till logga
-        String imagePathLogo = "C:\\Users\\helga\\OneDrive\\Skrivbord\\Skola\\Software Development Process\\WigellVideoLogo.png";
+        String imagePathLogo = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\WigellVideoLogo.png";
 
         Image image = new Image("file:" + imagePathLogo);
 
