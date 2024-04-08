@@ -93,6 +93,92 @@ public class CrudOfCustomer {
         }
     }
 
+    public void updateCustomer(Label labelDuplicateCustomer, String firstName, String lastName, String email, String country, String city,
+                               String address, String district, String postalCode, String phone){
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            TypedQuery<Customer> query = session.createNamedQuery("Customer.byEmail", Customer.class);
+            query.setParameter("email", email);
+
+            List<Customer> existingCustomers = query.getResultList();
+
+            Customer existingCustomer = null;
+
+            if (!existingCustomers.isEmpty()) {
+                existingCustomer = existingCustomers.getFirst();
+            }
+
+            if (existingCustomer == null) {
+                labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
+                        "finns inte i systemet.");
+            } else {
+
+
+                Short addressId = null;
+
+                TypedQuery<Short> addressQuery = session.createNamedQuery("Customer.addressFk", Short.class);
+                addressQuery.setParameter("email", email);
+
+
+                try {
+                    addressId = addressQuery.getSingleResult();
+                } catch (Exception ex) {
+                    //Something
+                }
+                Country countryObj = session.get(Country.class, country);
+
+                City cityObj = session.get(City.class, city);
+                cityObj.setCity(city);
+                cityObj.setCountry(countryObj);
+                cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                session.persist(cityObj);
+
+                Address getFirstAddress = session.get(Address.class, "1");
+                byte[] location = getFirstAddress.getLocation();
+
+
+                Address addressObj = session.get(Address.class, addressId);
+                addressObj.setAddress(address);
+                addressObj.setDistrict(district);
+                addressObj.setCity(cityObj);
+                addressObj.setPostalCode(postalCode);
+                addressObj.setPhone(phone);
+                addressObj.setLocation(location);
+                addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                session.persist(addressObj);
+
+                Store store = session.get(Store.class, 1);
+                Customer customerObj = session.get(Customer.class, email);
+                customerObj.setStore(store);
+                customerObj.setFirstName(firstName);
+                customerObj.setLastName(lastName);
+                customerObj.setEmail(email);
+                customerObj.setAddress(addressObj);
+                customerObj.setActive((byte) 1);
+                customerObj.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                customerObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                session.persist(customerObj);
+                transaction.commit();
+            }
+
+        }catch(Exception e){
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }finally {
+            if (session != null) {
+                session.close();
+            }
+            sessionFactory.close();
+        }
+    }
+
+
     public static void readFromCustomers(List<Customer> customerList) {
         //Lägg till label för när kund finns
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
