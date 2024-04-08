@@ -1050,7 +1050,7 @@ public class Main extends Application {
 
         RegistryAddress addressStore = new RegistryAddress();
         textFieldManagerId = new TextField();
-        textFieldManagerId.setPromptText("Manager-id");
+        textFieldManagerId.setPromptText("Manager-username");
         textFieldManagerId.setMinSize(140,40);
         textFieldManagerId.setMaxSize(140,40);
 
@@ -1059,7 +1059,7 @@ public class Main extends Application {
         btnRegStore.setMaxSize(140,40);
 
        btnRegStore.setOnAction(e-> {
-           Byte managerStaffId = Byte.valueOf(textFieldManagerId.getText());
+           String managerStaffId = textFieldManagerId.getText();
            String address = addressStore.textFieldRegAddress.getText();
            String postalCode = addressStore.textFieldRegPostalCode.getText();
            String district = addressStore.textFieldRegDistrict.getText();

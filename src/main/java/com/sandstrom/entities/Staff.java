@@ -10,6 +10,9 @@ import java.util.Objects;
 
 @Entity
 @NamedNativeQuery(name = "Staff.byEmail", query = "SELECT c.* FROM staff c WHERE c.email = :email ", resultClass = Staff.class)
+@NamedNativeQuery(name = "Staff.table", query = "SELECT * FROM staff", resultClass = Staff.class)
+@NamedNativeQuery(name = "Staff.byUsername", query = "SELECT s.* FROM staff s WHERE s.username = :username ", resultClass = Staff.class)
+@NamedNativeQuery(name = "Staff.pk", query = "SELECT s.staff_id from staff s WHERE s.username =:username", resultClass = Byte.class)
 @Table(name = "staff", schema = "sakila")
 public class Staff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
