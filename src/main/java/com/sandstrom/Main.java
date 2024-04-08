@@ -4,8 +4,6 @@ import com.sandstrom.crudOperations.CrudOfCustomer;
 import com.sandstrom.crudOperations.CrudOfStaff;
 import com.sandstrom.crudOperations.CrudOfStore;
 import com.sandstrom.entities.*;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaQuery;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,10 +23,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -67,6 +61,7 @@ public class Main extends Application {
     TextArea textAreaAllCustomers;
 
     private ObservableList<Customer> customerList;
+    private ObservableList<Staff> staffList;
     private ObservableList<Film> filmList;
 
     TableView tableViewCustomers, tableViewStaff, tableViewFilms;
@@ -390,9 +385,31 @@ public class Main extends Application {
         MenuItem menuItemStore2 = new MenuItem("Butik 2");
         menuButtonStore.getItems().addAll(menuItemStore1, menuItemStore2);
 
-
+//Registrera ny Staff
 
         btnRegisterNewStaff = new Button("Registrera");
+        btnRegisterNewStaff.setOnAction(e-> {
+            CrudOfStaff crudOfStaff = new CrudOfStaff();
+            String firstName =textFieldStaffFName.getText();
+            String lastName = textFieldStaffLName.getText();
+            String email = textFieldStaffEmail.getText();
+            String username = textFieldStaffUserName.getText();
+            String password = textFieldStaffPassword.getText();
+
+            String address = regStaffAddress.textFieldRegAddress.getText();
+            String postalCode = regStaffAddress.textFieldRegPostalCode.getText();
+            String city = regStaffAddress.textFieldRegCity.getText();
+            String district = regStaffAddress.textFieldRegDistrict.getText();
+            String country = regStaffAddress.textFieldRegCountry.getText();
+            String phone = regStaffAddress.textFieldRegPhone.getText();
+            int storeId = 1;
+
+            crudOfStaff.registerNewStaff(labelDuplicateStaff, firstName, lastName, email,
+                     username, password, address,  district,
+                     postalCode,phone,  storeId);
+        });
+
+
 
         vBoxRegStaff1 = new VBox();
         vBoxRegStaff2 = new VBox();
@@ -516,14 +533,15 @@ public class Main extends Application {
 
         //Del av tableView som hör till Address
         columnStaffAddressId = new TableColumn<>("Adressid");
-        columnStaffAddress = new TableColumn<>("Adress");
+      /*  columnStaffAddress = new TableColumn<>("Adress");
         columnStaffDistrict = new TableColumn<>("Distrikt");
         columnStaffPostalCode= new TableColumn<>("Postnr");
         columnStaffPhone = new TableColumn<>("Telefon");
         columnStaffLastUpdateAddress= new TableColumn<>("Uppdaterad");
+*/
 
         columnStaffAddressId.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAddressId()));
-        columnStaffAddress.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress()));
+       /*columnStaffAddress.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress()));
         columnStaffDistrict.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDistrict()));
         columnStaffPostalCode.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPostalCode()));
         columnStaffPhone.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhone()));
@@ -548,12 +566,30 @@ public class Main extends Application {
         columnStaffCountry.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCountry()));
         columnLastUpdateCountry.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getLastUpdate()));
 
-        tableViewStaff.getColumns().addAll(  columnStaffId, columnStaffFirstName, columnStaffLastName,columnStaffEmail,
-        columnStaffActive, columnStaffUserName, columnStaffPassword, columnStaffLastUpdate, columnStaffAddressId,
-        columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone, columnStaffLastUpdateAddress, columnStaffCityId,
-        columnStaffCity, columnStaffLastUpdateCity, columnStaffCountryId, columnStaffCountry, columnLastUpdateCountry);
+columnStaffAddress, columnStaffDistrict, columnStaffPostalCode, columnStaffPhone, columnStaffLastUpdateAddress, columnStaffCityId,
+        columnStaffCity, columnStaffLastUpdateCity, columnStaffCountryId, columnStaffCountry, columnLastUpdateCountry
 
-        //tableViewStaff.setItems(Staff);
+        */
+        tableViewStaff.getColumns().addAll(  columnStaffId, columnStaffFirstName, columnStaffLastName,columnStaffEmail,
+        columnStaffActive, columnStaffUserName, columnStaffPassword, columnStaffLastUpdate, columnStaffAddressId
+        );
+
+        CrudOfStaff crudOfStaff = new CrudOfStaff();
+        ObservableList<Staff> staffList = FXCollections.observableArrayList(); // Skapa en ObservableList
+
+// Anropa getAllStaff-metoden för att hämta alla poster från Staff-tabellen
+        List<Staff> fetchedStaffList = crudOfStaff.getAllStaff();
+
+        if (fetchedStaffList != null) {
+            // Lägg till alla element från den hämtade listan i den ObservableList som du ska använda i tableView
+            staffList.addAll(fetchedStaffList);
+        } else {
+            // Hantera om det inte gick att hämta data från databasen
+            // (t.ex. visa ett felmeddelande)
+        }
+
+
+        tableViewStaff.setItems(staffList);
         tableViewStaff.refresh();
 
         textFieldSearchStaff = new TextField();
