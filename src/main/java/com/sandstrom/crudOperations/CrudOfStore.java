@@ -22,7 +22,7 @@ public class CrudOfStore {
             throw new ExceptionInInitializerError(ex);
         }
     }
-
+//For push
     public void registerNewStore(Byte mangerId, String address, String district, String city, String postalCode, String phone, byte[] location, String country, Timestamp lastUpdate, Short cityId) {
         Session session = null;
         Transaction transaction = null;

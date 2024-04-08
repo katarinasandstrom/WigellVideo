@@ -22,7 +22,7 @@ public class Cashier {
             throw new ExceptionInInitializerError(ex);
         }
     }
-    public void filmRental(short customerNumber, Byte staffNumber, short filmNumber, int daysOfRental){
+    public void addRental(short customerNumber, Byte staffNumber, short filmNumber, int daysOfRental){
 
         Session session = null;
         Transaction transaction = null;

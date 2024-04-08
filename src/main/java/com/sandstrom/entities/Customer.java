@@ -20,7 +20,7 @@ public class Customer {
     @Id
     @Column(name = "customer_id")
     private short customerId;
-
+    //forpush
     @Basic
     @Column(name = "store_id", insertable=false, updatable=false)
     private Byte storeId;
