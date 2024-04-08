@@ -189,6 +189,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
 
+
         // Sökväg till bildfil
         String imagePath = "C:\\Users\\annak\\IdeaProjects\\WigellVideo1\\9a1fbf03-a849-4816-a517-18e3a68d8724.png";
 

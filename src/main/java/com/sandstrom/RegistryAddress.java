@@ -12,6 +12,7 @@ public class RegistryAddress extends VBox {
     public RegistryAddress() {
 
 
+
         textFieldRegAddress = new TextField();
         textFieldRegAddress.setPromptText("Gatuadress");
 

@@ -41,6 +41,7 @@ public class Inventory {
         return store;
     }
 
+
     public void setStore(Store store) {
         this.store = store;
     }

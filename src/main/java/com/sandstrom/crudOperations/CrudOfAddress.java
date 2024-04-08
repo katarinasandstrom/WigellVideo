@@ -14,6 +14,7 @@ public class CrudOfAddress{
     private Scanner scanner = new Scanner(System.in);
 
 
+
     public void getAllAddresses() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();

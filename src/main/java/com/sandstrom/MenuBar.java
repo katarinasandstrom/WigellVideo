@@ -53,6 +53,7 @@ public class MenuBar extends HBox {
         imageView.setPreserveRatio(true); // Bevara bildens proportioner
 
 
+
         labelLogo = new Label("Wigell Video");
         labelLogo.setStyle("-fx-font-family: Broadway;" +
                 "-fx-font-size: 30;" +

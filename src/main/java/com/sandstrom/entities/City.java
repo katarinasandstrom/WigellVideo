@@ -15,6 +15,7 @@ public class City {
     @Id
     @Column(name = "city_id")
     private short cityId;
+
     @Basic
     @Column(name = "city")
     private String city;

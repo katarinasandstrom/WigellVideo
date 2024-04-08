@@ -14,6 +14,7 @@ public class Payment {
     @Column(name = "payment_id")
     private short paymentId;
 
+
     @Basic
     @Column(name = "customer_id", insertable=false, updatable=false)
     private short customerId;

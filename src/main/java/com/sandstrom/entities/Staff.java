@@ -29,6 +29,7 @@ public class Staff {
     @Column(name = "last_name")
     private String lastName;
 
+
     @Basic
     @Column(name = "address_id", insertable=false, updatable=false)
     private short addressId;

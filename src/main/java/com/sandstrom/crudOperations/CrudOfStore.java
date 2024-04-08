@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 public class CrudOfStore {
     private SessionFactory sessionFactory;
 
+
     public CrudOfStore() {
         try {
             sessionFactory = new Configuration().configure().buildSessionFactory();

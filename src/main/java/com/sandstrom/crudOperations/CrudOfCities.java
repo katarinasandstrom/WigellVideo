@@ -13,7 +13,6 @@ import java.util.Scanner;
 public class CrudOfCities{
     private Scanner scanner = new Scanner(System.in);
     private City city = new City();
-
     public void getAllCities() {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();

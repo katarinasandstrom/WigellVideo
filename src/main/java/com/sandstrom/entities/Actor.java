@@ -14,6 +14,7 @@ public class Actor {
     @Column(name = "actor_id")
     private short actorId;
 
+
     public short getActorId() {
         return actorId;
     }

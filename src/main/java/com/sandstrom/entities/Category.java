@@ -14,6 +14,7 @@ public class Category {
     @jakarta.persistence.Column(name = "category_id")
     private Byte categoryId;
 
+
     public Byte getCategoryId() {
         return categoryId;
     }

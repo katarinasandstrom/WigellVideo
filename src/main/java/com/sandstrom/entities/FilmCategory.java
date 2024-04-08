@@ -14,6 +14,7 @@ public class FilmCategory {
     @Column(name = "film_id")
     private short filmId;
 
+
     public short getFilmId() {
         return filmId;
     }

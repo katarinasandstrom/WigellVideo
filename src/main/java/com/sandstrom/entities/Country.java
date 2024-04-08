@@ -15,6 +15,7 @@ public class Country {
     @Id
     @Column(name = "country_id")
     private short countryId;
+
     @Basic
     @Column(name = "country")
     private String country;

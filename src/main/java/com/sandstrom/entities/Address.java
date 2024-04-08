@@ -157,6 +157,7 @@ public class Address {
         this.postalCode = postalCode;
     }
 
+
     public String getPhone() {
         return phone;
     }

@@ -14,6 +14,7 @@ public class Rental {
     @Column(name = "rental_id")
     private int rentalId;
 
+
     @Basic
     @Column(name = "rental_date")
     private Timestamp rentalDate;

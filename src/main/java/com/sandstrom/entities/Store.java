@@ -20,6 +20,7 @@ public class Store {
     @Column(name = "manager_staff_id", insertable=false, updatable=false)
     private Byte managerStaffId;
 
+
     @Basic
     @Column(name = "address_id", insertable=false, updatable=false)
     private short addressId;

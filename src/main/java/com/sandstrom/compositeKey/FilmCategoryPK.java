@@ -7,6 +7,7 @@ public class FilmCategoryPK implements Serializable {
     private short filmId;
     private Byte categoryId;
 
+
     public FilmCategoryPK(short filmId, Byte categoryId) {
         this.filmId = filmId;
         this.categoryId = categoryId;

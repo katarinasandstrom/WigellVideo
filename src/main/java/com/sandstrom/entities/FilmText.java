@@ -14,6 +14,7 @@ public class FilmText {
     @Basic
     @Column(name = "title")
     private String title;
+
     @Basic
     @Column(name = "description")
     private String description;

@@ -72,6 +72,7 @@ public class CrudOfFilm {
         Session session = null;
         Transaction transaction = null;
 
+
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();

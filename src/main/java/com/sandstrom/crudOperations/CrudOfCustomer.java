@@ -261,6 +261,7 @@ public class CrudOfCustomer {
         Transaction transaction = null;
 
 
+
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();

@@ -51,6 +51,7 @@ public class FilmActor {
     @JoinColumn(name = "actor_id", referencedColumnName = "actor_id")
     private Actor actor;
 
+
     public Actor getActor(){
         return actor;
     }

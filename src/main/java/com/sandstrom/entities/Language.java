@@ -67,4 +67,8 @@ public class Language {
     public int hashCode() {
         return Objects.hash(languageId, name, lastUpdate);
     }
+
+    public Language() {
+    }
 }
+

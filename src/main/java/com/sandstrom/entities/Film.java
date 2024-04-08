@@ -25,6 +25,7 @@ public class Film {
         this.filmId = filmId;
     }
 
+
     @Basic
     @Column(name = "title")
     private String title;
