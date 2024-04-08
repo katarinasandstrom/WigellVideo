@@ -43,20 +43,45 @@ public class CrudOfCustomer {
                 labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
                         "finns redan i systemet.");
             }else{
-                    Country countryObj = session.get(Country.class, country);
+                Short countryId = null;
+
+                TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
+                countryQuery.setParameter("country", country);
+                try {
+                    countryId = countryQuery.getSingleResult();
+                } catch (Exception ex) {
+                    //
+                }
+
+                if (countryId != null) {
+                    Country countryObj = session.get(Country.class, countryId);
+
                     City cityObj = new City();
                     cityObj.setCity(city);
                     cityObj.setCountry(countryObj);
                     cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
                     session.persist(cityObj);
 
-                    Address getFirstAddress = session.get(Address.class, "1");
-                    byte[] location = getFirstAddress.getLocation();
+                    Short cityId = null;
+
+                    TypedQuery<Short> cityQuery = session.createNamedQuery("City.pk", Short.class);
+                    cityQuery.setParameter("city", city);
+                    try {
+                        cityId = countryQuery.getSingleResult();
+                    } catch (Exception ex) {
+                        //
+                    }
+
+                    if(cityId != null){
+
+                        Address getFirstAddress = session.get(Address.class, "1");
+                        byte[] location = getFirstAddress.getLocation();
+                        City addressId = session.get(City.class, cityId);
 
                         Address addressObj = new Address();
                         addressObj.setAddress(address);
                         addressObj.setDistrict(district);
-                        addressObj.setCity(addressObj.getCity());
+                        addressObj.setCity(addressId);
                         addressObj.setPostalCode(postalCode);
                         addressObj.setPhone(phone);
                         addressObj.setLocation(location);
@@ -80,6 +105,10 @@ public class CrudOfCustomer {
                         transaction.commit();
                     }
 
+                }else{
+                    System.out.println("No such country exists, please check your spelling");
+                }
+            }
 
         }catch(Exception e){
             if (transaction != null) {
@@ -92,6 +121,8 @@ public class CrudOfCustomer {
             sessionFactory.close();
         }
     }
+
+
 
     public void updateCustomer(Label labelDuplicateCustomer, String firstName, String lastName, String email, String country, String city,
                                String address, String district, String postalCode, String phone){
@@ -117,7 +148,20 @@ public class CrudOfCustomer {
                 labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
                         "finns inte i systemet.");
             } else {
+                Short countryId = null;
 
+                TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
+                countryQuery.setParameter("country", country);
+
+                Short cityId = null;
+
+                TypedQuery<Short> cityQuery = session.createNamedQuery("City.pk", Short.class);
+                cityQuery.setParameter("city", city);
+
+                Short customerId = null;
+
+                TypedQuery<Short> customerQuery = session.createNamedQuery("Customer.pk", Short.class);
+                customerQuery.setParameter("email", email);
 
                 Short addressId = null;
 
@@ -126,46 +170,66 @@ public class CrudOfCustomer {
 
 
                 try {
+                    countryId = countryQuery.getSingleResult();
+                    cityId = countryQuery.getSingleResult();
+                    customerId =  customerQuery.getSingleResult();
                     addressId = addressQuery.getSingleResult();
                 } catch (Exception ex) {
                     //Something
                 }
-                Country countryObj = session.get(Country.class, country);
 
-                City cityObj = session.get(City.class, city);
-                cityObj.setCity(city);
-                cityObj.setCountry(countryObj);
-                cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
-                session.persist(cityObj);
+                if (countryId != null) {
+                    Country countryObj = session.get(Country.class, countryId);
 
-                Address getFirstAddress = session.get(Address.class, "1");
-                byte[] location = getFirstAddress.getLocation();
+                    City cityObj = session.get(City.class, cityId);
+                    cityObj.setCity(city);
+                    cityObj.setCountry(countryObj);
+                    cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                    session.persist(cityObj);
+
+                    try {
+                        cityId = countryQuery.getSingleResult();
+                    } catch (Exception ex) {
+                        //
+                    }
+
+                    if(cityId != null){
+
+                        Address getFirstAddress = session.get(Address.class, "1");
+                        byte[] location = getFirstAddress.getLocation();
 
 
-                Address addressObj = session.get(Address.class, addressId);
-                addressObj.setAddress(address);
-                addressObj.setDistrict(district);
-                addressObj.setCity(cityObj);
-                addressObj.setPostalCode(postalCode);
-                addressObj.setPhone(phone);
-                addressObj.setLocation(location);
-                addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
-                session.persist(addressObj);
+                        Address addressObj = session.get(Address.class, addressId);
+                        addressObj.setAddress(address);
+                        addressObj.setDistrict(district);
+                        addressObj.setCity(cityObj);
+                        addressObj.setPostalCode(postalCode);
+                        addressObj.setPhone(phone);
+                        addressObj.setLocation(location);
+                        addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                        session.persist(addressObj);
 
-                Store store = session.get(Store.class, 1);
-                Customer customerObj = session.get(Customer.class, email);
-                customerObj.setStore(store);
-                customerObj.setFirstName(firstName);
-                customerObj.setLastName(lastName);
-                customerObj.setEmail(email);
-                customerObj.setAddress(addressObj);
-                customerObj.setActive((byte) 1);
-                customerObj.setCreateDate(new Timestamp(System.currentTimeMillis()));
-                customerObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
-                session.persist(customerObj);
-                transaction.commit();
+                        Store store = session.get(Store.class, 1);
+                        Customer customerObj = session.get(Customer.class, customerId);
+                        customerObj.setStore(store);
+                        customerObj.setFirstName(firstName);
+                        customerObj.setLastName(lastName);
+                        customerObj.setEmail(email);
+                        customerObj.setAddress(addressObj);
+                        customerObj.setActive((byte) 1);
+                        customerObj.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                        customerObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                        session.persist(customerObj);
+
+
+                        transaction.commit();
+                    }
+
+                }else{
+                    System.out.println("No such country exists, please check your spelling");
+                }
+
             }
-
         }catch(Exception e){
             if (transaction != null) {
                 transaction.rollback();
