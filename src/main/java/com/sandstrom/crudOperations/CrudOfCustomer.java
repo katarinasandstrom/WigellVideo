@@ -43,45 +43,20 @@ public class CrudOfCustomer {
                 labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
                         "finns redan i systemet.");
             }else{
-                Short countryId = null;
-
-                TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
-                countryQuery.setParameter("country", country);
-                try {
-                    countryId = countryQuery.getSingleResult();
-                } catch (Exception ex) {
-                    //
-                }
-
-                if (countryId != null) {
-                    Country countryObj = session.get(Country.class, countryId);
-
+                    Country countryObj = session.get(Country.class, country);
                     City cityObj = new City();
                     cityObj.setCity(city);
                     cityObj.setCountry(countryObj);
                     cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
                     session.persist(cityObj);
 
-                    Short cityId = null;
-
-                    TypedQuery<Short> cityQuery = session.createNamedQuery("City.pk", Short.class);
-                    cityQuery.setParameter("city", city);
-                    try {
-                        cityId = countryQuery.getSingleResult();
-                    } catch (Exception ex) {
-                       //
-                    }
-
-                    if(cityId != null){
-
-                        Address getFirstAddress = session.get(Address.class, "1");
-                        byte[] location = getFirstAddress.getLocation();
-                        City addressId = session.get(City.class, cityId);
+                    Address getFirstAddress = session.get(Address.class, "1");
+                    byte[] location = getFirstAddress.getLocation();
 
                         Address addressObj = new Address();
                         addressObj.setAddress(address);
                         addressObj.setDistrict(district);
-                        addressObj.setCity(addressId);
+                        addressObj.setCity(addressObj.getCity());
                         addressObj.setPostalCode(postalCode);
                         addressObj.setPhone(phone);
                         addressObj.setLocation(location);
@@ -105,10 +80,6 @@ public class CrudOfCustomer {
                         transaction.commit();
                     }
 
-                }else{
-                    System.out.println("No such country exists, please check your spelling");
-                }
-            }
 
         }catch(Exception e){
             if (transaction != null) {
