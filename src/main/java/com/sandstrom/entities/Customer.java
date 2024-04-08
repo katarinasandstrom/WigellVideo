@@ -11,10 +11,9 @@ import java.util.Objects;
 @Entity
 @NamedNativeQuery(name = "Customer.table", query = "SELECT * FROM Customer", resultClass = Customer.class)
 @NamedNativeQuery(name = "Customer.byEmail", query = "SELECT c.* FROM customer c WHERE c.email = :email ", resultClass = Customer.class)
-@NamedNativeQuery(name = "Customer.pk", query = "SELECT c.customer_id from customer c WHERE c.email =: email", resultClass = Customer.class)
+@NamedNativeQuery(name = "Customer.pk", query = "SELECT c.customer_id from customer c WHERE c.email =: email", resultClass = Short.class)
 @NamedNativeQuery(name = "Customer.address", query = "SELECT COUNT(c.address_id) FROM Customer c WHERE c.address_id = :address_id", resultClass = Long.class)
-@NamedNativeQuery(name = "Customer.customerAndAddress", query = "SELECT c.*, a.* FROM customer c JOIN address a ON c.address_id = a.address_id", resultClass = Customer.class)
-
+@NamedNativeQuery(name = "Customer.addressFk", query = "SELECT c.address_id FROM Customer c WHERE c.email = :email", resultClass = Short.class)
 //@NamedNativeQuery(name = "Customer.")
 @Table(name = "customer", schema = "sakila")
 public class Customer {
@@ -22,7 +21,7 @@ public class Customer {
     @Id
     @Column(name = "customer_id")
     private short customerId;
-
+    //forpush
     @Basic
     @Column(name = "store_id", insertable=false, updatable=false)
     private Byte storeId;

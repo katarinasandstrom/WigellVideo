@@ -18,7 +18,7 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
     private short addressId;
-
+    //forpush
     @Basic
     @Column(name = "address")
     private String address;

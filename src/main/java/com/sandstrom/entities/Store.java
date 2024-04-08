@@ -15,7 +15,7 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")
     private Byte storeId;
-
+    //forpush
     @Basic
     @Column(name = "manager_staff_id", insertable=false, updatable=false)
     private Byte managerStaffId;
