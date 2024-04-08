@@ -1,6 +1,7 @@
 package com.sandstrom.crudOperations;
 
 import com.sandstrom.entities.*;
+import jakarta.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -22,45 +23,64 @@ public class CrudOfStore {
         }
     }
 
-    public void registerNewStore(Byte managerStaffId, String address, String district, String city, String postalCode, String phone, byte[] location, String country, Timestamp lastUpdate, Short cityId) {
+    public void registerNewStore(String username, String address, String district, String city, String postalCode, String phone, byte[] location, String country, Timestamp lastUpdate, Short cityId) {
         Session session = null;
         Transaction transaction = null;
+
+        System.out.println(username.getClass().getName());
 
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             String address2 = null;
 
-            Store store = new Store();
-            store.setManagerStaffId(managerStaffId);
-            store.setLastUpdate(lastUpdate);
+            Byte staffId = null;
 
-            Country countries = new Country(country, lastUpdate); // get the country that matches
+            TypedQuery<Byte> query = session.createNamedQuery("Staff.pk", Byte.class);
+            query.setParameter("username", username);
 
-            City cities = null;
-            if (cityId != null) {
-                cities = session.load(City.class, cityId);
-            } else {
-                // Get city Id
-                cities = getOrCreateCity(session, city, countries, lastUpdate);
+            try {
+                staffId = query.getSingleResult();
+            } catch (Exception ex) {
+                //
+            }
+            if( staffId != null){
+                Staff staffObj = session.get(Staff.class, staffId);
+                Store store = new Store();
+                store.setStaff(staffObj); // check with query
+                store.setLastUpdate(lastUpdate);
+                Country countries = new Country(country, lastUpdate); // get the country that matches
+
+                City cities = null;
+                if (cityId != null) {
+                    cities = session.load(City.class, cityId);
+                } else {
+                    // Get city Id
+                    cities = getOrCreateCity(session, city, countries, lastUpdate);
+                }
+
+                Address getFirstAddress = session.get(Address.class, "1");
+                location = getFirstAddress.getLocation();
+
+                // Skapa en ny Address och koppla den till butiken
+                Address storeAddress = new Address();
+                storeAddress.setAddress(address);
+                storeAddress.setAddress2(address2);
+                storeAddress.setDistrict(district);
+                storeAddress.setCity(cities);
+                storeAddress.setPostalCode(postalCode);
+                storeAddress.setPhone(phone);
+                storeAddress.setLocation(location);
+                storeAddress.setLastUpdate(lastUpdate);
+                // Lägg till adressen i butiken
+
+                store.setAddress(storeAddress);
+
+                session.persist(store);
+                transaction.commit();
             }
 
-            // Skapa en ny Address och koppla den till butiken
-            Address storeAddress = new Address();
-            storeAddress.setAddress(address);
-            storeAddress.setAddress2(address2);
-            storeAddress.setDistrict(district);
-            storeAddress.setCity(cities);
-            storeAddress.setPostalCode(postalCode);
-            storeAddress.setPhone(phone);
-            storeAddress.setLocation(location);
-            storeAddress.setLastUpdate(lastUpdate);
 
-            // Lägg till adressen i butiken
-            store.setAddress(storeAddress);
-
-            session.persist(store);
-            transaction.commit();
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
