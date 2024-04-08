@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 public class CrudOfCustomer {
-    public void registerNewCustomer(Label labelDuplicateCustomer, String firstName, String lastName, String email, String country, String city,
+   /* public void registerNewCustomer(Label labelDuplicateCustomer, String firstName, String lastName, String email, String country, String city,
                                     String address, String district, String postalCode, String phone){
 
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
@@ -45,7 +45,7 @@ public class CrudOfCustomer {
             }else{
                 Short countryId = null;
 
-                TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
+                TypedQuery<Short> countryQuery = session.createQuery("SELECT c.countryId FROM Country c WHERE c.country = :country", Short.class);
                 countryQuery.setParameter("country", country);
                 try {
                     countryId = countryQuery.getSingleResult();
@@ -107,6 +107,93 @@ public class CrudOfCustomer {
 
                 }else{
                     System.out.println("No such country exists, please check your spelling");
+                }
+            }
+
+        }catch(Exception e){
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }finally {
+            if (session != null) {
+                session.close();
+            }
+            sessionFactory.close();
+        }
+    }*/
+
+    public void registerNewCustomer(Label labelDuplicateCustomer, String firstName, String lastName, String email, String country, String city,
+                                    String address, String district, String postalCode, String phone){
+
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = null;
+        Transaction transaction = null;
+        try{
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            TypedQuery<Customer> query = session.createNamedQuery("Customer.byEmail", Customer.class);
+            query.setParameter("email", email);
+
+            List<Customer> existingCustomers = query.getResultList();
+
+            Customer existingCustomer = null;
+
+            if(!existingCustomers.isEmpty()){
+                existingCustomer = existingCustomers.getFirst();
+            }
+
+            if(existingCustomer != null){
+                labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
+                        "finns redan i systemet.");
+            }else{
+                Short countryId = null;
+
+                TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
+                countryQuery.setParameter("country", country);
+                try {
+                    countryId = countryQuery.getSingleResult();
+                } catch (Exception ex) {
+                    // Handle the case where the country doesn't exist
+                    // You might want to log this or handle it accordingly
+                }
+
+                if (countryId != null) {
+                    Country countryObj = session.get(Country.class, countryId);
+
+                    City cityObj = new City();
+                    cityObj.setCity(city);
+                    cityObj.setCountry(countryObj);
+                    cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                    session.persist(cityObj);
+
+                    Address getFirstAddress = session.get(Address.class, "1");
+                    byte[] location = getFirstAddress.getLocation();
+
+                    Address addressObj = new Address();
+                    addressObj.setAddress(address);
+                    addressObj.setDistrict(district);
+                    addressObj.setCity(cityObj);
+                    addressObj.setPostalCode(postalCode);
+                    addressObj.setPhone(phone);
+                    addressObj.setLocation(location);
+                    addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                    session.persist(addressObj);
+
+                    Store store = session.get(Store.class, 1);
+
+                    Customer customer = new Customer();
+                    customer.setStore(store);
+                    customer.setFirstName(firstName);
+                    customer.setLastName(lastName);
+                    customer.setEmail(email);
+                    customer.setAddress(addressObj);
+                    customer.setActive((byte) 1);
+                    customer.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                    customer.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                    session.persist(customer);
+
+                    transaction.commit();
                 }
             }
 
