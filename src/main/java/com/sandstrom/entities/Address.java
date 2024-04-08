@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;;
 
+@NamedNativeQuery(name = "Address.table", query = "SELECT * FROM address", resultClass = Address.class)
 @Entity
 @Table(name = "address", schema = "sakila")
 public class Address {
@@ -204,8 +205,7 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" +
-                "addressId=" + addressId +
+        return " addressId=" + addressId +
                 ", address='" + address + '\'' +
                 ", address2='" + address2 + '\'' +
                 ", district='" + district + '\'' +

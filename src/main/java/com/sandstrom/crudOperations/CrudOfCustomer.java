@@ -15,10 +15,17 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class CrudOfCustomer {
+    private SessionFactory sessionFactory;
+    public CrudOfCustomer(){
+        try {
+            sessionFactory = new Configuration().configure().buildSessionFactory();
+        } catch (Throwable ex) {
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
+
     public void registerNewCustomer(Label labelDuplicateCustomer, String firstName, String lastName, String email, String country, String city,
                                     String address, String district, String postalCode, String phone){
-
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = null;
         Transaction transaction = null;
         try{
@@ -40,71 +47,10 @@ public class CrudOfCustomer {
                 labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
                         "finns redan i systemet.");
             }else{
-                Short countryId = null;
 
-                TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
-                countryQuery.setParameter("country", country);
-                try {
-                    countryId = countryQuery.getSingleResult();
-                } catch (Exception ex) {
-                    //
-                }
+                addOrUpdateCustomer(firstName, lastName, email, country,  city,
+                        address, district, postalCode, phone, session, transaction);
 
-                if (countryId != null) {
-                    Country countryObj = session.get(Country.class, countryId);
-
-                    City cityObj = new City();
-                    cityObj.setCity(city);
-                    cityObj.setCountry(countryObj);
-                    cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
-                    session.persist(cityObj);
-
-                    Short cityId = null;
-
-                    TypedQuery<Short> cityQuery = session.createNamedQuery("City.pk", Short.class);
-                    cityQuery.setParameter("city", city);
-                    try {
-                        cityId = countryQuery.getSingleResult();
-                    } catch (Exception ex) {
-                       //
-                    }
-
-                    if(cityId != null){
-
-                        Address getFirstAddress = session.get(Address.class, "1");
-                        byte[] location = getFirstAddress.getLocation();
-                        City addressId = session.get(City.class, cityId);
-
-                        Address addressObj = new Address();
-                        addressObj.setAddress(address);
-                        addressObj.setDistrict(district);
-                        addressObj.setCity(addressId);
-                        addressObj.setPostalCode(postalCode);
-                        addressObj.setPhone(phone);
-                        addressObj.setLocation(location);
-                        addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
-                        session.persist(addressObj);
-
-                        Store store = session.get(Store.class, 1);
-
-                        Customer customer = new Customer();
-                        customer.setStore(store);
-                        customer.setFirstName(firstName);
-                        customer.setLastName(lastName);
-                        customer.setEmail(email);
-                        customer.setAddress(addressObj);
-                        customer.setActive((byte) 1);
-                        customer.setCreateDate(new Timestamp(System.currentTimeMillis()));
-                        customer.setLastUpdate(new Timestamp(System.currentTimeMillis()));
-                        session.persist(customer);
-
-
-                        transaction.commit();
-                    }
-
-                }else{
-                    System.out.println("No such country exists, please check your spelling");
-                }
             }
 
         }catch(Exception e){
@@ -119,7 +65,117 @@ public class CrudOfCustomer {
         }
     }
 
-    public static void readFromCustomers(List<Customer> customerList) {
+    public void updateCustomer(Label labelDuplicateCustomer, String firstName, String lastName, String email, String country, String city,
+                               String address, String district, String postalCode, String phone){
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            TypedQuery<Customer> query = session.createNamedQuery("Customer.byEmail", Customer.class);
+            query.setParameter("email", email);
+
+            List<Customer> existingCustomers = query.getResultList();
+
+            Customer existingCustomer = null;
+
+            if (!existingCustomers.isEmpty()) {
+                existingCustomer = existingCustomers.getFirst();
+            }
+
+            if (existingCustomer == null) {
+                labelDuplicateCustomer.setText("En kund med den angivna e-postadressen " +
+                        "finns inte i systemet.");
+            } else {
+
+                addOrUpdateCustomer(firstName, lastName, email, country,  city,
+                        address, district, postalCode, phone, session, transaction);
+
+            }
+        }catch(Exception e){
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }finally {
+            if (session != null) {
+                session.close();
+            }
+            sessionFactory.close();
+        }
+    }
+
+    private void addOrUpdateCustomer( String firstName, String lastName, String email, String country, String city,
+                                     String address, String district, String postalCode, String phone, Session session, Transaction transaction) {
+        Short countryId = null;
+
+        TypedQuery<Short> countryQuery = session.createNamedQuery("Country.pk", Short.class);
+        countryQuery.setParameter("country", country);
+        try {
+            countryId = countryQuery.getSingleResult();
+        } catch (Exception ex) {
+            //
+        }
+
+        if (countryId != null) {
+            Country countryObj = session.get(Country.class, countryId);
+
+            City cityObj = new City();
+            cityObj.setCity(city);
+            cityObj.setCountry(countryObj);
+            cityObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+            session.persist(cityObj);
+
+            Short cityId = null;
+
+            TypedQuery<Short> cityQuery = session.createNamedQuery("City.pk", Short.class);
+            cityQuery.setParameter("city", city);
+            try {
+                cityId = countryQuery.getSingleResult();
+            } catch (Exception ex) {
+                //
+            }
+
+            if (cityId != null) {
+
+                Address getFirstAddress = session.get(Address.class, "1");
+                byte[] location = getFirstAddress.getLocation();
+                City addressId = session.get(City.class, cityId);
+
+                Address addressObj = new Address();
+                addressObj.setAddress(address);
+                addressObj.setDistrict(district);
+                addressObj.setCity(addressId);
+                addressObj.setPostalCode(postalCode);
+                addressObj.setPhone(phone);
+                addressObj.setLocation(location);
+                addressObj.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                session.persist(addressObj);
+
+                Store store = session.get(Store.class, 1);
+
+                Customer customer = new Customer();
+                customer.setStore(store);
+                customer.setFirstName(firstName);
+                customer.setLastName(lastName);
+                customer.setEmail(email);
+                customer.setAddress(addressObj);
+                customer.setActive((byte) 1);
+                customer.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                customer.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                session.persist(customer);
+
+
+                transaction.commit();
+            }
+        }else {
+            System.out.println("Landet du lagt till fins inte. ");
+        }
+    }
+
+
+    public void readFromCustomers(List<Customer> customerList) {
         //Lägg till label för när kund finns
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = null;
@@ -129,9 +185,9 @@ public class CrudOfCustomer {
         try{
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            TypedQuery<Customer> query = session.createNamedQuery("Customer.table", Customer.class);
+            TypedQuery<Customer> queryCustomer = session.createNamedQuery("Customer.table", Customer.class);
 
-            List<Customer> foundCustomer = query.getResultList();
+            List<Customer> foundCustomer = queryCustomer.getResultList();
             customerList.addAll(foundCustomer);
 
         }catch(Exception e){

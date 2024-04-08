@@ -22,13 +22,38 @@ public class Inventory {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
+    @ManyToOne()
+    @JoinColumn(name = "film_id", referencedColumnName = "film_id")
+    private Film film;
+
+    public Film getFilm() {
+        return film;
+    }
+
+    public void setFilm(Film film) {
+        this.film = film;
+    }
 
     @ManyToOne
     @JoinColumn(name = "store_id" , referencedColumnName = "store_id")
     private Store store;
+    public Store getStore() {
+        return store;
+    }
 
+    public void setStore(Store store) {
+        this.store = store;
+    }
     @OneToMany(mappedBy = "inventory")
     private List<Rental> rentals; //
+
+    public List<Rental> getRentals() {
+        return rentals;
+    }
+
+    public void setRentals(List<Rental> rentals) {
+        this.rentals = rentals;
+    }
 
     public Inventory() {
     }

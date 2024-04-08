@@ -190,6 +190,17 @@ public class Film {
         this.filmCategoriesByFilmId = filmCategoriesByFilmId;
     }
 
+    @OneToMany(mappedBy = "film")
+    private Collection<Inventory> inventoryByFilmId = new ArrayList<>();
+
+    public Collection<Inventory> getInventoryByFilmId() {
+        return inventoryByFilmId;
+    }
+
+    public void setInventoryByFilmId(Collection<Inventory> inventoryByFilmId) {
+        this.inventoryByFilmId = inventoryByFilmId;
+    }
+
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "language_id", referencedColumnName = "language_id")
     private Language language;

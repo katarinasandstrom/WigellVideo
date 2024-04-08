@@ -13,6 +13,8 @@ import java.util.Objects;
 @NamedNativeQuery(name = "Customer.byEmail", query = "SELECT c.* FROM customer c WHERE c.email = :email ", resultClass = Customer.class)
 @NamedNativeQuery(name = "Customer.pk", query = "SELECT c.customer_id from customer c WHERE c.email =: email", resultClass = Customer.class)
 @NamedNativeQuery(name = "Customer.address", query = "SELECT COUNT(c.address_id) FROM Customer c WHERE c.address_id = :address_id", resultClass = Long.class)
+@NamedNativeQuery(name = "Customer.customerAndAddress", query = "SELECT c.*, a.* FROM customer c JOIN address a ON c.address_id = a.address_id", resultClass = Customer.class)
+
 //@NamedNativeQuery(name = "Customer.")
 @Table(name = "customer", schema = "sakila")
 public class Customer {

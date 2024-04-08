@@ -14,6 +14,7 @@ import java.util.Objects;
 public class Staff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @NaturalId
     @Column(name = "staff_id")
     private Byte staffId;
 
